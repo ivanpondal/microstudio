@@ -12,6 +12,7 @@ import org.anddev.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextur
 import org.anddev.andengine.opengl.texture.region.TextureRegion;
 
 import android.util.Log;
+import android.view.MotionEvent;
 
 import com.ioni.piano.Piano;
 import com.main.MainActivity;
@@ -75,6 +76,7 @@ public class FreePlay extends Scene {
 		this.attachChild(this.mPiano);
         
 	}
+
 	public void menuItemPressed(int id){
 		
 		MainActivity.getInstance().getSceneManager().setMenuScene(CAMERA_WIDTH, CAMERA_HEIGHT);

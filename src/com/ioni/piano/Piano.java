@@ -148,9 +148,19 @@ public class Piano extends Entity {
 		
 	}
 	public boolean onTouchEvent(MotionEvent event) {
-		float x = event.getX();
-		float y = event.getY();
-		Log.d("onTouch","X=" + x + " Y=" + y);
+		int myEventAction = event.getAction(); 
+		switch (myEventAction) {
+        	case MotionEvent.ACTION_DOWN:
+        		break;
+        	case MotionEvent.ACTION_MOVE: {
+        		float x = event.getX();
+        		float y = event.getY();
+        		Log.d("onTouch","X=" + x + " Y=" + y);
+        		break;}
+        	case MotionEvent.ACTION_UP:
+        		break;
+		}
+		
 		return true;
 	}
 	public void keyPressed(Sprite s){
