@@ -11,7 +11,7 @@ import com.main.MainActivity;
 
 public class SceneManager {
 
-	// Escena actual
+	// Scene
 	public Scene scene;
 	
 	public void setMenuScene(int w, int h) {
