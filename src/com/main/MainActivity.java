@@ -1,4 +1,4 @@
-package ioni.ioni;
+package com.main;
 
 import org.anddev.andengine.engine.Engine;
 import org.anddev.andengine.engine.camera.ZoomCamera;

@@ -1,13 +1,13 @@
 package com.ioni.managers;
 
-import ioni.ioni.MainActivity;
 
 import org.anddev.andengine.entity.scene.Scene;
 
 import com.ioni.scenes.MenuScene;
 import com.ioni.scenes.PutoScene;
 import com.ioni.scenes.FreePlay;
-import com.ioni.scenes.RecordScene;;
+import com.ioni.scenes.RecordScene;
+import com.main.MainActivity;
 
 public class SceneManager {
 

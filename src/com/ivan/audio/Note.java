@@ -2,8 +2,10 @@ package com.ivan.audio;
 import java.io.IOException;
 
 import org.anddev.andengine.audio.music.*;
+
+import com.main.MainActivity;
+
 import android.content.res.AssetManager;
-import ioni.ioni.MainActivity;
 
 public class Note {
 	private String str_name;
