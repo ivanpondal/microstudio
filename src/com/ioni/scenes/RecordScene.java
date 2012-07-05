@@ -22,18 +22,17 @@ public class RecordScene extends Scene {
 	private TextureRegion mFaceTextureRegion;
 	private Sprite back;
 	
-	private MainActivity mMainActivity;
 	
-	public RecordScene(MainActivity pMainActivity, int w ,int h) {
+	public RecordScene(int w ,int h) {
 
 		CAMERA_WIDTH = w;
 		CAMERA_HEIGHT = h;
-		this.mMainActivity = pMainActivity;
+		//this.mMainActivity = pMainActivity;
         this.setBackground(new ColorBackground(0, 0, 0.8784f));
         
         this.mTexture = new BitmapTextureAtlas(512, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
-		this.mFaceTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, this.mMainActivity.getApplicationContext(), "gfx/R-U R-D.png", 0, 0);
-		this.mMainActivity.getEngine().getTextureManager().loadTexture(this.mTexture);
+		this.mFaceTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "gfx/R-U R-D.png", 0, 0);
+		MainActivity.getInstance().getEngine().getTextureManager().loadTexture(this.mTexture);
 		
 		final int centerX = (10);
         final int centerY = (10);
@@ -66,6 +65,6 @@ public class RecordScene extends Scene {
 	}
 	public void menuItemPressed(int id){
 		
-		this.mMainActivity.getSceneManager().setMenuScene(CAMERA_WIDTH, CAMERA_HEIGHT);
+		MainActivity.getInstance().getSceneManager().setMenuScene(CAMERA_WIDTH, CAMERA_HEIGHT);
 	}
 }

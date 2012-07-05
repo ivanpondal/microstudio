@@ -15,22 +15,22 @@ public class SceneManager {
 	public Scene scene;
 	
 	public void setMenuScene(int w, int h) {
-		this.scene = new MenuScene(MainActivity.getInstance(), w, h);
+		this.scene = new MenuScene(w, h);
 		MainActivity.getInstance().getEngine().setScene(this.scene);
 	}
 	
 	public void setPutoScene(int w, int h) {
-		this.scene = new PutoScene(MainActivity.getInstance(), w, h);
+		this.scene = new PutoScene(w, h);
 		MainActivity.getInstance().getEngine().setScene(this.scene);
 	}
 	
 	public void setFreePlay(int w, int h) {
-		this.scene = new FreePlay(MainActivity.getInstance(), w, h);
+		this.scene = new FreePlay(w, h);
 		MainActivity.getInstance().getEngine().setScene(this.scene);
 	}
 	
 	public void setRecordScene(int w, int h) {
-		this.scene = new RecordScene(MainActivity.getInstance(), w, h);
+		this.scene = new RecordScene(w, h);
 		MainActivity.getInstance().getEngine().setScene(this.scene);
 	}
 	

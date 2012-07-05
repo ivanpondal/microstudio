@@ -11,9 +11,10 @@ import org.anddev.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.anddev.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegionFactory;
 import org.anddev.andengine.opengl.texture.region.TextureRegion;
 
-import com.main.MainActivity;
-
 import android.util.Log;
+import android.view.MotionEvent;
+
+import com.main.MainActivity;
 
 public class Piano extends Entity {
 	
@@ -26,22 +27,22 @@ public class Piano extends Entity {
 	private TextureRegion mFaceTextureRegion2;
 	private TextureRegion mFaceTextureRegion3;
 	private TextureRegion mFaceTextureRegion4;
-	private MainActivity mMainActivity;
 	
-	public Piano(MainActivity pMainActivity, Scene pScine, int w, int h) {
+	
+	public Piano(Scene pScine, int w, int h) {
 		
 		CAMERA_WIDTH = w;
 		CAMERA_HEIGHT = h;
 		
-		this.mMainActivity = pMainActivity;
+		//this.mMainActivity = pMainActivity;
 		
 		
 		this.mTexture = new BitmapTextureAtlas(256, 1024, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
-		this.mFaceTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, this.mMainActivity.getApplicationContext(), "gfx/Teclas/Blancas/NB.png", 0, 0);
-		this.mFaceTextureRegion2 = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, this.mMainActivity.getApplicationContext(), "gfx/Teclas/Negras/NN.png", 99, 0);
-		this.mFaceTextureRegion3 = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, this.mMainActivity.getApplicationContext(), "gfx/Teclas/Blancas/PB.png", 0,500);
-		this.mFaceTextureRegion4 = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, this.mMainActivity.getApplicationContext(), "gfx/Teclas/Negras/NP.png", 99,500);
-		this.mMainActivity.getEngine().getTextureManager().loadTexture(this.mTexture);
+		this.mFaceTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "gfx/Teclas/Blancas/NB.png", 0, 0);
+		this.mFaceTextureRegion2 = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "gfx/Teclas/Negras/NN.png", 99, 0);
+		this.mFaceTextureRegion3 = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "gfx/Teclas/Blancas/PB.png", 0,500);
+		this.mFaceTextureRegion4 = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "gfx/Teclas/Negras/NP.png", 99,500);
+		MainActivity.getInstance().getEngine().getTextureManager().loadTexture(this.mTexture);
 		
 		
 		Entity negras = new Entity();
@@ -145,6 +146,12 @@ public class Piano extends Entity {
 	}
 	public void checkPressed(){
 		
+	}
+	public boolean onTouchEvent(MotionEvent event) {
+		float x = event.getX();
+		float y = event.getY();
+		Log.d("onTouch","X=" + x + " Y=" + y);
+		return true;
 	}
 	public void keyPressed(Sprite s){
 		

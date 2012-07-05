@@ -1,6 +1,5 @@
 package com.ivan.audio;
 
-import android.util.Log;
 import com.ivan.midi.MIDIMessage;
 
 public class Instrument {

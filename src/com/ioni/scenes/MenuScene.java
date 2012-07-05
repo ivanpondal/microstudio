@@ -1,6 +1,7 @@
 package com.ioni.scenes;
 
 
+
 import org.anddev.andengine.entity.scene.Scene;
 import org.anddev.andengine.entity.scene.Scene.IOnSceneTouchListener;
 import org.anddev.andengine.entity.scene.background.ColorBackground;
@@ -32,26 +33,23 @@ public class MenuScene extends Scene implements IScrollDetectorListener, IOnScen
 	private Sprite ball2;
 	private Sprite ball;
 	private Sprite ball3;
-	private MainActivity mMainActivity;
 	
-	public MenuScene(MainActivity pMainActivity, int w, int h) {
+	public MenuScene(int w, int h) {
 		
 		CAMERA_WIDTH = w;
 		CAMERA_HEIGHT = h;
 		
-		this.mMainActivity = pMainActivity;
-		
 		this.mTexture = new BitmapTextureAtlas(512, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
-		this.mFaceTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, this.mMainActivity.getApplicationContext(), "gfx/Botones/R-U S-D.png", 0, 0);
-		this.mMainActivity.getEngine().getTextureManager().loadTexture(this.mTexture);
+		this.mFaceTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "gfx/Botones/R-U S-D.png", 0, 0);
+		MainActivity.getInstance().getEngine().getTextureManager().loadTexture(this.mTexture);
 		
 		this.mTexture2 = new BitmapTextureAtlas(512, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
-		this.mFaceTextureRegion2 = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture2, this.mMainActivity.getApplicationContext(), "gfx/Botones/S-U S-D.png", 0, 0);
-		this.mMainActivity.getEngine().getTextureManager().loadTexture(this.mTexture2);
+		this.mFaceTextureRegion2 = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture2, MainActivity.getInstance().getApplicationContext(), "gfx/Botones/S-U S-D.png", 0, 0);
+		MainActivity.getInstance().getEngine().getTextureManager().loadTexture(this.mTexture2);
 		
 		this.mTexture3 = new BitmapTextureAtlas(512, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
-		this.mFaceTextureRegion3 = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture3, this.mMainActivity.getApplicationContext(), "gfx/Botones/S-U R-D.png", 0, 0);
-		this.mMainActivity.getEngine().getTextureManager().loadTexture(this.mTexture3);
+		this.mFaceTextureRegion3 = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture3, MainActivity.getInstance().getApplicationContext(), "gfx/Botones/S-U R-D.png", 0, 0);
+		MainActivity.getInstance().getEngine().getTextureManager().loadTexture(this.mTexture3);
 		
         this.setBackground(new ColorBackground(0.5f, 0.5f, 0.5f));
         
@@ -139,13 +137,13 @@ public class MenuScene extends Scene implements IScrollDetectorListener, IOnScen
 	public void menuItemPressed(int id){
 		switch (id){
 			case 1:
-				this.mMainActivity.getSceneManager().setPutoScene(CAMERA_WIDTH, CAMERA_HEIGHT);
+				MainActivity.getInstance().getSceneManager().setPutoScene(CAMERA_WIDTH, CAMERA_HEIGHT);
 				break;
 			case 2:
-				this.mMainActivity.getSceneManager().setFreePlay(CAMERA_WIDTH, CAMERA_HEIGHT);
+				MainActivity.getInstance().getSceneManager().setFreePlay(CAMERA_WIDTH, CAMERA_HEIGHT);
 				break;
 			case 3:
-				this.mMainActivity.getSceneManager().setRecordScene(CAMERA_WIDTH, CAMERA_HEIGHT);
+				MainActivity.getInstance().getSceneManager().setRecordScene(CAMERA_WIDTH, CAMERA_HEIGHT);
 				break;
 		}
 	}
@@ -154,7 +152,7 @@ public class MenuScene extends Scene implements IScrollDetectorListener, IOnScen
 	 public void onScroll(ScrollDetector pScollDetector, TouchEvent pTouchEvent, float pDistanceX, float pDistanceY) {
 		
 		
-		this.mMainActivity.getCamera().offsetCenter(0, -pDistanceY);
+		MainActivity.getInstance().getCamera().offsetCenter(0, -pDistanceY);
 		
 	 }
 	 

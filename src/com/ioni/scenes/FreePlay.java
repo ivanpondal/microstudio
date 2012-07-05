@@ -27,21 +27,21 @@ public class FreePlay extends Scene {
 	private Sprite back;
 	private Piano mPiano;
 	
-	private MainActivity mMainActivity;
 	
-	public FreePlay(MainActivity pMainActivity, int w, int h) {
+	
+	public FreePlay(int w, int h) {
 		
 
 		Log.d("DISPLAY","w: " + w + " h: " + h);
 		CAMERA_WIDTH = w;
 		CAMERA_HEIGHT = h;
 	
-		this.mMainActivity = pMainActivity;
+		//this.mMainActivity = pMainActivity;
         this.setBackground(new ColorBackground(0, 0.8784f, 0));
         
         this.mTexture = new BitmapTextureAtlas(512, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
-		this.mFaceTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, this.mMainActivity.getApplicationContext(), "gfx/Botones/R-U R-D.png", 0, 0);
-		this.mMainActivity.getEngine().getTextureManager().loadTexture(this.mTexture);
+		this.mFaceTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "gfx/Botones/R-U R-D.png", 0, 0);
+		MainActivity.getInstance().getEngine().getTextureManager().loadTexture(this.mTexture);
 		
 		final int centerX = (600);
         final int centerY = (10);
@@ -71,12 +71,12 @@ public class FreePlay extends Scene {
         
         //this.setTouchAreaBindingEnabled(true);
         
-		this.mPiano = new Piano(this.mMainActivity, this, CAMERA_WIDTH, CAMERA_HEIGHT);
+		this.mPiano = new Piano(this, CAMERA_WIDTH, CAMERA_HEIGHT);
 		this.attachChild(this.mPiano);
         
 	}
 	public void menuItemPressed(int id){
 		
-		this.mMainActivity.getSceneManager().setMenuScene(CAMERA_WIDTH, CAMERA_HEIGHT);
+		MainActivity.getInstance().getSceneManager().setMenuScene(CAMERA_WIDTH, CAMERA_HEIGHT);
 	}
 }

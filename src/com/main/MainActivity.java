@@ -38,7 +38,7 @@ public class MainActivity extends BaseGameActivity {
 		
 		CAMERA_WIDTH = this.getWindowManager().getDefaultDisplay().getHeight();
 		CAMERA_HEIGHT = this.getWindowManager().getDefaultDisplay().getWidth();
-		
+		MainActivity.setInstance(this);
 		this.mCamera = new ZoomCamera(0, 0, CAMERA_WIDTH, CAMERA_HEIGHT);
 		this.mCamera.setBounds(0, CAMERA_WIDTH, -250, 700);
 		this.mCamera.setBoundsEnabled(true);
