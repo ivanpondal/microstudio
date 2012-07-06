@@ -52,18 +52,18 @@ public class Piano extends Entity {
 				int teclaX = ((int)pTouchAreaLocalX/(CAMERA_WIDTH/8));
 				switch(pAreaTouchEvent.getAction()) {
                     case TouchEvent.ACTION_DOWN: 
-                        keyPressed(teclaX , 0);
-                        Log.d("Pressed","Tecla: " + (teclaX + 0));
+                        keyPressed(teclaX , false);
+                        Log.d("Pressed","Tecla: " + (teclaX + 1));
                         break;
                         
                     case TouchEvent.ACTION_UP: 
-                    	keyPressed(teclaX , 1);
+                    	keyPressed(teclaX , true);
                     	Log.d("Relesed","Tecla: " + (teclaX + 1));
                         break;
                         
                     case TouchEvent.ACTION_MOVE:
-                    	keyPressed(teclaXVieja , 1);
-                    	keyPressed(teclaX , 0);
+                    	keyPressed(teclaXVieja , true);
+                    	keyPressed(teclaX , false);
                     	teclaXVieja = teclaX;
                 		Log.d("MOVE", "" + pTouchAreaLocalX);
                     	break;
@@ -191,7 +191,7 @@ public class Piano extends Entity {
 	public void checkPressed(){
 		
 	}
-	public void keyPressed(int s, int mode){
+	public void keyPressed(int s, boolean mode){
 		/*int count = blancas.getChildCount();
 		for(int i = 0; i < count; i++) {
 			IEntity entity = blancas.getChild(i);
@@ -208,11 +208,8 @@ public class Piano extends Entity {
 			}
 		}*/
 		IEntity entity = blancas.getChild(s);
-    	if (mode == 0){
-    		entity.setVisible(false);
-    	}else{
-    		entity.setVisible(true);
-    	}
+    	entity.setVisible(mode);
+    
         
 		//Log.d("Piano: ","tecla: " + s);  
 	}
