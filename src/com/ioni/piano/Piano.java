@@ -2,6 +2,7 @@ package com.ioni.piano;
 
 
 import org.anddev.andengine.entity.Entity;
+import org.anddev.andengine.entity.IEntity;
 import org.anddev.andengine.entity.scene.Scene;
 import org.anddev.andengine.entity.sprite.Sprite;
 import org.anddev.andengine.input.touch.TouchEvent;
@@ -12,7 +13,6 @@ import org.anddev.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextur
 import org.anddev.andengine.opengl.texture.region.TextureRegion;
 
 import android.util.Log;
-import android.view.MotionEvent;
 
 import com.main.MainActivity;
 
@@ -21,19 +21,21 @@ public class Piano extends Entity {
 	
 	static int CAMERA_WIDTH;
 	static int CAMERA_HEIGHT;
+	static Scene scene;
 	
+	private Entity blancas;
 	private Texture mTexture;
 	private TextureRegion mFaceTextureRegion;
 	private TextureRegion mFaceTextureRegion2;
 	private TextureRegion mFaceTextureRegion3;
 	private TextureRegion mFaceTextureRegion4;
-	
+	private int teclaXVieja;
 	
 	public Piano(Scene pScine, int w, int h) {
 		
 		CAMERA_WIDTH = w;
 		CAMERA_HEIGHT = h;
-		
+		scene = pScine;
 		//this.mMainActivity = pMainActivity;
 		
 		
@@ -42,9 +44,42 @@ public class Piano extends Entity {
 		this.mFaceTextureRegion2 = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "gfx/Teclas/Negras/NN.png", 99, 0);
 		this.mFaceTextureRegion3 = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "gfx/Teclas/Blancas/PB.png", 0,500);
 		this.mFaceTextureRegion4 = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "gfx/Teclas/Negras/NP.png", 99,500);
+		//this.mFaceTextureRegion5 = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "gfx/Teclas/Negras/NP.png", 1000,1000);
 		MainActivity.getInstance().getEngine().getTextureManager().loadTexture(this.mTexture);
 		
+		Sprite touchControl = new Sprite(0,CAMERA_HEIGHT*0.2f,mFaceTextureRegion4){
+			public boolean onAreaTouched(final TouchEvent pAreaTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
+				int teclaX = ((int)pTouchAreaLocalX/(CAMERA_WIDTH/8));
+				switch(pAreaTouchEvent.getAction()) {
+                    case TouchEvent.ACTION_DOWN: 
+                        keyPressed(teclaX , 0);
+                        Log.d("Pressed","Tecla: " + (teclaX + 0));
+                        break;
+                        
+                    case TouchEvent.ACTION_UP: 
+                    	keyPressed(teclaX , 1);
+                    	Log.d("Relesed","Tecla: " + (teclaX + 1));
+                        break;
+                        
+                    case TouchEvent.ACTION_MOVE:
+                    	keyPressed(teclaXVieja , 1);
+                    	keyPressed(teclaX , 0);
+                    	teclaXVieja = teclaX;
+                		Log.d("MOVE", "" + pTouchAreaLocalX);
+                    	break;
+                    	
+                   	}
+                
+                return true;
+            }
+		};
+		touchControl.setHeight(CAMERA_HEIGHT*0.8f);
+		touchControl.setWidth(CAMERA_WIDTH);
+		this.attachChild(touchControl);
+		pScine.registerTouchArea(touchControl);
 		
+		
+		//Negras------------------------------------
 		Entity negras = new Entity();
 	
 		for (int i = 0; i < 8; i++){
@@ -54,7 +89,7 @@ public class Piano extends Entity {
 		        np.setHeight(CAMERA_HEIGHT*0.5f);
 				negras.attachChild(np);
 				Sprite n = new Sprite(CAMERA_WIDTH/16 + CAMERA_WIDTH/32 + i*(CAMERA_WIDTH/16 + CAMERA_WIDTH/16),CAMERA_HEIGHT*0.2f,this.mFaceTextureRegion2){
-					@Override
+					/*@Override
 					public boolean onAreaTouched(final TouchEvent pAreaTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
 		                switch(pAreaTouchEvent.getAction()) {
 	                    	
@@ -84,7 +119,7 @@ public class Piano extends Entity {
 		                   	}
 		                
 		                return true;
-		            }
+		            }*/
 				};
 				
 				n.setUserData(i+10);
@@ -94,6 +129,11 @@ public class Piano extends Entity {
 				pScine.registerTouchArea(n);
 			}
 		}
+		
+		
+		//Blancas-------------------------------------------
+		
+		blancas = new Entity();
 		for (int i = 0; i < 8; i++){
 			
 			Sprite bp = new Sprite(i*(CAMERA_WIDTH/8),CAMERA_HEIGHT*0.2f,this.mFaceTextureRegion3);
@@ -101,8 +141,10 @@ public class Piano extends Entity {
 	        bp.setHeight(CAMERA_HEIGHT*0.8f);
 			this.attachChild(bp);
 			
+			
+			
 			Sprite b = new Sprite(i*(CAMERA_WIDTH/8),CAMERA_HEIGHT*0.2f,this.mFaceTextureRegion){
-				@Override
+				/*@Override
 				public boolean onAreaTouched(final TouchEvent pAreaTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
 	                switch(pAreaTouchEvent.getAction()) {
                     	
@@ -131,40 +173,47 @@ public class Piano extends Entity {
 	                //Log.d("Nothing", "YEY");
 	                return true;
 	               
-	            }
+	            }*/
 			};
+			b.setChildIndex(blancas, i);
 			b.setUserData(i);
 			b.setWidth(CAMERA_WIDTH/8);
 	        b.setHeight(CAMERA_HEIGHT*0.8f);
-			this.attachChild(b);
+			blancas.attachChild(b);
 			pScine.registerTouchArea(b);
 			
 			
 		}
+		this.attachChild(blancas);
 		this.attachChild(negras);
 		this.sortChildren();
 	}
 	public void checkPressed(){
 		
 	}
-	public boolean onTouchEvent(MotionEvent event) {
-		int myEventAction = event.getAction(); 
-		switch (myEventAction) {
-        	case MotionEvent.ACTION_DOWN:
-        		break;
-        	case MotionEvent.ACTION_MOVE: {
-        		float x = event.getX();
-        		float y = event.getY();
-        		Log.d("onTouch","X=" + x + " Y=" + y);
-        		break;}
-        	case MotionEvent.ACTION_UP:
-        		break;
-		}
-		
-		return true;
-	}
-	public void keyPressed(Sprite s){
-		
-		Log.d("Piano: ","tecla: " + s.getUserData());  
+	public void keyPressed(int s, int mode){
+		/*int count = blancas.getChildCount();
+		for(int i = 0; i < count; i++) {
+			IEntity entity = blancas.getChild(i);
+			if(entity instanceof Sprite) {
+		        if(entity.getUserData().equals(s)){
+		        	if (mode == 0){
+		        		entity.setVisible(false);
+		        	}else{
+		        		entity.setVisible(true);
+		        	}
+		            
+		            Log.d("Found","Tecla: " + s);
+		        }
+			}
+		}*/
+		IEntity entity = blancas.getChild(s);
+    	if (mode == 0){
+    		entity.setVisible(false);
+    	}else{
+    		entity.setVisible(true);
+    	}
+        
+		//Log.d("Piano: ","tecla: " + s);  
 	}
 }

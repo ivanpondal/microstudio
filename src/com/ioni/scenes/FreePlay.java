@@ -12,7 +12,6 @@ import org.anddev.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextur
 import org.anddev.andengine.opengl.texture.region.TextureRegion;
 
 import android.util.Log;
-import android.view.MotionEvent;
 
 import com.ioni.piano.Piano;
 import com.main.MainActivity;
