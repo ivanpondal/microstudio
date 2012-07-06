@@ -1,4 +1,4 @@
-package com.ivan.midi;
+package com.ppp.midi;
 
 public class MIDIMessage {
 	private byte sta_function;//4 higher bits

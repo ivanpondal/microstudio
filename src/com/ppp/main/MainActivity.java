@@ -1,4 +1,4 @@
-package com.main;
+package com.ppp.main;
 
 import org.anddev.andengine.engine.Engine;
 import org.anddev.andengine.engine.camera.ZoomCamera;
@@ -14,7 +14,7 @@ import org.anddev.andengine.ui.activity.BaseGameActivity;
 
 import android.widget.Toast;
 
-import com.ioni.managers.SceneManager;
+import com.ppp.managers.SceneManager;
 
 public class MainActivity extends BaseGameActivity {
 	

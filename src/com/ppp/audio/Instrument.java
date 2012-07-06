@@ -1,6 +1,6 @@
-package com.ivan.audio;
+package com.ppp.audio;
 
-import com.ivan.midi.MIDIMessage;
+import com.ppp.midi.MIDIMessage;
 
 public class Instrument {
 	private Note[] dat_notes;

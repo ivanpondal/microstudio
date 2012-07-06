@@ -1,4 +1,4 @@
-package com.ioni.piano;
+package com.ppp.piano;
 
 
 import org.anddev.andengine.entity.Entity;
@@ -14,7 +14,7 @@ import org.anddev.andengine.opengl.texture.region.TextureRegion;
 
 import android.util.Log;
 
-import com.main.MainActivity;
+import com.ppp.main.MainActivity;
 
 public class Piano extends Entity {
 	

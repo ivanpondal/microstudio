@@ -1,4 +1,4 @@
-package com.ioni.scenes;
+package com.ppp.scenes;
 
 
 
@@ -16,7 +16,7 @@ import org.anddev.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.anddev.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegionFactory;
 import org.anddev.andengine.opengl.texture.region.TextureRegion;
 
-import com.main.MainActivity;
+import com.ppp.main.MainActivity;
 
 public class MenuScene extends Scene implements IScrollDetectorListener, IOnSceneTouchListener  {
 

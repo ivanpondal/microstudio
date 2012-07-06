@@ -1,9 +1,9 @@
-package com.ivan.audio;
+package com.ppp.audio;
 import java.io.IOException;
 
 import org.anddev.andengine.audio.music.*;
 
-import com.main.MainActivity;
+import com.ppp.main.MainActivity;
 
 import android.content.res.AssetManager;
 
