@@ -1,7 +1,7 @@
 package com.ppp.audio;
 import java.io.IOException;
 
-import org.anddev.andengine.audio.music.*;
+import org.anddev.andengine.audio.sound.*;
 
 import com.ppp.main.MainActivity;
 
@@ -9,7 +9,7 @@ import android.content.res.AssetManager;
 
 public class Note {
 	private String str_name;
-	private Music[] dat_samples;
+	private Sound[] dat_samples;
 	private byte val_midi;
 	private boolean enabled;
 	
@@ -30,8 +30,8 @@ public class Note {
 		boolean found=false,finished=false;
 		int i;
 		AssetManager SamplesDir = MainActivity.getInstance().getAssets();
-		MusicFactory.setAssetBasePath("mfx/"+n+"/");
-		this.dat_samples=new Music[s];
+		SoundFactory.setAssetBasePath("sfx/"+n+"/");
+		this.dat_samples=new Sound[s];
 		try {
 			files=SamplesDir.list("mfx/"+n);
 			i=0;
@@ -75,7 +75,7 @@ public class Note {
 								finished=true;
 								filename=files[i].split("_");
 								this.str_name=filename[2].substring(0, filename[2].length()-4);
-								this.dat_samples[samp] = MusicFactory.createMusicFromAsset(MainActivity.getInstance().getMusicManager(), MainActivity.getInstance().getApplicationContext(), files[i]);
+								this.dat_samples[samp] = SoundFactory.createSoundFromAsset(MainActivity.getInstance().getSoundManager(), MainActivity.getInstance().getApplicationContext(), files[i]);
 							}
 							i++;
 						}
@@ -103,7 +103,7 @@ public class Note {
 		return this.str_name;
 	}
 	
-	public Music[] getSamples()
+	public Sound[] getSamples()
 	{
 		return this.dat_samples;
 	}
