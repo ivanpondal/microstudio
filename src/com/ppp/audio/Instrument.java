@@ -8,12 +8,14 @@ public class Instrument {
 	private float val_left_vol;
 	private float val_right_vol;
 	private byte val_samples;
+	private long val_decay;
 	
-	public Instrument(String n, byte s)
+	public Instrument(String n, byte s, long d)
 	{
 		setName(n);
 		setSamples(s);
 		setNotes();
+		setDecay(d);
 		setVolumeLeft(1.0f);
 		setVolumeRight(1.0f);
 	}
@@ -47,6 +49,11 @@ public class Instrument {
 		this.val_samples=s;
 	}
 	
+	public void setDecay(long d)
+	{
+		this.val_decay=d;
+	}
+	
 	public String getName()
 	{
 		return this.str_name;
@@ -70,6 +77,11 @@ public class Instrument {
 	public byte getSamples()
 	{
 		return this.val_samples;
+	}
+	
+	public long getDecay()
+	{
+		return this.val_decay;
 	}
 	
 	public void processMIDI(MIDIMessage msg)

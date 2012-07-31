@@ -11,9 +11,9 @@ public class Note {
 	private String str_name;
 	private Sound[] dat_samples;
 	private byte val_midi;
-	private boolean enabled;
+	private boolean val_enabled; 
 	
-	public Note(byte m, byte s, String n)//midi note, samples, instrument
+	public Note(byte m, byte s, String n)//midi note, samples, instrument, decay
 	{
 		setSamples(m,s,n);
 	}
@@ -52,7 +52,7 @@ public class Note {
 				}
 				i++;
 			}
-			this.enabled=found;
+			this.val_enabled=found;
 			if(found)
 			{
 				for(byte samp=0;samp<s;samp++)
@@ -95,7 +95,7 @@ public class Note {
 	
 	public void setEnabled(boolean e)
 	{
-		this.enabled=e;
+		this.val_enabled=e;
 	}
 	
 	public String getName()
@@ -115,26 +115,32 @@ public class Note {
 	
 	public boolean getEnabled()
 	{
-		return this.enabled;
+		return this.val_enabled;
 	}
 	
-	public void playNote(byte v)
+	public void playNote(byte v, float l, float r)
 	{
-		float samplerange;
+		float samplerange,left,right;
 		byte sample;
 		samplerange=(float)Math.ceil(128/(float)dat_samples.length);
 		sample=(byte)Math.ceil(v/samplerange);
 		sample--;
+		left=this.dat_samples[sample].getLeftVolume()*l;
+		right=this.dat_samples[sample].getRightVolume()*r;
+		this.dat_samples[sample].setVolume(left, right);
 		this.dat_samples[sample].play();
 	}
 	
-	public void stopNote(byte v)
+	public void stopNote(byte v, float l, float r)
 	{
-		float samplerange;
+		float samplerange,left,right;
 		byte sample;
 		samplerange=(float)Math.ceil(128/(float)dat_samples.length);
 		sample=(byte)Math.ceil(v/samplerange);
 		sample--;
+		left=this.dat_samples[sample].getLeftVolume()*l;
+		right=this.dat_samples[sample].getRightVolume()*r;
+		this.dat_samples[sample].setVolume(left, right);
 		this.dat_samples[sample].stop();
 	}
 	
