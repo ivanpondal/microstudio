@@ -101,7 +101,7 @@ public class Instrument {
 	{
 		if(dat_notes[note].getEnabled())
 		{
-			dat_notes[note].playNote(velocity);
+			dat_notes[note].playNote(velocity, val_left_vol, val_right_vol);
 		}
 	}
 	
@@ -109,7 +109,7 @@ public class Instrument {
 	{
 		if(dat_notes[note].getEnabled())
 		{
-			dat_notes[note].stopNote(velocity);
+			dat_notes[note].stopNote(velocity, val_left_vol, val_right_vol);
 		}
 	}
 	
