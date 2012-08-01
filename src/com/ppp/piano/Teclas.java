@@ -5,8 +5,9 @@ public class Teclas {
 	private int teclasXvieja;
 	private boolean presionada;
 	
-	public Teclas(){
+	public Teclas(int i){
 		presionada = false;
+		teclasXvieja = i;
 	}
 	public void setTecla(boolean p){
 		presionada = p;

@@ -50,7 +50,7 @@ public class Piano extends Entity {
 		
 		teclas = new Teclas[16];
 		for (int i = 0; i<16; i++){
-			teclas[i] = new Teclas();
+			teclas[i] = new Teclas(i);
 		}
 		this.mTexture = new BitmapTextureAtlas(256, 1024, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 		this.mFaceTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "gfx/Teclas/Blancas/NB.png", 0, 0);
@@ -70,21 +70,40 @@ public class Piano extends Entity {
 						teclas[teclaX].setTecla(true);
 						
 					}
+				}else{
+					teclas[teclaX].setTecla(true);
 				}
-				teclas[teclaX].setTecla(true);
-				keyPressed();
+				
+				
 				switch(pAreaTouchEvent.getAction()) {
                     case TouchEvent.ACTION_DOWN: 
                         //keyPressed(teclaX , false);
                         //Log.d("Pressed","Tecla: " + (teclaX + 1));
+                    	//teclas[teclaX].setVieja(teclaX);
+                    	keyPressed();
                         break;
                         
                     case TouchEvent.ACTION_UP: 
+                    	teclas[teclaX].setTecla(false);
                     	//keyPressed(teclaX , true);
                     	//Log.d("Relesed","Tecla: " + (teclaX + 1));
+                    	keyPressed();
                         break;
                         
                     case TouchEvent.ACTION_MOVE:
+                    	
+                    	
+                    	//teclas[teclas[teclaX].getVieja()].setTecla(false);
+                    	//keyPressed();
+                    	
+                    	teclas[teclaX].setTecla(true);
+                    	keyPressed();
+                    	
+                    	//if (teclaX != teclas[teclaX].getVieja()){
+                    	//	teclas[teclaX].setVieja(teclaX);
+                    	//}
+                    	//keyPressed();
+                    	
                     	//keyPressed(teclaXVieja , true);
                     	//keyPressed(teclas[teclaX].getVieja() , true);
                     	//keyPressed(teclaX , false);
@@ -166,7 +185,7 @@ public class Piano extends Entity {
 	public void keyPressed(){//int s, boolean mode){
 	
 		
-		for (int t = 0; t<16; t++){
+		for (int t = 0; t<8; t++){
 			if (teclas[t].getTecla() == true){
 				IEntity entity = blancas.getChild(t);
 		    	entity.setVisible(false);
@@ -174,6 +193,12 @@ public class Piano extends Entity {
 				IEntity entity = blancas.getChild(t);
 		    	entity.setVisible(true);
 			}
+			
+		}
+		
+		for (int t = 0; t<8; t++){
+			int vieja = teclas[t].getVieja();
+			teclas[vieja].setTecla(false);
 			
 		}
 		/*if (s<0){
