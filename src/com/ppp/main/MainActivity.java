@@ -12,9 +12,11 @@ import org.anddev.andengine.extension.input.touch.controller.MultiTouchControlle
 import org.anddev.andengine.extension.input.touch.exception.MultiTouchException;
 import org.anddev.andengine.ui.activity.BaseGameActivity;
 
+import android.util.Log;
 import android.widget.Toast;
 
 import com.ppp.managers.SceneManager;
+import com.ppp.audio.*;
 
 public class MainActivity extends BaseGameActivity {
 	
@@ -25,6 +27,7 @@ public class MainActivity extends BaseGameActivity {
 	private SceneManager mSceneManager;
 	
 	private static MainActivity mInstance;
+
 	
 	@Override
 	public void onLoadComplete() {
@@ -44,6 +47,7 @@ public class MainActivity extends BaseGameActivity {
 		this.mCamera.setBoundsEnabled(true);
 		this.mSceneManager = new SceneManager();
 		final Engine mEngine = new Engine(new EngineOptions(true,ScreenOrientation.LANDSCAPE , new RatioResolutionPolicy(CAMERA_HEIGHT,CAMERA_WIDTH ), mCamera).setNeedsSound(true).setNeedsMusic(true));
+		/*
 		try {
 			if (MultiTouch.isSupported(this)) {
 				mEngine.setTouchController(new MultiTouchController());
@@ -53,13 +57,13 @@ public class MainActivity extends BaseGameActivity {
 		} catch (final MultiTouchException e) {
 			Toast.makeText(this,"Sorry your Android Version does NOT support MultiTouch!\n\n(Falling back to SingleTouch.)",Toast.LENGTH_LONG).show();
 		}
-
+		*/
 		return mEngine;
 	}
 	
 	@Override
 	public void onLoadResources() {
-		// TODO Auto-generated method stub
+
 	}
 
 	@Override
@@ -68,7 +72,7 @@ public class MainActivity extends BaseGameActivity {
 		this.mEngine.registerUpdateHandler(new FPSLogger());
 		
 		this.mSceneManager.setMenuScene(CAMERA_WIDTH,CAMERA_HEIGHT);
-        
+		
         return this.mSceneManager.getCurrentScene();
 	}
     /** Called when the activity is first created. */

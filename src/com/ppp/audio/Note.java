@@ -13,7 +13,7 @@ public class Note {
 	private byte val_midi;
 	private boolean val_enabled; 
 	
-	public Note(byte m, byte s, String n)//midi note, samples, instrument, decay
+	public Note(byte m, byte s, String n)//midi note, samples, instrument
 	{
 		setSamples(m,s,n);
 	}
@@ -33,7 +33,7 @@ public class Note {
 		SoundFactory.setAssetBasePath("sfx/"+n+"/");
 		this.dat_samples=new Sound[s];
 		try {
-			files=SamplesDir.list("mfx/"+n);
+			files=SamplesDir.list("sfx/"+n);
 			i=0;
 			while(!finished)
 			{

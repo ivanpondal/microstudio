@@ -16,6 +16,8 @@ import org.anddev.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.anddev.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegionFactory;
 import org.anddev.andengine.opengl.texture.region.TextureRegion;
 
+import com.ppp.audio.AudioMath;
+import com.ppp.audio.Instrument;
 import com.ppp.main.MainActivity;
 
 public class MenuScene extends Scene implements IScrollDetectorListener, IOnSceneTouchListener  {
@@ -34,10 +36,15 @@ public class MenuScene extends Scene implements IScrollDetectorListener, IOnScen
 	private Sprite ball;
 	private Sprite ball3;
 	
+	private Instrument Piano;
+	
 	public MenuScene(int w, int h) {
 		
 		CAMERA_WIDTH = w;
 		CAMERA_HEIGHT = h;
+		
+		// Para debuguear cargamos instrumento "piano" con los sonidos de prueba
+		Piano=new Instrument("Piano",(byte)1,0);
 		
 		this.mTexture = new BitmapTextureAtlas(512, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 		this.mFaceTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "gfx/Botones/R-U S-D.png", 0, 0);
@@ -143,7 +150,25 @@ public class MenuScene extends Scene implements IScrollDetectorListener, IOnScen
 				MainActivity.getInstance().getSceneManager().setFreePlay(CAMERA_WIDTH, CAMERA_HEIGHT);
 				break;
 			case 3:
-				MainActivity.getInstance().getSceneManager().setRecordScene(CAMERA_WIDTH, CAMERA_HEIGHT);
+				//debug piano
+				try {
+					Piano.getNotes()[69].getSamples()[0].setVolume(1.0f);
+					Piano.getNotes()[69].getSamples()[0].play();
+					Thread.sleep(500);
+					Piano.getNotes()[69].getSamples()[0].setVolume(0.8f);
+					Thread.sleep(500);
+					Piano.getNotes()[69].getSamples()[0].setVolume(0.6f);
+					Thread.sleep(500);
+					Piano.getNotes()[69].getSamples()[0].setVolume(0.4f);
+					Thread.sleep(500);
+					Piano.getNotes()[69].getSamples()[0].setVolume(0.2f);
+					Thread.sleep(500);
+					Piano.getNotes()[69].getSamples()[0].setVolume(0.0f);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				//MainActivity.getInstance().getSceneManager().setRecordScene(CAMERA_WIDTH, CAMERA_HEIGHT);
 				break;
 		}
 	}

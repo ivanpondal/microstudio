@@ -1,5 +1,7 @@
 package com.ppp.audio;
 
+import android.util.Log;
+
 import com.ppp.midi.MIDIMessage;
 
 public class Instrument {
