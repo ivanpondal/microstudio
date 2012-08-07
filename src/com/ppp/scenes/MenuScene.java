@@ -16,7 +16,6 @@ import org.anddev.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.anddev.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegionFactory;
 import org.anddev.andengine.opengl.texture.region.TextureRegion;
 
-import com.ppp.audio.AudioMath;
 import com.ppp.audio.Instrument;
 import com.ppp.main.MainActivity;
 
@@ -154,16 +153,11 @@ public class MenuScene extends Scene implements IScrollDetectorListener, IOnScen
 				try {
 					Piano.getNotes()[69].getSamples()[0].setVolume(1.0f);
 					Piano.getNotes()[69].getSamples()[0].play();
-					Thread.sleep(500);
-					Piano.getNotes()[69].getSamples()[0].setVolume(0.8f);
-					Thread.sleep(500);
-					Piano.getNotes()[69].getSamples()[0].setVolume(0.6f);
-					Thread.sleep(500);
-					Piano.getNotes()[69].getSamples()[0].setVolume(0.4f);
-					Thread.sleep(500);
-					Piano.getNotes()[69].getSamples()[0].setVolume(0.2f);
-					Thread.sleep(500);
-					Piano.getNotes()[69].getSamples()[0].setVolume(0.0f);
+					for(float i=1.0f;i>0;i=i-0.1f)
+					{
+						Piano.getNotes()[69].getSamples()[0].setVolume(i);
+						Thread.sleep(500);
+					}
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

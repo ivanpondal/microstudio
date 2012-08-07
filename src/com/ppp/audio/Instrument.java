@@ -111,7 +111,7 @@ public class Instrument {
 	{
 		if(dat_notes[note].getEnabled())
 		{
-			dat_notes[note].stopNote(velocity, val_left_vol, val_right_vol);
+			dat_notes[note].stopNote(velocity, val_left_vol, val_right_vol, val_decay);
 		}
 	}
 	

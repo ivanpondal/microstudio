@@ -131,7 +131,7 @@ public class Note {
 		this.dat_samples[sample].play();
 	}
 	
-	public void stopNote(byte v, float l, float r)
+	public void stopNote(byte v, float l, float r, long d)
 	{
 		float samplerange,left,right;
 		byte sample;
@@ -145,3 +145,4 @@ public class Note {
 	}
 	
 }
+
