@@ -128,7 +128,7 @@ public class Note {
 		sample--;
 		left=1.0f*l;
 		right=1.0f*r;
-		this.dat_samples[sample].setVolume(left, right);
+		this.dat_samples[sample].setVolume(right, left);
 		this.dat_samples[sample].play();
 	}
 	

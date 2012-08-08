@@ -16,8 +16,6 @@ import org.anddev.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.anddev.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegionFactory;
 import org.anddev.andengine.opengl.texture.region.TextureRegion;
 
-import com.ppp.audio.Instrument;
-import com.ppp.midi.MIDIMessage;
 import com.ppp.main.MainActivity;
 
 public class MenuScene extends Scene implements IScrollDetectorListener, IOnSceneTouchListener  {
@@ -36,15 +34,11 @@ public class MenuScene extends Scene implements IScrollDetectorListener, IOnScen
 	private Sprite ball;
 	private Sprite ball3;
 	
-	private Instrument Piano;
 	
 	public MenuScene(int w, int h) {
 		
 		CAMERA_WIDTH = w;
 		CAMERA_HEIGHT = h;
-		
-		// Para debuguear cargamos instrumento "piano" con los sonidos de prueba
-		Piano=new Instrument("Piano",(byte)1,100);
 		
 		this.mTexture = new BitmapTextureAtlas(512, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 		this.mFaceTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "gfx/Botones/R-U S-D.png", 0, 0);
@@ -150,42 +144,7 @@ public class MenuScene extends Scene implements IScrollDetectorListener, IOnScen
 				MainActivity.getInstance().getSceneManager().setFreePlay(CAMERA_WIDTH, CAMERA_HEIGHT);
 				break;
 			case 3:
-			try {
-				Piano.setVolume(1.0f,1.0f);
-				MIDIMessage la=new MIDIMessage((byte)0x90,(byte)0x00,(byte)69,(byte)127);
-				MIDIMessage sol=new MIDIMessage((byte)0x90,(byte)0x00,(byte)0,(byte)127);
-				Piano.processMIDI(la);
-				Thread.sleep(500);
-				Piano.processMIDI(sol);
-				Thread.sleep(1500);
-				la.setFunction((byte)0x80);
-				Piano.processMIDI(la);
-				Thread.sleep(1000);
-
-				Piano.setVolume(1.0f,0.0f);
-				la.setFunction((byte)0x90);
-				Piano.processMIDI(la);
-				Thread.sleep(2000);
-
-				la.setFunction((byte)0x80);
-				Piano.processMIDI(la);
-				Thread.sleep(1000);
-				
-				Piano.setVolume(0.0f,1.0f);
-				la.setFunction((byte)0x90);
-				Piano.processMIDI(la);
-				Thread.sleep(2000);
-				
-				la.setFunction((byte)0x80);
-				Piano.processMIDI(la);
-				Thread.sleep(1000);
-
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-				
-				//MainActivity.getInstance().getSceneManager().setRecordScene(CAMERA_WIDTH, CAMERA_HEIGHT);
+				MainActivity.getInstance().getSceneManager().setRecordScene(CAMERA_WIDTH, CAMERA_HEIGHT);
 				break;
 		}
 	}
