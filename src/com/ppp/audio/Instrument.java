@@ -46,6 +46,12 @@ public class Instrument {
 		this.val_right_vol=r;
 	}
 	
+	public void setVolume(float l, float r)
+	{
+		this.val_left_vol=l;
+		this.val_right_vol=r;
+	}
+	
 	public void setSamples(byte s)
 	{
 		this.val_samples=s;
@@ -111,7 +117,7 @@ public class Instrument {
 	{
 		if(dat_notes[note].getEnabled())
 		{
-			dat_notes[note].stopNote(velocity, val_left_vol, val_right_vol, val_decay);
+			dat_notes[note].stopNote(velocity, val_decay);
 		}
 	}
 	

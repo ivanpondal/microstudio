@@ -17,6 +17,7 @@ import org.anddev.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextur
 import org.anddev.andengine.opengl.texture.region.TextureRegion;
 
 import com.ppp.audio.Instrument;
+import com.ppp.midi.MIDIMessage;
 import com.ppp.main.MainActivity;
 
 public class MenuScene extends Scene implements IScrollDetectorListener, IOnSceneTouchListener  {
@@ -43,7 +44,7 @@ public class MenuScene extends Scene implements IScrollDetectorListener, IOnScen
 		CAMERA_HEIGHT = h;
 		
 		// Para debuguear cargamos instrumento "piano" con los sonidos de prueba
-		Piano=new Instrument("Piano",(byte)1,0);
+		Piano=new Instrument("Piano",(byte)1,100);
 		
 		this.mTexture = new BitmapTextureAtlas(512, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 		this.mFaceTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "gfx/Botones/R-U S-D.png", 0, 0);
@@ -149,19 +150,33 @@ public class MenuScene extends Scene implements IScrollDetectorListener, IOnScen
 				MainActivity.getInstance().getSceneManager().setFreePlay(CAMERA_WIDTH, CAMERA_HEIGHT);
 				break;
 			case 3:
-				//debug piano
-				try {
-					Piano.getNotes()[69].getSamples()[0].setVolume(1.0f);
-					Piano.getNotes()[69].getSamples()[0].play();
-					for(float i=1.0f;i>0;i=i-0.1f)
-					{
-						Piano.getNotes()[69].getSamples()[0].setVolume(i);
-						Thread.sleep(500);
-					}
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+			try {
+				Piano.setVolume(1.0f,1.0f);
+				//genero paquete midi
+				MIDIMessage delay=new MIDIMessage((byte)0x90,(byte)0x00,(byte)69,(byte)127);
+				//se lo mando al instrumento
+				Piano.processMIDI(delay);
+				Thread.sleep(2000);
+				//despues de esperar 2s cambio el paquete midi
+				delay.setFunction((byte)0x80);
+				//se lo mando al instrumento
+				Piano.processMIDI(delay);
+				Thread.sleep(1000);
+				//despues de esperar cambio el volumen del instrumento
+				Piano.setVolume(1.0f,0.5f);
+				//cambio el paquete midi
+				delay.setFunction((byte)0x90);
+				//se lo envio al instrumento
+				Piano.processMIDI(delay);
+				Thread.sleep(2000);
+				//nuevamente cambio y vuelvo a mandarlo al instrumento
+				delay.setFunction((byte)0x80);
+				Piano.processMIDI(delay);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+				
 				//MainActivity.getInstance().getSceneManager().setRecordScene(CAMERA_WIDTH, CAMERA_HEIGHT);
 				break;
 		}

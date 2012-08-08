@@ -6,6 +6,7 @@ import org.anddev.andengine.audio.sound.*;
 import com.ppp.main.MainActivity;
 
 import android.content.res.AssetManager;
+import android.util.Log;
 
 public class Note {
 	private String str_name;
@@ -125,23 +126,28 @@ public class Note {
 		samplerange=(float)Math.ceil(128/(float)dat_samples.length);
 		sample=(byte)Math.ceil(v/samplerange);
 		sample--;
-		left=this.dat_samples[sample].getLeftVolume()*l;
-		right=this.dat_samples[sample].getRightVolume()*r;
+		left=1.0f*l;
+		right=1.0f*r;
 		this.dat_samples[sample].setVolume(left, right);
 		this.dat_samples[sample].play();
 	}
 	
-	public void stopNote(byte v, float l, float r, long d)
+	public void stopNote(byte v, long d)
 	{
-		float samplerange,left,right;
+		float samplerange;
 		byte sample;
 		samplerange=(float)Math.ceil(128/(float)dat_samples.length);
 		sample=(byte)Math.ceil(v/samplerange);
 		sample--;
-		left=this.dat_samples[sample].getLeftVolume()*l;
-		right=this.dat_samples[sample].getRightVolume()*r;
-		this.dat_samples[sample].setVolume(left, right);
-		this.dat_samples[sample].stop();
+		if(d==0)
+		{
+			this.dat_samples[sample].stop();
+		}
+		else
+		{
+			VolumeDecay decay=new VolumeDecay(d,this.dat_samples[sample]);
+			decay.start();
+		}
 	}
 	
 }
