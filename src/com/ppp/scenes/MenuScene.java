@@ -152,26 +152,34 @@ public class MenuScene extends Scene implements IScrollDetectorListener, IOnScen
 			case 3:
 			try {
 				Piano.setVolume(1.0f,1.0f);
-				//genero paquete midi
-				MIDIMessage delay=new MIDIMessage((byte)0x90,(byte)0x00,(byte)69,(byte)127);
-				//se lo mando al instrumento
-				Piano.processMIDI(delay);
-				Thread.sleep(2000);
-				//despues de esperar 2s cambio el paquete midi
-				delay.setFunction((byte)0x80);
-				//se lo mando al instrumento
-				Piano.processMIDI(delay);
+				MIDIMessage la=new MIDIMessage((byte)0x90,(byte)0x00,(byte)69,(byte)127);
+				MIDIMessage sol=new MIDIMessage((byte)0x90,(byte)0x00,(byte)0,(byte)127);
+				Piano.processMIDI(la);
 				Thread.sleep(1000);
-				//despues de esperar cambio el volumen del instrumento
-				Piano.setVolume(1.0f,0.5f);
-				//cambio el paquete midi
-				delay.setFunction((byte)0x90);
-				//se lo envio al instrumento
-				Piano.processMIDI(delay);
+				Piano.processMIDI(sol);
+				
+				la.setFunction((byte)0x80);
+				Piano.processMIDI(la);
+				Thread.sleep(1000);
+
+				Piano.setVolume(1.0f,0.0f);
+				la.setFunction((byte)0x90);
+				Piano.processMIDI(la);
 				Thread.sleep(2000);
-				//nuevamente cambio y vuelvo a mandarlo al instrumento
-				delay.setFunction((byte)0x80);
-				Piano.processMIDI(delay);
+
+				la.setFunction((byte)0x80);
+				Piano.processMIDI(la);
+				Thread.sleep(1000);
+				
+				Piano.setVolume(0.0f,1.0f);
+				la.setFunction((byte)0x90);
+				Piano.processMIDI(la);
+				Thread.sleep(2000);
+				
+				la.setFunction((byte)0x80);
+				Piano.processMIDI(la);
+				Thread.sleep(1000);
+
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
