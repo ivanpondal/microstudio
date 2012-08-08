@@ -155,9 +155,9 @@ public class MenuScene extends Scene implements IScrollDetectorListener, IOnScen
 				MIDIMessage la=new MIDIMessage((byte)0x90,(byte)0x00,(byte)69,(byte)127);
 				MIDIMessage sol=new MIDIMessage((byte)0x90,(byte)0x00,(byte)0,(byte)127);
 				Piano.processMIDI(la);
-				Thread.sleep(1000);
+				Thread.sleep(500);
 				Piano.processMIDI(sol);
-				
+				Thread.sleep(1500);
 				la.setFunction((byte)0x80);
 				Piano.processMIDI(la);
 				Thread.sleep(1000);
