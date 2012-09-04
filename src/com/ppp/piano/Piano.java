@@ -67,11 +67,12 @@ public class Piano extends Entity {
 					if (calcNegras%2 == 0 && calcNegras != 0 && calcNegras != 6 && calcNegras != 14){
 						teclaX = 2*(calcNegras/2);
 						Log.d("LULULULULLU","" + teclaX);
-						teclas[teclaX].setTecla(true);
-						
+						//teclas[teclaX].setTecla(true);
+						Log.d("GAY","");
 					}
 				}else{
-					teclas[teclaX].setTecla(true);
+					
+					//teclas[teclaX].setTecla(true);
 				}
 				
 				
@@ -80,6 +81,7 @@ public class Piano extends Entity {
                         //keyPressed(teclaX , false);
                         //Log.d("Pressed","Tecla: " + (teclaX + 1));
                     	//teclas[teclaX].setVieja(teclaX);
+                    	teclas[teclaX].setTecla(true);
                     	keyPressed();
                         break;
                         
@@ -98,6 +100,9 @@ public class Piano extends Entity {
                     	
                     	teclas[teclaX].setTecla(true);
                     	keyPressed();
+                    	for (int i = 0; i < 8; i++){
+                    		zs
+                    	}
                     	
                     	//if (teclaX != teclas[teclaX].getVieja()){
                     	//	teclas[teclaX].setVieja(teclaX);
@@ -196,9 +201,13 @@ public class Piano extends Entity {
 			
 		}
 		
-		for (int t = 0; t<8; t++){
+		for (int t = 1; t<8; t++){
 			int vieja = teclas[t].getVieja();
-			teclas[vieja].setTecla(false);
+			boolean viejaStatus = teclas[t].getTecla();
+			if (vieja == t){
+				teclas[vieja].setTecla(false);
+			}
+			
 			
 		}
 		/*if (s<0){

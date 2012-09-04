@@ -69,7 +69,7 @@ public class FreePlay extends Scene {
         this.attachChild(back);
         this.registerTouchArea(back);
         
-        //this.setTouchAreaBindingEnabled(true);
+        this.setTouchAreaBindingEnabled(false);
         
 		this.mPiano = new Piano(this, CAMERA_WIDTH, CAMERA_HEIGHT);
 		this.attachChild(this.mPiano);

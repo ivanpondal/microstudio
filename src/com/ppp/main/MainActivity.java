@@ -47,17 +47,17 @@ public class MainActivity extends BaseGameActivity {
 		this.mCamera.setBoundsEnabled(true);
 		this.mSceneManager = new SceneManager();
 		final Engine mEngine = new Engine(new EngineOptions(true,ScreenOrientation.LANDSCAPE , new RatioResolutionPolicy(CAMERA_HEIGHT,CAMERA_WIDTH ), mCamera).setNeedsSound(true).setNeedsMusic(true));
-		/*
+		
 		try {
 			if (MultiTouch.isSupported(this)) {
 				mEngine.setTouchController(new MultiTouchController());
 			} else {
-			    Toast.makeText(this,"Sorry your device does NOT support MultiTouch!\n\n(Falling back to SingleTouch.)",Toast.LENGTH_LONG).show();
+			    //Toast.makeText(this,"Sorry your device does NOT support MultiTouch!\n\n(Falling back to SingleTouch.)",Toast.LENGTH_LONG).show();
 			}
 		} catch (final MultiTouchException e) {
-			Toast.makeText(this,"Sorry your Android Version does NOT support MultiTouch!\n\n(Falling back to SingleTouch.)",Toast.LENGTH_LONG).show();
+			//Toast.makeText(this,"Sorry your Android Version does NOT support MultiTouch!\n\n(Falling back to SingleTouch.)",Toast.LENGTH_LONG).show();
 		}
-		*/
+		
 		return mEngine;
 	}
 	

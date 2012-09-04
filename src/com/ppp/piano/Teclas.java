@@ -11,6 +11,7 @@ public class Teclas {
 	}
 	public void setTecla(boolean p){
 		presionada = p;
+		
 	}
 	public void setVieja(int t){
 		teclasXvieja = t;
