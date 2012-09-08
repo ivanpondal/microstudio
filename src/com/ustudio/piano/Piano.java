@@ -1,4 +1,4 @@
-package com.ppp.piano;
+package com.ustudio.piano;
 
 
 import org.anddev.andengine.entity.Entity;
@@ -14,7 +14,7 @@ import org.anddev.andengine.opengl.texture.region.TextureRegion;
 
 import android.util.Log;
 
-import com.ppp.main.MainActivity;
+import com.ustudio.main.MainActivity;
 
 public class Piano extends Entity {
 	
@@ -101,7 +101,7 @@ public class Piano extends Entity {
                     	teclas[teclaX].setTecla(true);
                     	keyPressed();
                     	for (int i = 0; i < 8; i++){
-                    		zs
+                    		
                     	}
                     	
                     	//if (teclaX != teclas[teclaX].getVieja()){

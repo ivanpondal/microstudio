@@ -1,8 +1,8 @@
-package com.ppp.audio;
+package com.ustudio.audio;
 
 import android.util.Log;
 
-import com.ppp.midi.MIDIMessage;
+import com.ustudio.midi.MIDIMessage;
 
 public class Instrument {
 	private Note[] dat_notes;

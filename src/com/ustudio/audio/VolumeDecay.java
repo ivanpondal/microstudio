@@ -1,4 +1,4 @@
-package com.ppp.audio;
+package com.ustudio.audio;
 import org.anddev.andengine.audio.sound.*;
 
 import android.util.Log;

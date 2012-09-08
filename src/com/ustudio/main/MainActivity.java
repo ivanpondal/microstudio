@@ -1,4 +1,4 @@
-package com.ppp.main;
+package com.ustudio.main;
 
 import org.anddev.andengine.engine.Engine;
 import org.anddev.andengine.engine.camera.ZoomCamera;
@@ -15,8 +15,8 @@ import org.anddev.andengine.ui.activity.BaseGameActivity;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.ppp.managers.SceneManager;
-import com.ppp.audio.*;
+import com.ustudio.audio.*;
+import com.ustudio.managers.SceneManager;
 
 public class MainActivity extends BaseGameActivity {
 	

@@ -1,4 +1,4 @@
-package com.ppp.midi;
+package com.ustudio.midi;
 
 public class MIDIMessage {
 	private byte sta_function;//4 higher bits

@@ -1,9 +1,9 @@
-package com.ppp.audio;
+package com.ustudio.audio;
 import java.io.IOException;
 
 import org.anddev.andengine.audio.sound.*;
 
-import com.ppp.main.MainActivity;
+import com.ustudio.main.MainActivity;
 
 import android.content.res.AssetManager;
 import android.util.Log;

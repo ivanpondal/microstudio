@@ -1,4 +1,4 @@
-package com.ppp.scenes;
+package com.ustudio.scenes;
 
 
 import org.anddev.andengine.entity.scene.Scene;
@@ -11,7 +11,7 @@ import org.anddev.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.anddev.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegionFactory;
 import org.anddev.andengine.opengl.texture.region.TextureRegion;
 
-import com.ppp.main.MainActivity;
+import com.ustudio.main.MainActivity;
 
 public class PutoScene extends Scene {
 

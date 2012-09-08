@@ -1,4 +1,4 @@
-package com.ppp.scenes;
+package com.ustudio.scenes;
 
 
 import org.anddev.andengine.entity.scene.Scene;
@@ -11,30 +11,39 @@ import org.anddev.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.anddev.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegionFactory;
 import org.anddev.andengine.opengl.texture.region.TextureRegion;
 
-import com.ppp.main.MainActivity;
+import android.util.Log;
 
-public class RecordScene extends Scene {
+import com.ustudio.main.MainActivity;
+import com.ustudio.piano.Piano;
+
+public class FreePlay extends Scene {
 
 	static int CAMERA_WIDTH;
 	static int CAMERA_HEIGHT;
 
+
 	private Texture mTexture;
 	private TextureRegion mFaceTextureRegion;
 	private Sprite back;
+	private Piano mPiano;
 	
 	
-	public RecordScene(int w ,int h) {
+	
+	public FreePlay(int w, int h) {
+		
 
+		Log.d("DISPLAY","w: " + w + " h: " + h);
 		CAMERA_WIDTH = w;
 		CAMERA_HEIGHT = h;
+	
 		//this.mMainActivity = pMainActivity;
-        this.setBackground(new ColorBackground(0, 0, 0.8784f));
+        this.setBackground(new ColorBackground(0, 0.8784f, 0));
         
         this.mTexture = new BitmapTextureAtlas(512, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
-		this.mFaceTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "gfx/R-U R-D.png", 0, 0);
+		this.mFaceTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "gfx/Botones/R-U R-D.png", 0, 0);
 		MainActivity.getInstance().getEngine().getTextureManager().loadTexture(this.mTexture);
 		
-		final int centerX = (10);
+		final int centerX = (600);
         final int centerY = (10);
        
         back = new Sprite(centerX, centerY, this.mFaceTextureRegion){
@@ -54,15 +63,19 @@ public class RecordScene extends Scene {
                 
                         return true;
             }
-        	
         };
-        
-        back.setWidth(780);
+        back.setWidth(100);
         back.setHeight(75);
         this.attachChild(back);
         this.registerTouchArea(back);
         
+        this.setTouchAreaBindingEnabled(false);
+        
+		this.mPiano = new Piano(this, CAMERA_WIDTH, CAMERA_HEIGHT);
+		this.attachChild(this.mPiano);
+        
 	}
+
 	public void menuItemPressed(int id){
 		
 		MainActivity.getInstance().getSceneManager().setMenuScene(CAMERA_WIDTH, CAMERA_HEIGHT);

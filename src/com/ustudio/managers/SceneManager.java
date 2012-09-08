@@ -1,13 +1,13 @@
-package com.ppp.managers;
+package com.ustudio.managers;
 
 
 import org.anddev.andengine.entity.scene.Scene;
 
-import com.ppp.main.MainActivity;
-import com.ppp.scenes.FreePlay;
-import com.ppp.scenes.MenuScene;
-import com.ppp.scenes.PutoScene;
-import com.ppp.scenes.RecordScene;
+import com.ustudio.main.MainActivity;
+import com.ustudio.scenes.FreePlay;
+import com.ustudio.scenes.MenuScene;
+import com.ustudio.scenes.PutoScene;
+import com.ustudio.scenes.RecordScene;
 
 public class SceneManager {
 

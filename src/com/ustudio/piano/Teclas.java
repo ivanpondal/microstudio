@@ -1,4 +1,4 @@
-package com.ppp.piano;
+package com.ustudio.piano;
 
 public class Teclas {
 	
