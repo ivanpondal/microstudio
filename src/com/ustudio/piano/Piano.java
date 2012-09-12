@@ -24,6 +24,7 @@ public class Piano extends Entity {
 	static Scene scene;
 	
 	private Entity blancas;
+	private Entity blancasp;
 	private Entity negras;
 	private Entity negrasp;
 	private Texture mTexture;
@@ -37,11 +38,11 @@ public class Piano extends Entity {
 	
 
 	
-	public Piano(Scene pScine, int w, int h) {
+	public Piano(Scene pScene, int w, int h) {
 		
 		CAMERA_WIDTH = w;
 		CAMERA_HEIGHT = h;
-		scene = pScine;
+		scene = pScene;
 		
 		teclasA = new boolean[16];
 		for (int i = 0; i<16; i++){
@@ -57,39 +58,47 @@ public class Piano extends Entity {
 		this.mFTR_BP = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "gfx/Teclas/Blancas/BP.png", 0,500);
 		this.mFTR_NN = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "gfx/Teclas/Negras/NN.png", 99, 0);
 		this.mFTR_NP = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "gfx/Teclas/Negras/NP.png", 99,500);
+
 		MainActivity.getInstance().getEngine().getTextureManager().loadTexture(this.mTexture);
 		
 		Sprite touchControl = new Sprite(0,CAMERA_HEIGHT*0.2f,mFTR_NP){
 			public boolean onAreaTouched(final TouchEvent pAreaTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
-				int calcNegras = (int)(pTouchAreaLocalX + (CAMERA_WIDTH/32))/(CAMERA_WIDTH/16);
-				int teclaX = ((int)pTouchAreaLocalX/(CAMERA_WIDTH/8));
-				if (pTouchAreaLocalY <= CAMERA_HEIGHT*0.5f){
-					if (calcNegras%2 == 0 && calcNegras != 0 && calcNegras != 6 && calcNegras != 14){
-						teclaX = 2*(calcNegras/2);
-						Log.d("LULULULULLU","" + teclaX);
-						//teclas[teclaX].setTecla(true);
-						Log.d("GAY","");
-					}
+				int widthBlanca = CAMERA_WIDTH/8;
+				int posBlanca = (int)(pTouchAreaLocalX/widthBlanca);
+				int widthNegra = CAMERA_WIDTH/16;
+				int espacioNegra = CAMERA_WIDTH/32;
+				int posNegra = (int)((pTouchAreaLocalX+espacioNegra)/widthNegra);
+				int BOrW = (int)(CAMERA_HEIGHT*0.5f);
+				int posSel=0;
+				if (pTouchAreaLocalY <= BOrW){
+						if(posNegra%2==0 && posNegra!=0 && posNegra!=6 && posNegra!=14)
+						{
+							posSel = posNegra+100;
+						}
+						else
+						{
+							posSel = posBlanca;
+						}
 				}else{
-					
+					posSel=posBlanca;
 					//teclas[teclaX].setTecla(true);
 				}
 				
-				
 				switch(pAreaTouchEvent.getAction()) {
                     case TouchEvent.ACTION_DOWN: 
-                        //keyPressed(teclaX , false);
+                        Log.d("Piano", posSel+"");
+                    	//keyPressed(teclaX , false);
                         //Log.d("Pressed","Tecla: " + (teclaX + 1));
                     	//teclas[teclaX].setVieja(teclaX);
-                    	teclas[teclaX].setTecla(true);
-                    	keyPressed();
+                    	//teclas[posSel].setTecla(true);
+                    	//keyPressed();
                         break;
                         
                     case TouchEvent.ACTION_UP: 
-                    	teclas[teclaX].setTecla(false);
+                    	//teclas[posSel].setTecla(false);
                     	//keyPressed(teclaX , true);
                     	//Log.d("Relesed","Tecla: " + (teclaX + 1));
-                    	keyPressed();
+                    	//keyPressed();
                         break;
                         
                     case TouchEvent.ACTION_MOVE:
@@ -98,11 +107,11 @@ public class Piano extends Entity {
                     	//teclas[teclas[teclaX].getVieja()].setTecla(false);
                     	//keyPressed();
                     	
-                    	teclas[teclaX].setTecla(true);
-                    	keyPressed();
-                    	for (int i = 0; i < 8; i++){
+                    	//teclas[posSel].setTecla(true);
+                    	//keyPressed();
+                    	//for (int i = 0; i < 8; i++){
                     		
-                    	}
+                    	//}
                     	
                     	//if (teclaX != teclas[teclaX].getVieja()){
                     	//	teclas[teclaX].setVieja(teclaX);
@@ -125,7 +134,7 @@ public class Piano extends Entity {
 		touchControl.setHeight(CAMERA_HEIGHT*0.8f);
 		touchControl.setWidth(CAMERA_WIDTH);
 		this.attachChild(touchControl);
-		pScine.registerTouchArea(touchControl);
+		pScene.registerTouchArea(touchControl);
 		
 		
 		//Negras------------------------------------
@@ -138,45 +147,34 @@ public class Piano extends Entity {
 		        np.setHeight(CAMERA_HEIGHT*0.5f);
 				negrasp.attachChild(np);
 				//np.setChildIndex(negras, (int)(i));
-				Sprite n = new Sprite(CAMERA_WIDTH/16 + CAMERA_WIDTH/32 + i*(CAMERA_WIDTH/16 + CAMERA_WIDTH/16),CAMERA_HEIGHT*0.2f,this.mFTR_NN){
-					
-				};
-				
+				Sprite n = new Sprite(CAMERA_WIDTH/16 + CAMERA_WIDTH/32 + i*(CAMERA_WIDTH/16 + CAMERA_WIDTH/16),CAMERA_HEIGHT*0.2f,this.mFTR_NN);		
 				n.setChildIndex(negras, (int)(i));
-				Log.d("LALALALALALA","" + (i+7));
 				n.setUserData(i+10);
 				n.setWidth(CAMERA_WIDTH/16);
 		        n.setHeight(CAMERA_HEIGHT*0.5f);
 				negras.attachChild(n);
-				pScine.registerTouchArea(n);
 			}
 		}
 		
-		
 		//Blancas-------------------------------------------
-		
 		blancas = new Entity();
+		blancasp = new Entity();
 		for (int i = 0; i < 8; i++){
-			
 			Sprite bp = new Sprite(i*(CAMERA_WIDTH/8),CAMERA_HEIGHT*0.2f,this.mFTR_BP);
 			bp.setWidth(CAMERA_WIDTH/8);
-	        bp.setHeight(CAMERA_HEIGHT*0.8f);
-			this.attachChild(bp);
-			
-			
-			
+			bp.setHeight(CAMERA_HEIGHT*0.8f);
+			blancasp.attachChild(bp);
+	
 			Sprite b = new Sprite(i*(CAMERA_WIDTH/8),CAMERA_HEIGHT*0.2f,this.mFTR_BN){
-				
+
 			};
 			b.setChildIndex(blancas, i);
 			b.setUserData(i);
 			b.setWidth(CAMERA_WIDTH/8);
 	        b.setHeight(CAMERA_HEIGHT*0.8f);
-			blancas.attachChild(b);
-			pScine.registerTouchArea(b);
-			
-			
+			blancas.attachChild(b);		
 		}
+		this.attachChild(blancasp);
 		this.attachChild(blancas);
 		this.attachChild(negrasp);
 		this.attachChild(negras);
