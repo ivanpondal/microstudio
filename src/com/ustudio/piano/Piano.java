@@ -27,10 +27,10 @@ public class Piano extends Entity {
 	private Entity negras;
 	private Entity negrasp;
 	private Texture mTexture;
-	private TextureRegion mFaceTextureRegion;
-	private TextureRegion mFaceTextureRegion2;
-	private TextureRegion mFaceTextureRegion3;
-	private TextureRegion mFaceTextureRegion4;
+	private TextureRegion mFTR_BN;
+	private TextureRegion mFTR_BP;
+	private TextureRegion mFTR_NN;
+	private TextureRegion mFTR_NP;
 	private int teclaXVieja;
 	private boolean teclasA[];
 	private Teclas teclas[];
@@ -53,13 +53,13 @@ public class Piano extends Entity {
 			teclas[i] = new Teclas(i);
 		}
 		this.mTexture = new BitmapTextureAtlas(256, 1024, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
-		this.mFaceTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "gfx/Teclas/Blancas/NB.png", 0, 0);
-		this.mFaceTextureRegion2 = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "gfx/Teclas/Negras/NN.png", 99, 0);
-		this.mFaceTextureRegion3 = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "gfx/Teclas/Blancas/PB.png", 0,500);
-		this.mFaceTextureRegion4 = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "gfx/Teclas/Negras/NP.png", 99,500);
+		this.mFTR_BN = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "gfx/Teclas/Blancas/BN.png", 0, 0);
+		this.mFTR_BP = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "gfx/Teclas/Blancas/BP.png", 0,500);
+		this.mFTR_NN = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "gfx/Teclas/Negras/NN.png", 99, 0);
+		this.mFTR_NP = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "gfx/Teclas/Negras/NP.png", 99,500);
 		MainActivity.getInstance().getEngine().getTextureManager().loadTexture(this.mTexture);
 		
-		Sprite touchControl = new Sprite(0,CAMERA_HEIGHT*0.2f,mFaceTextureRegion4){
+		Sprite touchControl = new Sprite(0,CAMERA_HEIGHT*0.2f,mFTR_NP){
 			public boolean onAreaTouched(final TouchEvent pAreaTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
 				int calcNegras = (int)(pTouchAreaLocalX + (CAMERA_WIDTH/32))/(CAMERA_WIDTH/16);
 				int teclaX = ((int)pTouchAreaLocalX/(CAMERA_WIDTH/8));
@@ -133,12 +133,12 @@ public class Piano extends Entity {
 		negrasp = new Entity();
 		for (int i = 0; i < 8; i++){
 			if (i != 2 && i != 6){
-				Sprite np = new Sprite(CAMERA_WIDTH/16 + CAMERA_WIDTH/32 + i*(CAMERA_WIDTH/16 + CAMERA_WIDTH/16),CAMERA_HEIGHT*0.2f,this.mFaceTextureRegion4);
+				Sprite np = new Sprite(CAMERA_WIDTH/16 + CAMERA_WIDTH/32 + i*(CAMERA_WIDTH/16 + CAMERA_WIDTH/16),CAMERA_HEIGHT*0.2f,this.mFTR_NP);
 				np.setWidth(CAMERA_WIDTH/16);
 		        np.setHeight(CAMERA_HEIGHT*0.5f);
 				negrasp.attachChild(np);
 				//np.setChildIndex(negras, (int)(i));
-				Sprite n = new Sprite(CAMERA_WIDTH/16 + CAMERA_WIDTH/32 + i*(CAMERA_WIDTH/16 + CAMERA_WIDTH/16),CAMERA_HEIGHT*0.2f,this.mFaceTextureRegion2){
+				Sprite n = new Sprite(CAMERA_WIDTH/16 + CAMERA_WIDTH/32 + i*(CAMERA_WIDTH/16 + CAMERA_WIDTH/16),CAMERA_HEIGHT*0.2f,this.mFTR_NN){
 					
 				};
 				
@@ -158,14 +158,14 @@ public class Piano extends Entity {
 		blancas = new Entity();
 		for (int i = 0; i < 8; i++){
 			
-			Sprite bp = new Sprite(i*(CAMERA_WIDTH/8),CAMERA_HEIGHT*0.2f,this.mFaceTextureRegion3);
+			Sprite bp = new Sprite(i*(CAMERA_WIDTH/8),CAMERA_HEIGHT*0.2f,this.mFTR_BP);
 			bp.setWidth(CAMERA_WIDTH/8);
 	        bp.setHeight(CAMERA_HEIGHT*0.8f);
 			this.attachChild(bp);
 			
 			
 			
-			Sprite b = new Sprite(i*(CAMERA_WIDTH/8),CAMERA_HEIGHT*0.2f,this.mFaceTextureRegion){
+			Sprite b = new Sprite(i*(CAMERA_WIDTH/8),CAMERA_HEIGHT*0.2f,this.mFTR_BN){
 				
 			};
 			b.setChildIndex(blancas, i);
