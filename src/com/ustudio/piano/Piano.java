@@ -70,7 +70,7 @@ public class Piano extends Entity {
 				int BOrW = (int)(CAMERA_HEIGHT*0.5f);
 				int posSel=0;
 				if (pTouchAreaLocalY <= BOrW){
-						if(posNegra%2==0 && posNegra!=0 && posNegra%14!=0 && posNegra%6!=0 || (posNegra%6==0 && posNegra%4==0 ))
+						if((posNegra%2==0 && posNegra>1) && posNegra%14!=0 && posNegra%6!=0 || (posNegra%6==0 && posNegra%4==0 ))
 						{
 							posSel = posNegra+100;
 						}
@@ -85,6 +85,7 @@ public class Piano extends Entity {
 				
 				switch(pAreaTouchEvent.getAction()) {
                     case TouchEvent.ACTION_DOWN: 
+                    	Log.d("espacio",pTouchAreaLocalX+espacioNegra+"");
                         Log.d("Piano", posSel+"");
                     	//keyPressed(teclaX , false);
                         //Log.d("Pressed","Tecla: " + (teclaX + 1));
@@ -101,7 +102,7 @@ public class Piano extends Entity {
                         break;
                         
                     case TouchEvent.ACTION_MOVE:
-                    	
+                    	Log.d("Piano", posSel+"");
                     	
                     	//teclas[teclas[teclaX].getVieja()].setTecla(false);
                     	//keyPressed();
