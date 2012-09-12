@@ -32,9 +32,8 @@ public class Piano extends Entity {
 	private TextureRegion mFTR_BP;
 	private TextureRegion mFTR_NN;
 	private TextureRegion mFTR_NP;
-	private int teclaXVieja;
 	private boolean teclasA[];
-	private Teclas teclas[];
+	private Tecla teclas[];
 	
 
 	
@@ -49,9 +48,9 @@ public class Piano extends Entity {
 			teclasA[i] = false;
 		}
 		
-		teclas = new Teclas[16];
+		teclas = new Tecla[16];
 		for (int i = 0; i<16; i++){
-			teclas[i] = new Teclas(i);
+			teclas[i] = new Tecla(i);
 		}
 		this.mTexture = new BitmapTextureAtlas(256, 1024, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 		this.mFTR_BN = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "gfx/Teclas/Blancas/BN.png", 0, 0);
@@ -71,7 +70,7 @@ public class Piano extends Entity {
 				int BOrW = (int)(CAMERA_HEIGHT*0.5f);
 				int posSel=0;
 				if (pTouchAreaLocalY <= BOrW){
-						if(posNegra%2==0 && posNegra!=0 && posNegra!=6 && posNegra!=14)
+						if(posNegra%2==0 && posNegra!=0 && posNegra%14!=0 && posNegra%6!=0 || (posNegra%6==0 && posNegra%4==0 ))
 						{
 							posSel = posNegra+100;
 						}
@@ -200,11 +199,11 @@ public class Piano extends Entity {
 		}
 		
 		for (int t = 1; t<8; t++){
-			int vieja = teclas[t].getVieja();
-			boolean viejaStatus = teclas[t].getTecla();
-			if (vieja == t){
-				teclas[vieja].setTecla(false);
-			}
+			//int vieja = teclas[t].getVieja();
+			//boolean viejaStatus = teclas[t].getTecla();
+			//if (vieja == t){
+				//teclas[vieja].setTecla(false);
+			//}
 			
 			
 		}
