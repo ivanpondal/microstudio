@@ -41,8 +41,10 @@ public class Piano extends Entity {
 		
 		CAMERA_WIDTH = w;
 		CAMERA_HEIGHT = h;
+		
 		scene = pScene;
 		
+		/*
 		teclasA = new boolean[16];
 		for (int i = 0; i<16; i++){
 			teclasA[i] = false;
@@ -52,6 +54,10 @@ public class Piano extends Entity {
 		for (int i = 0; i<16; i++){
 			teclas[i] = new Tecla(i);
 		}
+		*/
+		
+		Log.d("Piano","width: "+CAMERA_WIDTH+" height: "+CAMERA_HEIGHT);
+		
 		this.mTexture = new BitmapTextureAtlas(256, 1024, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 		this.mFTR_BN = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "gfx/Teclas/Blancas/BN.png", 0, 0);
 		this.mFTR_BP = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "gfx/Teclas/Blancas/BP.png", 0,500);
@@ -131,7 +137,7 @@ public class Piano extends Entity {
             }
 		};
 		touchControl.setHeight(CAMERA_HEIGHT*0.8f);
-		touchControl.setWidth(CAMERA_WIDTH);
+		touchControl.setWidth(CAMERA_WIDTH*7);
 		this.attachChild(touchControl);
 		pScene.registerTouchArea(touchControl);
 		
@@ -139,14 +145,14 @@ public class Piano extends Entity {
 		//Negras------------------------------------
 		negras = new Entity();
 		negrasp = new Entity();
-		for (int i = 0; i < 8; i++){
-			if (i != 2 && i != 6){
-				Sprite np = new Sprite(CAMERA_WIDTH/16 + CAMERA_WIDTH/32 + i*(CAMERA_WIDTH/16 + CAMERA_WIDTH/16),CAMERA_HEIGHT*0.2f,this.mFTR_NP);
+		for (int i = 0; i < 83; i++){
+			if ((i-2)%7!=0 && (i+1)%7!=0){
+				Sprite np = new Sprite(CAMERA_WIDTH/16 + CAMERA_WIDTH/32 + i*(CAMERA_WIDTH/8),CAMERA_HEIGHT*0.2f,this.mFTR_NP);
 				np.setWidth(CAMERA_WIDTH/16);
 		        np.setHeight(CAMERA_HEIGHT*0.5f);
 				negrasp.attachChild(np);
 				//np.setChildIndex(negras, (int)(i));
-				Sprite n = new Sprite(CAMERA_WIDTH/16 + CAMERA_WIDTH/32 + i*(CAMERA_WIDTH/16 + CAMERA_WIDTH/16),CAMERA_HEIGHT*0.2f,this.mFTR_NN);		
+				Sprite n = new Sprite(CAMERA_WIDTH/16 + CAMERA_WIDTH/32 + i*(CAMERA_WIDTH/8),CAMERA_HEIGHT*0.2f,this.mFTR_NN);		
 				n.setChildIndex(negras, (int)(i));
 				n.setUserData(i+10);
 				n.setWidth(CAMERA_WIDTH/16);
@@ -158,7 +164,7 @@ public class Piano extends Entity {
 		//Blancas-------------------------------------------
 		blancas = new Entity();
 		blancasp = new Entity();
-		for (int i = 0; i < 8; i++){
+		for (int i = 0; i < 83; i++){
 			Sprite bp = new Sprite(i*(CAMERA_WIDTH/8),CAMERA_HEIGHT*0.2f,this.mFTR_BP);
 			bp.setWidth(CAMERA_WIDTH/8);
 			bp.setHeight(CAMERA_HEIGHT*0.8f);
@@ -178,7 +184,9 @@ public class Piano extends Entity {
 		this.attachChild(negrasp);
 		this.attachChild(negras);
 		this.sortChildren();
-		
+		MainActivity.getInstance().getCamera().setBounds(0, CAMERA_WIDTH*7, 0, CAMERA_HEIGHT);
+		MainActivity.getInstance().getCamera().setCenter(MainActivity.getInstance().getCamera().getCenterX()*3-CAMERA_WIDTH/8, MainActivity.getInstance().getCamera().getCenterY());
+		Log.d("Piano",MainActivity.getInstance().getCamera().getCenterX()+" "+MainActivity.getInstance().getCamera().getCenterY());
 	}
 	public int keyCheck(){
 			

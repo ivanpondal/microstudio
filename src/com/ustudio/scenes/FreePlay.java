@@ -32,7 +32,6 @@ public class FreePlay extends Scene {
 	public FreePlay(int w, int h) {
 		
 
-		Log.d("DISPLAY","w: " + w + " h: " + h);
 		CAMERA_WIDTH = w;
 		CAMERA_HEIGHT = h;
 	
