@@ -68,10 +68,10 @@ public class Piano extends Entity {
 		this.mFTR_TP = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "gfx/Teclas/Blancas/BP.png", 0,500);
 		this.mFTR_STN = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "gfx/Teclas/Negras/NN.png", 99, 0);
 		this.mFTR_STP = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "gfx/Teclas/Negras/NP.png", 99,500);
-
+		
 		MainActivity.getInstance().getEngine().getTextureManager().loadTexture(this.mTexture);
 		
-		Sprite touchControl = new Sprite(0,this.getKeyboardY(),mFTR_STP){
+		Sprite touchControl = new Sprite(0,this.getKeyboardY(),this.mFTR_STN){
 			public boolean onAreaTouched(final TouchEvent pAreaTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
 				int MIDInote;
 				
@@ -127,50 +127,17 @@ public class Piano extends Entity {
 		this.attachChild(touchControl);
 		pScene.registerTouchArea(touchControl);
 		
-		
-		//Negras------------------------------------
-		semitones = new Entity();
-		semitonesp = new Entity();
-		for (int i = 0; i < 83; i++){
-			if ((i-2)%7!=0 && (i+1)%7!=0){
-				Sprite np = new Sprite(this.getSTWidth() + this.getSpaceST() + i*this.getTonesWidth(),this.getKeyboardY(),this.mFTR_STP);
-				np.setWidth(this.getSTWidth());
-		        np.setHeight(this.getSTHeight());
-		        semitonesp.attachChild(np);
-				//np.setChildIndex(negras, (int)(i));
-				Sprite n = new Sprite(this.getSTWidth() + this.getSpaceST() + i*this.getTonesWidth(),this.getKeyboardY(),this.mFTR_STN);		
-				n.setChildIndex(semitones, (int)(i));
-				n.setUserData(i+10);
-				n.setWidth(this.getSTWidth());
-		        n.setHeight(this.getSTHeight());
-		        semitones.attachChild(n);
-			}
-		}
-		
-		//Blancas-------------------------------------------
-		tones = new Entity();
-		tonesp = new Entity();
-		for (int i = 0; i < 83; i++){
-			Sprite bp = new Sprite(i*this.getTonesWidth(),this.getKeyboardY(),this.mFTR_TP);
-			bp.setWidth(this.getTonesWidth());
-			bp.setHeight(this.getTonesHeight());
-			tonesp.attachChild(bp);
-	
-			Sprite b = new Sprite(i*this.getTonesWidth(),this.getKeyboardY(),this.mFTR_TN){
+		drawTones();
+		drawST();
 
-			};
-			b.setChildIndex(tones, i);
-			b.setUserData(i);
-			b.setWidth(this.getTonesWidth());
-	        b.setHeight(this.getTonesHeight());
-	        tones.attachChild(b);		
-		}
-		this.attachChild(tonesp);
-		this.attachChild(tones);
-		this.attachChild(semitonesp);
-		this.attachChild(semitones);
+		this.attachChild(this.getTonesP()); 
+		this.attachChild(this.getTones());
+		this.attachChild(this.getSTP());
+		this.attachChild(this.getST());
 		this.sortChildren();
 	}
+	
+	// SET
 	
 	public void setTonesWidth(float w)
 	{
@@ -217,6 +184,29 @@ public class Piano extends Entity {
 		this.heightKeyboard=h;
 	}
 	
+	public void setTones(Entity t)
+	{
+		this.tones=t;
+	}
+	
+	public void setST(Entity st)
+	{
+		this.semitones=st;
+	}
+	
+	public void setTonesP(Entity t)
+	{
+		this.tonesp=t;
+	}
+	
+	public void setSTP(Entity st)
+	{
+		this.semitonesp=st;
+	}
+	
+	
+	//GET
+	
 	public float getTonesWidth()
 	{
 		return this.widthTone;
@@ -261,6 +251,83 @@ public class Piano extends Entity {
 	{
 		return this.heightKeyboard;
 	}
+	
+	public Entity getTones()
+	{
+		return this.tones;
+	}
+	
+	public Entity getTonesP()
+	{
+		return this.tonesp;
+	}
+	
+	public Entity getST()
+	{
+		return this.semitones;
+	}
+	
+	public Entity getSTP()
+	{
+		return this.semitonesp;
+	}
+	
+	
+	//PRIVADAS
+	
+	private void drawTones()
+	{
+		Entity tmp_tones;
+		Entity tmp_tonesp;
+		tmp_tones = new Entity();
+		tmp_tonesp = new Entity();
+		for (int i = 0; i < 83; i++){
+			Sprite tp = new Sprite(i*this.getTonesWidth(),this.getKeyboardY(),this.mFTR_TP);
+			tp.setWidth(this.getTonesWidth());
+			tp.setHeight(this.getTonesHeight());
+			tmp_tonesp.attachChild(tp);
+	
+			Sprite t = new Sprite(i*this.getTonesWidth(),this.getKeyboardY(),this.mFTR_TN){
+
+			};
+			t.setChildIndex(tmp_tones, i);
+			t.setUserData(i);
+			t.setWidth(this.getTonesWidth());
+	        t.setHeight(this.getTonesHeight());
+	        tmp_tones.attachChild(t);		
+		}
+		
+		this.setTonesP(tmp_tonesp);
+		this.setTones(tmp_tones);
+	}
+	
+	private void drawST()
+	{
+		Entity tmp_semitones;
+		Entity tmp_semitonesp;
+		tmp_semitones = new Entity();
+		tmp_semitonesp = new Entity();
+		for (int i = 0; i < 83; i++){
+			if ((i-2)%7!=0 && (i+1)%7!=0){
+				Sprite stp = new Sprite(this.getSTWidth() + this.getSpaceST() + i*this.getTonesWidth(),this.getKeyboardY(),this.mFTR_STP);
+				stp.setWidth(this.getSTWidth());
+		        stp.setHeight(this.getSTHeight());
+		        tmp_semitonesp.attachChild(stp);
+				//np.setChildIndex(negras, (int)(i));
+				Sprite st = new Sprite(this.getSTWidth() + this.getSpaceST() + i*this.getTonesWidth(),this.getKeyboardY(),this.mFTR_STN);		
+				st.setChildIndex(tmp_semitones, i);
+				st.setUserData(i+10);
+				st.setWidth(this.getSTWidth());
+		        st.setHeight(this.getSTHeight());
+		        tmp_semitones.attachChild(st);
+			}
+		}
+		
+		this.setST(tmp_semitones);
+		this.setSTP(tmp_semitonesp);
+	}
+	
+	//PUBLICAS
 	
 	public boolean isTone(float TouchX,float TouchY)
 	{
