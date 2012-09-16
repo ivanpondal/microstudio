@@ -72,6 +72,8 @@ public class FreePlay extends Scene {
         
 		this.mPiano = new Piano(this, CAMERA_WIDTH, CAMERA_HEIGHT);
 		this.attachChild(this.mPiano);
+		this.mPiano.setPosition((CAMERA_WIDTH-CAMERA_WIDTH/8)*-3, 0.0f);
+		Log.d("Piano", "X:"+this.mPiano.getX());
         
 	}
 

@@ -56,8 +56,6 @@ public class Piano extends Entity {
 		}
 		*/
 		
-		Log.d("Piano","width: "+CAMERA_WIDTH+" height: "+CAMERA_HEIGHT);
-		
 		this.mTexture = new BitmapTextureAtlas(256, 1024, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 		this.mFTR_BN = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "gfx/Teclas/Blancas/BN.png", 0, 0);
 		this.mFTR_BP = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "gfx/Teclas/Blancas/BP.png", 0,500);
@@ -73,18 +71,20 @@ public class Piano extends Entity {
 				int widthNegra = CAMERA_WIDTH/16;
 				int espacioNegra = CAMERA_WIDTH/32;
 				int posNegra = (int)((pTouchAreaLocalX+espacioNegra)/widthNegra);
-				int BOrW = (int)(CAMERA_HEIGHT*0.5f);
+				int BorW = (int)(CAMERA_HEIGHT*0.5f);
 				int posSel=0;
-				if (pTouchAreaLocalY <= BOrW){
+				if (pTouchAreaLocalY <= BorW){
 						if(posNegra!=0 && posNegra%2==0 && (posNegra+8)%14!=0 && posNegra%14!=0)
 						{
-							posSel = posNegra+100;
+							posSel = posNegra;
 						}
 						else
 						{
 							posSel = posBlanca;
 						}
-				}else{
+				}
+				else
+				{
 					posSel=posBlanca;
 					//teclas[teclaX].setTecla(true);
 				}
@@ -184,14 +184,40 @@ public class Piano extends Entity {
 		this.attachChild(negrasp);
 		this.attachChild(negras);
 		this.sortChildren();
-		MainActivity.getInstance().getCamera().setBounds(0, CAMERA_WIDTH*7, 0, CAMERA_HEIGHT);
-		MainActivity.getInstance().getCamera().setCenter(MainActivity.getInstance().getCamera().getCenterX()*3-CAMERA_WIDTH/8, MainActivity.getInstance().getCamera().getCenterY());
-		Log.d("Piano",MainActivity.getInstance().getCamera().getCenterX()+" "+MainActivity.getInstance().getCamera().getCenterY());
 	}
+	
+	private boolean isTone(int TouchX,int TouchY)
+	{
+		int widthBlanca = CAMERA_WIDTH/8;
+		int posBlanca = (int)(TouchX/widthBlanca);
+		int widthNegra = CAMERA_WIDTH/16;
+		int espacioNegra = CAMERA_WIDTH/32;
+		int posNegra = (int)((TouchX+espacioNegra)/widthNegra);
+		int BorW = (int)(CAMERA_HEIGHT*0.5f);
+		if (TouchY <= BorW){
+				if(posNegra!=0 && posNegra%2==0 && (posNegra+8)%14!=0 && posNegra%14!=0)
+				{
+					return false;
+				}
+				else
+				{
+					return true;
+				}
+		}
+		return true;
+	}
+	
+	private int KeyPress2Midi(int SelKey,boolean isTone){
+		
+		return 0;
+	}
+	
+	
 	public int keyCheck(){
 			
 		return 0;
 	}
+	
 	public void keyPressed(){//int s, boolean mode){
 	
 		
