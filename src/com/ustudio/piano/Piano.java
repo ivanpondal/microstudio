@@ -23,18 +23,27 @@ public class Piano extends Entity {
 	static int CAMERA_HEIGHT;
 	static Scene scene;
 	
-	private Entity blancas;
-	private Entity blancasp;
-	private Entity negras;
-	private Entity negrasp;
+	private Entity tones;
+	private Entity tonesp;
+	private Entity semitones;
+	private Entity semitonesp;
 	private Texture mTexture;
-	private TextureRegion mFTR_BN;
-	private TextureRegion mFTR_BP;
-	private TextureRegion mFTR_NN;
-	private TextureRegion mFTR_NP;
+	private TextureRegion mFTR_TN;
+	private TextureRegion mFTR_TP;
+	private TextureRegion mFTR_STN;
+	private TextureRegion mFTR_STP;
 	private boolean teclasA[];
 	private Tecla teclas[];
 	
+	private float widthTone;
+	private float heightTone;
+	private float widthSemitone;
+	private float heightSemitone;
+	private float widthSpaceST;
+	private float TorST;
+	private float KeyboardY;
+	private float widthKeyboard;
+	private float heightKeyboard;
 
 	
 	public Piano(Scene pScene, int w, int h) {
@@ -42,56 +51,35 @@ public class Piano extends Entity {
 		CAMERA_WIDTH = w;
 		CAMERA_HEIGHT = h;
 		
+		
 		scene = pScene;
 		
-		/*
-		teclasA = new boolean[16];
-		for (int i = 0; i<16; i++){
-			teclasA[i] = false;
-		}
-		
-		teclas = new Tecla[16];
-		for (int i = 0; i<16; i++){
-			teclas[i] = new Tecla(i);
-		}
-		*/
+		this.setTonesWidth(CAMERA_WIDTH/8);
+		this.setTonesHeight(CAMERA_HEIGHT*0.8f);
+		this.setSTWidth(CAMERA_WIDTH/16);
+		this.setSTHeight(CAMERA_HEIGHT*0.5f);
+		this.setSpaceST(CAMERA_WIDTH/32);
+		this.setTorST(CAMERA_HEIGHT*0.5f);
+		this.setKeyboardHeight(CAMERA_HEIGHT*0.8f);
+		this.setKeyboardWidth(CAMERA_WIDTH);
 		
 		this.mTexture = new BitmapTextureAtlas(256, 1024, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
-		this.mFTR_BN = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "gfx/Teclas/Blancas/BN.png", 0, 0);
-		this.mFTR_BP = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "gfx/Teclas/Blancas/BP.png", 0,500);
-		this.mFTR_NN = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "gfx/Teclas/Negras/NN.png", 99, 0);
-		this.mFTR_NP = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "gfx/Teclas/Negras/NP.png", 99,500);
+		this.mFTR_TN = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "gfx/Teclas/Blancas/BN.png", 0, 0);
+		this.mFTR_TP = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "gfx/Teclas/Blancas/BP.png", 0,500);
+		this.mFTR_STN = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "gfx/Teclas/Negras/NN.png", 99, 0);
+		this.mFTR_STP = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "gfx/Teclas/Negras/NP.png", 99,500);
 
 		MainActivity.getInstance().getEngine().getTextureManager().loadTexture(this.mTexture);
 		
-		Sprite touchControl = new Sprite(0,CAMERA_HEIGHT*0.2f,mFTR_NP){
+		Sprite touchControl = new Sprite(0,this.getKeyboardY(),mFTR_STP){
 			public boolean onAreaTouched(final TouchEvent pAreaTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
-				int widthBlanca = CAMERA_WIDTH/8;
-				int posBlanca = (int)(pTouchAreaLocalX/widthBlanca);
-				int widthNegra = CAMERA_WIDTH/16;
-				int espacioNegra = CAMERA_WIDTH/32;
-				int posNegra = (int)((pTouchAreaLocalX+espacioNegra)/widthNegra);
-				int BorW = (int)(CAMERA_HEIGHT*0.5f);
-				int posSel=0;
-				if (pTouchAreaLocalY <= BorW){
-						if(posNegra!=0 && posNegra%2==0 && (posNegra+8)%14!=0 && posNegra%14!=0)
-						{
-							posSel = posNegra;
-						}
-						else
-						{
-							posSel = posBlanca;
-						}
-				}
-				else
-				{
-					posSel=posBlanca;
-					//teclas[teclaX].setTecla(true);
-				}
+				int MIDInote;
+				
+				MIDInote=Piano.this.SelKey2MIDI(Piano.this.TouchX2SelKey(pTouchAreaLocalX), Piano.this.isTone(pTouchAreaLocalX, pTouchAreaLocalY));
+
 				
 				switch(pAreaTouchEvent.getAction()) {
                     case TouchEvent.ACTION_DOWN: 
-                        Log.d("Piano", posSel+"");
                     	//keyPressed(teclaX , false);
                         //Log.d("Pressed","Tecla: " + (teclaX + 1));
                     	//teclas[teclaX].setVieja(teclaX);
@@ -106,9 +94,7 @@ public class Piano extends Entity {
                     	//keyPressed();
                         break;
                         
-                    case TouchEvent.ACTION_MOVE:
-                    	Log.d("Piano", posSel+"");
-                    	
+                    case TouchEvent.ACTION_MOVE:                    	
                     	//teclas[teclas[teclaX].getVieja()].setTecla(false);
                     	//keyPressed();
                     	
@@ -136,65 +122,150 @@ public class Piano extends Entity {
                 return true;
             }
 		};
-		touchControl.setHeight(CAMERA_HEIGHT*0.8f);
-		touchControl.setWidth(CAMERA_WIDTH*7);
+		touchControl.setHeight(this.getKeyboardHeight());
+		touchControl.setWidth(this.getKeyboardWidth());
 		this.attachChild(touchControl);
 		pScene.registerTouchArea(touchControl);
 		
 		
 		//Negras------------------------------------
-		negras = new Entity();
-		negrasp = new Entity();
+		semitones = new Entity();
+		semitonesp = new Entity();
 		for (int i = 0; i < 83; i++){
 			if ((i-2)%7!=0 && (i+1)%7!=0){
-				Sprite np = new Sprite(CAMERA_WIDTH/16 + CAMERA_WIDTH/32 + i*(CAMERA_WIDTH/8),CAMERA_HEIGHT*0.2f,this.mFTR_NP);
-				np.setWidth(CAMERA_WIDTH/16);
-		        np.setHeight(CAMERA_HEIGHT*0.5f);
-				negrasp.attachChild(np);
+				Sprite np = new Sprite(this.getSTWidth() + this.getSpaceST() + i*this.getTonesWidth(),this.getKeyboardY(),this.mFTR_STP);
+				np.setWidth(this.getSTWidth());
+		        np.setHeight(this.getSTHeight());
+		        semitonesp.attachChild(np);
 				//np.setChildIndex(negras, (int)(i));
-				Sprite n = new Sprite(CAMERA_WIDTH/16 + CAMERA_WIDTH/32 + i*(CAMERA_WIDTH/8),CAMERA_HEIGHT*0.2f,this.mFTR_NN);		
-				n.setChildIndex(negras, (int)(i));
+				Sprite n = new Sprite(this.getSTWidth() + this.getSpaceST() + i*this.getTonesWidth(),this.getKeyboardY(),this.mFTR_STN);		
+				n.setChildIndex(semitones, (int)(i));
 				n.setUserData(i+10);
-				n.setWidth(CAMERA_WIDTH/16);
-		        n.setHeight(CAMERA_HEIGHT*0.5f);
-				negras.attachChild(n);
+				n.setWidth(this.getSTWidth());
+		        n.setHeight(this.getSTHeight());
+		        semitones.attachChild(n);
 			}
 		}
 		
 		//Blancas-------------------------------------------
-		blancas = new Entity();
-		blancasp = new Entity();
+		tones = new Entity();
+		tonesp = new Entity();
 		for (int i = 0; i < 83; i++){
-			Sprite bp = new Sprite(i*(CAMERA_WIDTH/8),CAMERA_HEIGHT*0.2f,this.mFTR_BP);
-			bp.setWidth(CAMERA_WIDTH/8);
-			bp.setHeight(CAMERA_HEIGHT*0.8f);
-			blancasp.attachChild(bp);
+			Sprite bp = new Sprite(i*this.getTonesWidth(),this.getKeyboardY(),this.mFTR_TP);
+			bp.setWidth(this.getTonesWidth());
+			bp.setHeight(this.getTonesHeight());
+			tonesp.attachChild(bp);
 	
-			Sprite b = new Sprite(i*(CAMERA_WIDTH/8),CAMERA_HEIGHT*0.2f,this.mFTR_BN){
+			Sprite b = new Sprite(i*this.getTonesWidth(),this.getKeyboardY(),this.mFTR_TN){
 
 			};
-			b.setChildIndex(blancas, i);
+			b.setChildIndex(tones, i);
 			b.setUserData(i);
-			b.setWidth(CAMERA_WIDTH/8);
-	        b.setHeight(CAMERA_HEIGHT*0.8f);
-			blancas.attachChild(b);		
+			b.setWidth(this.getTonesWidth());
+	        b.setHeight(this.getTonesHeight());
+	        tones.attachChild(b);		
 		}
-		this.attachChild(blancasp);
-		this.attachChild(blancas);
-		this.attachChild(negrasp);
-		this.attachChild(negras);
+		this.attachChild(tonesp);
+		this.attachChild(tones);
+		this.attachChild(semitonesp);
+		this.attachChild(semitones);
 		this.sortChildren();
 	}
 	
-	private boolean isTone(int TouchX,int TouchY)
+	public void setTonesWidth(float w)
 	{
-		int widthBlanca = CAMERA_WIDTH/8;
-		int posBlanca = (int)(TouchX/widthBlanca);
-		int widthNegra = CAMERA_WIDTH/16;
-		int espacioNegra = CAMERA_WIDTH/32;
-		int posNegra = (int)((TouchX+espacioNegra)/widthNegra);
-		int BorW = (int)(CAMERA_HEIGHT*0.5f);
-		if (TouchY <= BorW){
+		this.widthTone=w;
+	}
+	
+	public void setTonesHeight(float h)
+	{
+		this.heightTone=h;
+	}
+	
+	public void setSTWidth(float w)
+	{
+		this.widthSemitone=w;
+	}
+	
+	public void setSTHeight(float h)
+	{
+		this.heightSemitone=h;
+	}
+	
+	public void setSpaceST(float w)
+	{
+		this.widthSpaceST=w;
+	}
+	
+	public void setTorST(float h)
+	{
+		this.TorST=h;
+	}
+	
+	public void setKeyboardY(float y)
+	{
+		this.KeyboardY=y;
+	}
+	
+	public void setKeyboardWidth(float w)
+	{
+		this.widthKeyboard=w;
+	}
+	
+	public void setKeyboardHeight(float h)
+	{
+		this.heightKeyboard=h;
+	}
+	
+	public float getTonesWidth()
+	{
+		return this.widthTone;
+	}
+	
+	public float getTonesHeight()
+	{
+		return this.heightTone;
+	}
+	
+	public float getSTWidth()
+	{
+		return this.widthSemitone;
+	}
+	
+	public float getSTHeight()
+	{
+		return this.heightSemitone;
+	}
+	
+	public float getSpaceST()
+	{
+		return this.widthSpaceST;
+	}
+	
+	public float getTorST()
+	{
+		return this.TorST;
+	}
+	
+	public float getKeyboardY()
+	{
+		return this.KeyboardY;
+	}
+	
+	public float getKeyboardWidth()
+	{
+		return this.widthKeyboard;
+	}
+	
+	public float getKeyboardHeight()
+	{
+		return this.heightKeyboard;
+	}
+	
+	public boolean isTone(float TouchX,float TouchY)
+	{
+		int posNegra = (int)((TouchX+this.widthSpaceST)/this.widthSemitone);
+		if (TouchY <= this.TorST){ 
 				if(posNegra!=0 && posNegra%2==0 && (posNegra+8)%14!=0 && posNegra%14!=0)
 				{
 					return false;
@@ -207,7 +278,22 @@ public class Piano extends Entity {
 		return true;
 	}
 	
-	private int KeyPress2Midi(int SelKey,boolean isTone){
+	public int TouchX2SelKey(float TouchX)
+	{
+		int posBlanca = (int)(TouchX/this.widthTone);
+		int posNegra = (int)((TouchX+this.widthSpaceST)/this.widthSemitone);
+		
+		if(posNegra!=0 && posNegra%2==0 && (posNegra+8)%14!=0 && posNegra%14!=0)
+		{
+			return posNegra;
+		}
+		else
+		{
+			return posBlanca;
+		}
+	}
+	
+	private int SelKey2MIDI(int SelKey,boolean isTone){
 		
 		return 0;
 	}
@@ -223,10 +309,10 @@ public class Piano extends Entity {
 		
 		for (int t = 0; t<8; t++){
 			if (teclas[t].getTecla() == true){
-				IEntity entity = blancas.getChild(t);
+				IEntity entity = tones.getChild(t);
 		    	entity.setVisible(false);
 			}else{
-				IEntity entity = blancas.getChild(t);
+				IEntity entity = tones.getChild(t);
 		    	entity.setVisible(true);
 			}
 			
