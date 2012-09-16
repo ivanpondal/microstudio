@@ -44,6 +44,8 @@ public class Piano extends Entity {
 	private float KeyboardY;
 	private float widthKeyboard;
 	private float heightKeyboard;
+	
+	int startmidi;
 
 	
 	public Piano(Scene pScene, int w, int h) {
@@ -63,6 +65,7 @@ public class Piano extends Entity {
 		this.setKeyboardHeight(CAMERA_HEIGHT*0.8f);
 		this.setKeyboardWidth(CAMERA_WIDTH*7);
 		this.setKeyboardY(CAMERA_HEIGHT*0.2f);
+		this.setStartMIDI(24);
 		
 		this.mTexture = new BitmapTextureAtlas(256, 1024, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 		this.mFTR_TN = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "gfx/Teclas/Blancas/BN.png", 0, 0);
@@ -204,6 +207,11 @@ public class Piano extends Entity {
 		this.semitonesp=st;
 	}
 	
+	public void setStartMIDI(int s)
+	{
+		this.startmidi=s;
+	}
+	
 	
 	//GET
 	
@@ -272,6 +280,11 @@ public class Piano extends Entity {
 		return this.semitonesp;
 	}
 	
+	public int getStartMIDI()
+	{
+		return this.startmidi;
+	}
+
 	
 	//PRIVADAS
 	
@@ -422,8 +435,7 @@ public class Piano extends Entity {
 					break;
 			}
 		}
-		midinote=octave*12+modifier;
-		Log.d("Piano","noteindex: "+noteindex+" octava:"+octave+" isTone:"+isTone+" selkey:"+SelKey);
+		midinote=octave*12+modifier+this.getStartMIDI();
 		return midinote;
 	}
 	
