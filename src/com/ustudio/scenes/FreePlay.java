@@ -72,9 +72,7 @@ public class FreePlay extends Scene {
         
 		this.mPiano = new Piano(this, CAMERA_WIDTH, CAMERA_HEIGHT);
 		this.attachChild(this.mPiano);
-		this.mPiano.setPosition((CAMERA_WIDTH-CAMERA_WIDTH/8)*-3, 0.0f);
-		Log.d("Piano", "X:"+this.mPiano.getX());
-        
+		this.mPiano.setPosition((CAMERA_WIDTH-CAMERA_WIDTH/8)*-3, 0.0f);//hago que empieze desde el middle C
 	}
 
 	public void menuItemPressed(int id){

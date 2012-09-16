@@ -61,7 +61,8 @@ public class Piano extends Entity {
 		this.setSpaceST(CAMERA_WIDTH/32);
 		this.setTorST(CAMERA_HEIGHT*0.5f);
 		this.setKeyboardHeight(CAMERA_HEIGHT*0.8f);
-		this.setKeyboardWidth(CAMERA_WIDTH);
+		this.setKeyboardWidth(CAMERA_WIDTH*7);
+		this.setKeyboardY(CAMERA_HEIGHT*0.2f);
 		
 		this.mTexture = new BitmapTextureAtlas(256, 1024, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 		this.mFTR_TN = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "gfx/Teclas/Blancas/BN.png", 0, 0);
@@ -74,9 +75,10 @@ public class Piano extends Entity {
 		Sprite touchControl = new Sprite(0,this.getKeyboardY(),this.mFTR_STN){
 			public boolean onAreaTouched(final TouchEvent pAreaTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
 				int MIDInote;
-				
-				MIDInote=Piano.this.SelKey2MIDI(Piano.this.TouchX2SelKey(pTouchAreaLocalX), Piano.this.isTone(pTouchAreaLocalX, pTouchAreaLocalY));
-
+				boolean tmpIsTone;
+				tmpIsTone=Piano.this.isTone(pTouchAreaLocalX, pTouchAreaLocalY);
+				MIDInote=Piano.this.SelKey2MIDI(Piano.this.TouchX2SelKey(pTouchAreaLocalX,tmpIsTone), tmpIsTone);
+				Log.d("Piano","MIDI: "+MIDInote);
 				
 				switch(pAreaTouchEvent.getAction()) {
                     case TouchEvent.ACTION_DOWN: 
@@ -85,8 +87,6 @@ public class Piano extends Entity {
                     	//teclas[teclaX].setVieja(teclaX);
                     	//teclas[posSel].setTecla(true);
                     	//keyPressed();
-                        break;
-                        
                     case TouchEvent.ACTION_UP: 
                     	//teclas[posSel].setTecla(false);
                     	//keyPressed(teclaX , true);
@@ -345,24 +345,86 @@ public class Piano extends Entity {
 		return true;
 	}
 	
-	public int TouchX2SelKey(float TouchX)
+	public int TouchX2SelKey(float TouchX,boolean isTone)
 	{
 		int posBlanca = (int)(TouchX/this.widthTone);
 		int posNegra = (int)((TouchX+this.widthSpaceST)/this.widthSemitone);
 		
-		if(posNegra!=0 && posNegra%2==0 && (posNegra+8)%14!=0 && posNegra%14!=0)
+		if(!isTone)
 		{
-			return posNegra;
+			if(posNegra!=0 && posNegra%2==0 && (posNegra+8)%14!=0 && posNegra%14!=0)
+			{
+				return posNegra;
+			}
+			else
+			{
+				return posBlanca;
+			}
 		}
-		else
-		{
-			return posBlanca;
-		}
+		return posBlanca;
 	}
 	
 	private int SelKey2MIDI(int SelKey,boolean isTone){
-		
-		return 0;
+		int octave;
+		int noteindex;
+		int midinote;
+		int modifier=0;
+		if(isTone)
+		{
+			octave=(int)Math.floor(SelKey/7);
+			noteindex=SelKey-7*octave;
+			switch(noteindex)
+			{
+				case 0:
+					modifier=0;
+					break;
+				case 1:
+					modifier=2;
+					break;
+				case 2:
+					modifier=4;
+					break;
+				case 3:
+					modifier=5;
+					break;
+				case 4:
+					modifier=7;
+					break;
+				case 5:
+					modifier=9;
+					break;	
+				case 6:
+					modifier=11;
+					break;	
+			}
+			
+		}
+		else
+		{
+			octave=(int)Math.floor(SelKey/14);
+			noteindex=SelKey-14*octave;
+			switch(noteindex)
+			{
+				case 2:
+					modifier=1;
+					break;
+				case 4:
+					modifier=3;
+					break;
+				case 8:
+					modifier=6;
+					break;
+				case 10:
+					modifier=8;
+					break;
+				case 12:
+					modifier=10;
+					break;
+			}
+		}
+		midinote=octave*12+modifier;
+		Log.d("Piano","noteindex: "+noteindex+" octava:"+octave+" isTone:"+isTone+" selkey:"+SelKey);
+		return midinote;
 	}
 	
 	
