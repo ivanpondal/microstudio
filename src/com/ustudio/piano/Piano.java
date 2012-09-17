@@ -23,10 +23,14 @@ public class Piano extends Entity {
 	static int CAMERA_HEIGHT;
 	static Scene scene;
 	
+	private Key tonekeys[];
+	private Key semitonekeys[];
+	
 	private Entity tones;
 	private Entity tonesp;
 	private Entity semitones;
 	private Entity semitonesp;
+	
 	private Texture mTexture;
 	private TextureRegion mFTR_TN;
 	private TextureRegion mFTR_TP;
@@ -43,10 +47,12 @@ public class Piano extends Entity {
 	private float widthKeyboard;
 	private float heightKeyboard;
 	
-	int midioffset;
+	private int midioffset;
 
 	
 	public Piano(Scene pScene, int w, int h) {
+		Key tmptonekeys[];
+		Key tmpsemitonekeys[];
 		
 		CAMERA_WIDTH = w;
 		CAMERA_HEIGHT = h;
@@ -65,6 +71,21 @@ public class Piano extends Entity {
 		this.setKeyboardY(CAMERA_HEIGHT*0.2f);
 		this.setMIDIOffset(24);
 		
+		tmptonekeys=new Key[49];
+		tmpsemitonekeys=new Key[35];
+		for (int i=0;i<49;i++)
+		{
+			tmptonekeys[i]=new Key();
+		}
+		
+		for (int i=0;i<35;i++)
+		{
+			tmpsemitonekeys[i]=new Key();
+		}
+		
+		this.setToneKeys(tmptonekeys);
+		this.setSemitoneKeys(tmpsemitonekeys);
+		
 		this.mTexture = new BitmapTextureAtlas(256, 1024, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 		this.mFTR_TN = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "gfx/Teclas/Blancas/BN.png", 0, 0);
 		this.mFTR_TP = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "gfx/Teclas/Blancas/BP.png", 0,500);
@@ -81,32 +102,80 @@ public class Piano extends Entity {
 				tmpIsTone=Piano.this.isTone(pTouchAreaLocalX, pTouchAreaLocalY);
 				MIDInote=Piano.this.SelKey2MIDI(Piano.this.TouchX2SelKey(pTouchAreaLocalX,tmpIsTone), tmpIsTone);
 				SpriteIndex=Piano.this.MIDI2SpriteIndex(MIDInote, tmpIsTone);
-				Log.d("Piano","MIDI: "+MIDInote+" IsTone:"+tmpIsTone+" SpriteIndex:"+SpriteIndex);
 				
-				switch(pAreaTouchEvent.getAction()) {
+				switch(pAreaTouchEvent.getAction()) 
+				{
                     case TouchEvent.ACTION_DOWN:
                     	if(tmpIsTone)
                     	{
-                    		Piano.this.getTones().getChild(SpriteIndex).setVisible(false);
+                    		Piano.this.getToneKeys()[SpriteIndex].setPressed(true);
                     	}
                     	else
                     	{
-                    		Piano.this.getST().getChild(SpriteIndex).setVisible(false);
+                    		Piano.this.getSemitoneKeys()[SpriteIndex].setPressed(true);
                     	}
                     	break;
                     case TouchEvent.ACTION_UP: 
                     	if(tmpIsTone)
                     	{
-                    		Piano.this.getTones().getChild(SpriteIndex).setVisible(true);
+                    		Piano.this.getToneKeys()[SpriteIndex].setPressed(false);
                     	}
                     	else
                     	{
-                    		Piano.this.getST().getChild(SpriteIndex).setVisible(true);
+                    		Piano.this.getSemitoneKeys()[SpriteIndex].setPressed(false);
                     	}
                         break;
-                    case TouchEvent.ACTION_MOVE:                    	
-                    	break;
-                   	}
+                    case TouchEvent.ACTION_MOVE:   
+                    	for (int i=0;i<49;i++)
+                		{
+                			if(Piano.this.getToneKeys()[i].getPressed() && i!=SpriteIndex)
+                			{
+                				Piano.this.getToneKeys()[i].setPressed(false);
+                			}
+                		}
+                		
+                		for (int i=0;i<35;i++)
+                		{
+                			if(Piano.this.getSemitoneKeys()[i].getPressed() && i!=SpriteIndex)
+                			{
+                				Piano.this.getSemitoneKeys()[i].setPressed(false);
+                			}
+                		}
+                		
+                    	if(tmpIsTone)
+                    	{
+                    		Piano.this.getToneKeys()[SpriteIndex].setPressed(true);
+                    	}
+                    	else
+                    	{
+                    		Piano.this.getSemitoneKeys()[SpriteIndex].setPressed(true);
+                    	}
+                    	break;	
+				}
+				
+				for (int i=0;i<49;i++)
+        		{
+        			if(Piano.this.getToneKeys()[i].getPressed())
+        			{
+        				Piano.this.getTones().getChild(i).setVisible(false);
+        			}
+        			else
+        			{
+        				Piano.this.getTones().getChild(i).setVisible(true);
+        			}
+        		}
+        		
+        		for (int i=0;i<35;i++)
+        		{
+        			if(Piano.this.getSemitoneKeys()[i].getPressed())
+        			{
+        				Piano.this.getST().getChild(i).setVisible(false);
+        			}
+        			else
+        			{
+        				Piano.this.getST().getChild(i).setVisible(true);
+        			}
+        		}
                 
                 return true;
             }
@@ -423,6 +492,15 @@ public class Piano extends Entity {
 		this.midioffset=s;
 	}
 	
+	public void setToneKeys(Key t[])
+	{
+		this.tonekeys=t;
+	}
+	
+	public void setSemitoneKeys(Key st[])
+	{
+		this.semitonekeys=st;
+	}
 	
 	//GET
 	
@@ -494,5 +572,15 @@ public class Piano extends Entity {
 	public int getMIDIOffset()
 	{
 		return this.midioffset;
+	}
+	
+	public Key[] getToneKeys()
+	{
+		return this.tonekeys;
+	}
+	
+	public Key[] getSemitoneKeys()
+	{
+		return this.semitonekeys;
 	}
 }
