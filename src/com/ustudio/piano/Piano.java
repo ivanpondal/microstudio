@@ -32,8 +32,6 @@ public class Piano extends Entity {
 	private TextureRegion mFTR_TP;
 	private TextureRegion mFTR_STN;
 	private TextureRegion mFTR_STP;
-	private boolean teclasA[];
-	private Tecla teclas[];
 	
 	private float widthTone;
 	private float heightTone;
@@ -45,7 +43,7 @@ public class Piano extends Entity {
 	private float widthKeyboard;
 	private float heightKeyboard;
 	
-	int startmidi;
+	int midioffset;
 
 	
 	public Piano(Scene pScene, int w, int h) {
@@ -65,7 +63,7 @@ public class Piano extends Entity {
 		this.setKeyboardHeight(CAMERA_HEIGHT*0.8f);
 		this.setKeyboardWidth(CAMERA_WIDTH*7);
 		this.setKeyboardY(CAMERA_HEIGHT*0.2f);
-		this.setStartMIDI(24);
+		this.setMIDIOffset(24);
 		
 		this.mTexture = new BitmapTextureAtlas(256, 1024, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 		this.mFTR_TN = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "gfx/Teclas/Blancas/BN.png", 0, 0);
@@ -77,49 +75,37 @@ public class Piano extends Entity {
 		
 		Sprite touchControl = new Sprite(0,this.getKeyboardY(),this.mFTR_STN){
 			public boolean onAreaTouched(final TouchEvent pAreaTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
-				int MIDInote;
+				int MIDInote,SpriteIndex;
 				boolean tmpIsTone;
+				
 				tmpIsTone=Piano.this.isTone(pTouchAreaLocalX, pTouchAreaLocalY);
 				MIDInote=Piano.this.SelKey2MIDI(Piano.this.TouchX2SelKey(pTouchAreaLocalX,tmpIsTone), tmpIsTone);
-				Log.d("Piano","MIDI: "+MIDInote);
+				SpriteIndex=Piano.this.MIDI2SpriteIndex(MIDInote, tmpIsTone);
+				Log.d("Piano","MIDI: "+MIDInote+" IsTone:"+tmpIsTone+" SpriteIndex:"+SpriteIndex);
 				
 				switch(pAreaTouchEvent.getAction()) {
-                    case TouchEvent.ACTION_DOWN: 
-                    	//keyPressed(teclaX , false);
-                        //Log.d("Pressed","Tecla: " + (teclaX + 1));
-                    	//teclas[teclaX].setVieja(teclaX);
-                    	//teclas[posSel].setTecla(true);
-                    	//keyPressed();
-                    case TouchEvent.ACTION_UP: 
-                    	//teclas[posSel].setTecla(false);
-                    	//keyPressed(teclaX , true);
-                    	//Log.d("Relesed","Tecla: " + (teclaX + 1));
-                    	//keyPressed();
-                        break;
-                        
-                    case TouchEvent.ACTION_MOVE:                    	
-                    	//teclas[teclas[teclaX].getVieja()].setTecla(false);
-                    	//keyPressed();
-                    	
-                    	//teclas[posSel].setTecla(true);
-                    	//keyPressed();
-                    	//for (int i = 0; i < 8; i++){
-                    		
-                    	//}
-                    	
-                    	//if (teclaX != teclas[teclaX].getVieja()){
-                    	//	teclas[teclaX].setVieja(teclaX);
-                    	//}
-                    	//keyPressed();
-                    	
-                    	//keyPressed(teclaXVieja , true);
-                    	//keyPressed(teclas[teclaX].getVieja() , true);
-                    	//keyPressed(teclaX , false);
-                    	//teclaXVieja = teclaX;
-                    	//teclas[teclaX].setVieja(teclaX);
-                		//Log.d("MOVE", "" + pTouchAreaLocalX);
+                    case TouchEvent.ACTION_DOWN:
+                    	if(tmpIsTone)
+                    	{
+                    		Piano.this.getTones().getChild(SpriteIndex).setVisible(false);
+                    	}
+                    	else
+                    	{
+                    		Piano.this.getST().getChild(SpriteIndex).setVisible(false);
+                    	}
                     	break;
-                    	
+                    case TouchEvent.ACTION_UP: 
+                    	if(tmpIsTone)
+                    	{
+                    		Piano.this.getTones().getChild(SpriteIndex).setVisible(true);
+                    	}
+                    	else
+                    	{
+                    		Piano.this.getST().getChild(SpriteIndex).setVisible(true);
+                    	}
+                        break;
+                    case TouchEvent.ACTION_MOVE:                    	
+                    	break;
                    	}
                 
                 return true;
@@ -138,6 +124,231 @@ public class Piano extends Entity {
 		this.attachChild(this.getSTP());
 		this.attachChild(this.getST());
 		this.sortChildren();
+	}
+
+	
+	//PRIVADAS
+	
+	private void drawTones()
+	{
+		Entity tmp_tones;
+		Entity tmp_tonesp;
+		tmp_tones = new Entity();
+		tmp_tonesp = new Entity();
+		for (int i = 0; i < 83; i++){
+			Sprite tp = new Sprite(i*this.getTonesWidth(),this.getKeyboardY(),this.mFTR_TP);
+			tp.setWidth(this.getTonesWidth());
+			tp.setHeight(this.getTonesHeight());
+			tmp_tonesp.attachChild(tp);
+			
+			Sprite t = new Sprite(i*this.getTonesWidth(),this.getKeyboardY(),this.mFTR_TN){
+
+			};
+			t.setWidth(this.getTonesWidth());
+	        t.setHeight(this.getTonesHeight());
+	        tmp_tones.attachChild(t);		
+		}
+		
+		this.setTonesP(tmp_tonesp);
+		this.setTones(tmp_tones);
+	}
+	
+	private void drawST()
+	{
+		Entity tmp_semitones;
+		Entity tmp_semitonesp;
+		tmp_semitones = new Entity();
+		tmp_semitonesp = new Entity();
+		for (int i = 0; i < 83; i++){
+			if ((i-2)%7!=0 && (i+1)%7!=0){
+				Sprite stp = new Sprite(this.getSTWidth() + this.getSpaceST() + i*this.getTonesWidth(),this.getKeyboardY(),this.mFTR_STP);
+				stp.setWidth(this.getSTWidth());
+		        stp.setHeight(this.getSTHeight());
+		        tmp_semitonesp.attachChild(stp);
+
+				Sprite st = new Sprite(this.getSTWidth() + this.getSpaceST() + i*this.getTonesWidth(),this.getKeyboardY(),this.mFTR_STN);		
+				st.setWidth(this.getSTWidth());
+		        st.setHeight(this.getSTHeight());
+		        tmp_semitones.attachChild(st);
+			}
+		}
+		
+		this.setST(tmp_semitones);
+		this.setSTP(tmp_semitonesp);
+	}
+	
+	//PUBLICAS
+	
+	public boolean isTone(float TouchX,float TouchY)
+	{
+		int posNegra = (int)((TouchX+this.widthSpaceST)/this.widthSemitone);
+		if (TouchY <= this.TorST){ 
+				if(posNegra!=0 && posNegra%2==0 && (posNegra+8)%14!=0 && posNegra%14!=0)
+				{
+					return false;
+				}
+				else
+				{
+					return true;
+				}
+		}
+		return true;
+	}
+	
+	public int TouchX2SelKey(float TouchX,boolean isTone)
+	{
+		int posBlanca = (int)(TouchX/this.widthTone);
+		int posNegra = (int)((TouchX+this.widthSpaceST)/this.widthSemitone);
+		
+		if(!isTone)
+		{
+			if(posNegra!=0 && posNegra%2==0 && (posNegra+8)%14!=0 && posNegra%14!=0)
+			{
+				return posNegra;
+			}
+			else
+			{
+				return posBlanca;
+			}
+		}
+		return posBlanca;
+	}
+	
+	public int SelKey2MIDI(int SelKey,boolean isTone){
+		int octave;
+		int noteindex;
+		int midinote;
+		int modifier=0;
+		if(isTone)
+		{
+			octave=(int)Math.floor(SelKey/7);
+			noteindex=SelKey-7*octave;
+			switch(noteindex)
+			{
+				case 0:
+					modifier=0;
+					break;
+				case 1:
+					modifier=2;
+					break;
+				case 2:
+					modifier=4;
+					break;
+				case 3:
+					modifier=5;
+					break;
+				case 4:
+					modifier=7;
+					break;
+				case 5:
+					modifier=9;
+					break;	
+				case 6:
+					modifier=11;
+					break;	
+			}
+			
+		}
+		else
+		{
+			octave=(int)Math.floor(SelKey/14);
+			noteindex=SelKey-14*octave;
+			switch(noteindex)
+			{
+				case 2:
+					modifier=1;
+					break;
+				case 4:
+					modifier=3;
+					break;
+				case 8:
+					modifier=6;
+					break;
+				case 10:
+					modifier=8;
+					break;
+				case 12:
+					modifier=10;
+					break;
+			}
+		}
+		midinote=octave*12+modifier+this.getMIDIOffset();
+		return midinote;
+	}
+	
+	public boolean isMIDITone(int midi){
+		int octave;
+		int noteindex;
+		midi-=this.getMIDIOffset();
+		octave=midi/12;
+		noteindex=midi-octave*12;
+		if((noteindex==1)||(noteindex==3)||(noteindex==6)||(noteindex==8)||(noteindex==10))
+		{
+			return false;
+		}
+		return true;
+	}
+	
+	public int MIDI2SpriteIndex(int midi,boolean isTone)
+	{
+		int octave;
+		int noteindex;
+		int modifier=0;
+		int spriteindex;
+		midi-=this.getMIDIOffset();
+		octave=midi/12;
+		noteindex=midi-octave*12;
+		if(isTone)
+		{
+			switch(noteindex)
+			{
+				case 0:
+					modifier=0;
+					break;
+				case 2:
+					modifier=1;
+					break;
+				case 4:
+					modifier=2;
+					break;
+				case 5:
+					modifier=3;
+					break;
+				case 7:
+					modifier=4;
+					break;
+				case 9:
+					modifier=5;
+					break;
+				case 11:
+					modifier=6;
+					break;
+			}
+			spriteindex=octave*7+modifier;
+		}
+		else
+		{
+			switch(noteindex)
+			{
+				case 1:
+					modifier=0;
+					break;
+				case 3:
+					modifier=1;
+					break;
+				case 6:
+					modifier=2;
+					break;
+				case 8:
+					modifier=3;
+					break;
+				case 10:
+					modifier=4;
+					break;
+			}
+			spriteindex=octave*5+modifier;
+		}
+		return spriteindex;
 	}
 	
 	// SET
@@ -207,9 +418,9 @@ public class Piano extends Entity {
 		this.semitonesp=st;
 	}
 	
-	public void setStartMIDI(int s)
+	public void setMIDIOffset(int s)
 	{
-		this.startmidi=s;
+		this.midioffset=s;
 	}
 	
 	
@@ -280,215 +491,8 @@ public class Piano extends Entity {
 		return this.semitonesp;
 	}
 	
-	public int getStartMIDI()
+	public int getMIDIOffset()
 	{
-		return this.startmidi;
-	}
-
-	
-	//PRIVADAS
-	
-	private void drawTones()
-	{
-		Entity tmp_tones;
-		Entity tmp_tonesp;
-		tmp_tones = new Entity();
-		tmp_tonesp = new Entity();
-		for (int i = 0; i < 83; i++){
-			Sprite tp = new Sprite(i*this.getTonesWidth(),this.getKeyboardY(),this.mFTR_TP);
-			tp.setWidth(this.getTonesWidth());
-			tp.setHeight(this.getTonesHeight());
-			tmp_tonesp.attachChild(tp);
-	
-			Sprite t = new Sprite(i*this.getTonesWidth(),this.getKeyboardY(),this.mFTR_TN){
-
-			};
-			t.setChildIndex(tmp_tones, i);
-			t.setUserData(i);
-			t.setWidth(this.getTonesWidth());
-	        t.setHeight(this.getTonesHeight());
-	        tmp_tones.attachChild(t);		
-		}
-		
-		this.setTonesP(tmp_tonesp);
-		this.setTones(tmp_tones);
-	}
-	
-	private void drawST()
-	{
-		Entity tmp_semitones;
-		Entity tmp_semitonesp;
-		tmp_semitones = new Entity();
-		tmp_semitonesp = new Entity();
-		for (int i = 0; i < 83; i++){
-			if ((i-2)%7!=0 && (i+1)%7!=0){
-				Sprite stp = new Sprite(this.getSTWidth() + this.getSpaceST() + i*this.getTonesWidth(),this.getKeyboardY(),this.mFTR_STP);
-				stp.setWidth(this.getSTWidth());
-		        stp.setHeight(this.getSTHeight());
-		        tmp_semitonesp.attachChild(stp);
-				//np.setChildIndex(negras, (int)(i));
-				Sprite st = new Sprite(this.getSTWidth() + this.getSpaceST() + i*this.getTonesWidth(),this.getKeyboardY(),this.mFTR_STN);		
-				st.setChildIndex(tmp_semitones, i);
-				st.setUserData(i+10);
-				st.setWidth(this.getSTWidth());
-		        st.setHeight(this.getSTHeight());
-		        tmp_semitones.attachChild(st);
-			}
-		}
-		
-		this.setST(tmp_semitones);
-		this.setSTP(tmp_semitonesp);
-	}
-	
-	//PUBLICAS
-	
-	public boolean isTone(float TouchX,float TouchY)
-	{
-		int posNegra = (int)((TouchX+this.widthSpaceST)/this.widthSemitone);
-		if (TouchY <= this.TorST){ 
-				if(posNegra!=0 && posNegra%2==0 && (posNegra+8)%14!=0 && posNegra%14!=0)
-				{
-					return false;
-				}
-				else
-				{
-					return true;
-				}
-		}
-		return true;
-	}
-	
-	public int TouchX2SelKey(float TouchX,boolean isTone)
-	{
-		int posBlanca = (int)(TouchX/this.widthTone);
-		int posNegra = (int)((TouchX+this.widthSpaceST)/this.widthSemitone);
-		
-		if(!isTone)
-		{
-			if(posNegra!=0 && posNegra%2==0 && (posNegra+8)%14!=0 && posNegra%14!=0)
-			{
-				return posNegra;
-			}
-			else
-			{
-				return posBlanca;
-			}
-		}
-		return posBlanca;
-	}
-	
-	private int SelKey2MIDI(int SelKey,boolean isTone){
-		int octave;
-		int noteindex;
-		int midinote;
-		int modifier=0;
-		if(isTone)
-		{
-			octave=(int)Math.floor(SelKey/7);
-			noteindex=SelKey-7*octave;
-			switch(noteindex)
-			{
-				case 0:
-					modifier=0;
-					break;
-				case 1:
-					modifier=2;
-					break;
-				case 2:
-					modifier=4;
-					break;
-				case 3:
-					modifier=5;
-					break;
-				case 4:
-					modifier=7;
-					break;
-				case 5:
-					modifier=9;
-					break;	
-				case 6:
-					modifier=11;
-					break;	
-			}
-			
-		}
-		else
-		{
-			octave=(int)Math.floor(SelKey/14);
-			noteindex=SelKey-14*octave;
-			switch(noteindex)
-			{
-				case 2:
-					modifier=1;
-					break;
-				case 4:
-					modifier=3;
-					break;
-				case 8:
-					modifier=6;
-					break;
-				case 10:
-					modifier=8;
-					break;
-				case 12:
-					modifier=10;
-					break;
-			}
-		}
-		midinote=octave*12+modifier+this.getStartMIDI();
-		return midinote;
-	}
-	
-	
-	public int keyCheck(){
-			
-		return 0;
-	}
-	
-	public void keyPressed(){//int s, boolean mode){
-	
-		
-		for (int t = 0; t<8; t++){
-			if (teclas[t].getTecla() == true){
-				IEntity entity = tones.getChild(t);
-		    	entity.setVisible(false);
-			}else{
-				IEntity entity = tones.getChild(t);
-		    	entity.setVisible(true);
-			}
-			
-		}
-		
-		for (int t = 1; t<8; t++){
-			//int vieja = teclas[t].getVieja();
-			//boolean viejaStatus = teclas[t].getTecla();
-			//if (vieja == t){
-				//teclas[vieja].setTecla(false);
-			//}
-			
-			
-		}
-		/*if (s<0){
-			if (s*(-1)>3){
-				if (s*(-1)>6){
-					IEntity entity = negras.getChild((-1)*s -3);
-			    	entity.setVisible(mode);
-				}else{
-					IEntity entity = negras.getChild((-1)*s -2);
-			    	entity.setVisible(mode);
-				}
-			}else{
-				IEntity entity = negras.getChild((-1)*s -1);
-		    	entity.setVisible(mode);
-			}
-			
-
-		}else{
-			IEntity entity = blancas.getChild(s);
-	    	entity.setVisible(mode);
-		}*/
-		
-    
- 
+		return this.midioffset;
 	}
 }
