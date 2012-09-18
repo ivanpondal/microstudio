@@ -106,60 +106,67 @@ public class Piano extends Entity {
 				switch(pAreaTouchEvent.getAction()) 
 				{
                     case TouchEvent.ACTION_DOWN:
+                    	Log.d("Piano","DOWN "+SpriteIndex);
                     	if(tmpIsTone)
                     	{
                     		Piano.this.getToneKeys()[SpriteIndex].setPressed(true);
+                    		Piano.this.getToneKeys()[SpriteIndex].setMoving(true);
                     	}
                     	else
                     	{
                     		Piano.this.getSemitoneKeys()[SpriteIndex].setPressed(true);
+                    		Piano.this.getSemitoneKeys()[SpriteIndex].setMoving(true);
                     	}
                     	break;
                     case TouchEvent.ACTION_UP: 
+                    	Log.d("Piano","UP "+SpriteIndex);
                     	if(tmpIsTone)
                     	{
                     		Piano.this.getToneKeys()[SpriteIndex].setPressed(false);
+                    		Piano.this.getToneKeys()[SpriteIndex].setMoving(false);
                     	}
                     	else
                     	{
                     		Piano.this.getSemitoneKeys()[SpriteIndex].setPressed(false);
+                    		Piano.this.getSemitoneKeys()[SpriteIndex].setMoving(false);
                     	}
                         break;
-                    case TouchEvent.ACTION_MOVE:   
-                    	for (int i=0;i<49;i++)
-                		{
-                			if(Piano.this.getToneKeys()[i].getPressed() && i!=SpriteIndex)
-                			{
-                				Piano.this.getToneKeys()[i].setPressed(false);
-                			}
-                		}
-                		
-                		for (int i=0;i<35;i++)
-                		{
-                			if(Piano.this.getSemitoneKeys()[i].getPressed() && i!=SpriteIndex)
-                			{
-                				Piano.this.getSemitoneKeys()[i].setPressed(false);
-                			}
-                		}
-                		
+                    case TouchEvent.ACTION_MOVE:                       	
+                    	Log.d("Piano","MOVE "+SpriteIndex);
                     	if(tmpIsTone)
                     	{
                     		Piano.this.getToneKeys()[SpriteIndex].setPressed(true);
+                    		Piano.this.getToneKeys()[SpriteIndex].setMoving(true);
                     	}
                     	else
                     	{
                     		Piano.this.getSemitoneKeys()[SpriteIndex].setPressed(true);
+                    		Piano.this.getSemitoneKeys()[SpriteIndex].setMoving(true);
                     	}
                     	break;	
 				}
 				
+
 				for (int i=0;i<49;i++)
         		{
-        			if(Piano.this.getToneKeys()[i].getPressed())
+        			if(Piano.this.getToneKeys()[i].getPressed() && i!=SpriteIndex)
+        			{
+        				if(Piano.this.getToneKeys()[i].getMoving())
+        				{
+        					Piano.this.getToneKeys()[i].setMoving(false);
+        					Piano.this.getTones().getChild(i).setVisible(false);
+        				}
+        				else
+        				{
+        					Piano.this.getToneKeys()[i].setPressed(false);
+        					Piano.this.getTones().getChild(i).setVisible(true);
+        				}
+        			}
+        			else if(Piano.this.getToneKeys()[i].getPressed() && i==SpriteIndex)
         			{
         				Piano.this.getTones().getChild(i).setVisible(false);
         			}
-        			else
+        			else if(!Piano.this.getToneKeys()[i].getPressed())
         			{
         				Piano.this.getTones().getChild(i).setVisible(true);
         			}
@@ -167,11 +174,24 @@ public class Piano extends Entity {
         		
         		for (int i=0;i<35;i++)
         		{
-        			if(Piano.this.getSemitoneKeys()[i].getPressed())
+        			if(Piano.this.getSemitoneKeys()[i].getPressed() && i!=SpriteIndex)
+        			{
+        				if(Piano.this.getSemitoneKeys()[i].getMoving())
+        				{
+        					Piano.this.getSemitoneKeys()[i].setMoving(false);
+        					Piano.this.getST().getChild(i).setVisible(false);
+        				}
+        				else
+        				{
+        					Piano.this.getSemitoneKeys()[i].setPressed(false);
+        					Piano.this.getST().getChild(i).setVisible(true);
+        				}
+        			}
+        			else if(Piano.this.getSemitoneKeys()[i].getPressed() && i==SpriteIndex)
         			{
         				Piano.this.getST().getChild(i).setVisible(false);
         			}
-        			else
+        			else if(!Piano.this.getSemitoneKeys()[i].getPressed())
         			{
         				Piano.this.getST().getChild(i).setVisible(true);
         			}
