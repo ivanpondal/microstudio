@@ -47,6 +47,8 @@ public class Piano extends Entity {
 	private float widthKeyboard;
 	private float heightKeyboard;
 	
+	private long stateToneKeys;
+	private long stateSTKeys;
 	private int midioffset;
 
 	
@@ -70,6 +72,8 @@ public class Piano extends Entity {
 		this.setKeyboardWidth(CAMERA_WIDTH*7);
 		this.setKeyboardY(CAMERA_HEIGHT*0.2f);
 		this.setMIDIOffset(24);
+		this.setStateToneKeys(0);
+		this.setStateSTKeys(0);
 		
 		tmptonekeys=new Key[49];
 		tmpsemitonekeys=new Key[35];
@@ -97,16 +101,21 @@ public class Piano extends Entity {
 		Sprite touchControl = new Sprite(0,this.getKeyboardY(),this.mFTR_STN){
 			public boolean onAreaTouched(final TouchEvent pAreaTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
 				int MIDInote,SpriteIndex;
+				long binval;
 				boolean tmpIsTone;
-				
+
 				tmpIsTone=Piano.this.isTone(pTouchAreaLocalX, pTouchAreaLocalY);
 				MIDInote=Piano.this.SelKey2MIDI(Piano.this.TouchX2SelKey(pTouchAreaLocalX,tmpIsTone), tmpIsTone);
 				SpriteIndex=Piano.this.MIDI2SpriteIndex(MIDInote, tmpIsTone);
-				
+    			binval=(long)Math.pow(2, SpriteIndex);
+    			
+    			Piano.this.setStateToneKeys(0);
+    			Piano.this.setStateSTKeys(0);
+    			
 				switch(pAreaTouchEvent.getAction()) 
 				{
                     case TouchEvent.ACTION_DOWN:
-                    	Log.d("Piano","DOWN "+SpriteIndex);
+                    	//Log.d("Piano","DOWN "+SpriteIndex);
                     	if(tmpIsTone)
                     	{
                     		Piano.this.getToneKeys()[SpriteIndex].setPressed(true);
@@ -119,7 +128,7 @@ public class Piano extends Entity {
                     	}
                     	break;
                     case TouchEvent.ACTION_UP: 
-                    	Log.d("Piano","UP "+SpriteIndex);
+                    	//Log.d("Piano","UP "+SpriteIndex);
                     	if(tmpIsTone)
                     	{
                     		Piano.this.getToneKeys()[SpriteIndex].setPressed(false);
@@ -132,20 +141,28 @@ public class Piano extends Entity {
                     	}
                         break;
                     case TouchEvent.ACTION_MOVE:                       	
-                    	Log.d("Piano","MOVE "+SpriteIndex);
+                    	//Log.d("Piano","MOVE "+SpriteIndex);
                     	if(tmpIsTone)
                     	{
+                    		if((Piano.this.getStateToneKeys() & binval)!=binval)
+                    		{
+                            	Piano.this.setStateToneKeys(Piano.this.getStateToneKeys()+binval);
+                    		}
                     		Piano.this.getToneKeys()[SpriteIndex].setPressed(true);
                     		Piano.this.getToneKeys()[SpriteIndex].setMoving(true);
                     	}
                     	else
                     	{
+                    		if((Piano.this.getStateSTKeys() & binval)!=binval)
+                    		{
+                            	Piano.this.setStateSTKeys(Piano.this.getStateSTKeys()+binval);
+                    		}
                     		Piano.this.getSemitoneKeys()[SpriteIndex].setPressed(true);
                     		Piano.this.getSemitoneKeys()[SpriteIndex].setMoving(true);
                     	}
                     	break;	
 				}
-				
+				Log.d("Piano","state tone keys:"+Piano.this.getStateToneKeys()+" state semitone keys:"+Piano.this.getStateSTKeys()+" spriteindex:"+SpriteIndex);
 
 				for (int i=0;i<49;i++)
         		{
@@ -522,7 +539,17 @@ public class Piano extends Entity {
 		this.semitonekeys=st;
 	}
 	
-	//GET
+	public void setStateToneKeys(long s)
+	{
+		this.stateToneKeys=s;
+	}
+	
+	public void setStateSTKeys(long s)
+	{
+		this.stateSTKeys=s;
+	}
+	
+	//GET}
 	
 	public float getTonesWidth()
 	{
@@ -602,5 +629,15 @@ public class Piano extends Entity {
 	public Key[] getSemitoneKeys()
 	{
 		return this.semitonekeys;
+	}
+	
+	public long getStateToneKeys()
+	{
+		return this.stateToneKeys;
+	}
+	
+	public long getStateSTKeys()
+	{
+		return this.stateSTKeys;
 	}
 }
