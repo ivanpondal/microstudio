@@ -2,7 +2,6 @@ package com.ustudio.piano;
 
 
 import org.anddev.andengine.entity.Entity;
-import org.anddev.andengine.entity.IEntity;
 import org.anddev.andengine.entity.scene.Scene;
 import org.anddev.andengine.entity.sprite.Sprite;
 import org.anddev.andengine.input.touch.TouchEvent;
@@ -13,6 +12,8 @@ import org.anddev.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextur
 import org.anddev.andengine.opengl.texture.region.TextureRegion;
 
 import android.util.Log;
+
+import java.util.Hashtable;
 
 import com.ustudio.main.MainActivity;
 
@@ -47,14 +48,13 @@ public class Piano extends Entity {
 	private float widthKeyboard;
 	private float heightKeyboard;
 	
-	private long stateToneKeys;
-	private long stateSTKeys;
 	private int midioffset;
-
+	private Hashtable<Integer,Key> TouchIDs;
 	
 	public Piano(Scene pScene, int w, int h) {
 		Key tmptonekeys[];
 		Key tmpsemitonekeys[];
+		Hashtable<Integer,Key> tmpTouchIDs;
 		
 		CAMERA_WIDTH = w;
 		CAMERA_HEIGHT = h;
@@ -72,23 +72,24 @@ public class Piano extends Entity {
 		this.setKeyboardWidth(CAMERA_WIDTH*7);
 		this.setKeyboardY(CAMERA_HEIGHT*0.2f);
 		this.setMIDIOffset(24);
-		this.setStateToneKeys(0);
-		this.setStateSTKeys(0);
 		
 		tmptonekeys=new Key[49];
 		tmpsemitonekeys=new Key[35];
 		for (int i=0;i<49;i++)
 		{
-			tmptonekeys[i]=new Key();
+			tmptonekeys[i]=new Key(false,true,i);
 		}
 		
 		for (int i=0;i<35;i++)
 		{
-			tmpsemitonekeys[i]=new Key();
+			tmpsemitonekeys[i]=new Key(false,false,i);
 		}
 		
 		this.setToneKeys(tmptonekeys);
 		this.setSemitoneKeys(tmpsemitonekeys);
+		
+		tmpTouchIDs=new Hashtable<Integer,Key>();
+		this.setTouchIDs(tmpTouchIDs);
 		
 		this.mTexture = new BitmapTextureAtlas(256, 1024, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 		this.mFTR_TN = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "gfx/Teclas/Blancas/BN.png", 0, 0);
@@ -100,120 +101,130 @@ public class Piano extends Entity {
 		
 		Sprite touchControl = new Sprite(0,this.getKeyboardY(),this.mFTR_STN){
 			public boolean onAreaTouched(final TouchEvent pAreaTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
-				int MIDInote,SpriteIndex;
-				long binval;
+				int MIDInote,SpriteIndex,PointerID;
 				boolean tmpIsTone;
-
 				tmpIsTone=Piano.this.isTone(pTouchAreaLocalX, pTouchAreaLocalY);
 				MIDInote=Piano.this.SelKey2MIDI(Piano.this.TouchX2SelKey(pTouchAreaLocalX,tmpIsTone), tmpIsTone);
 				SpriteIndex=Piano.this.MIDI2SpriteIndex(MIDInote, tmpIsTone);
-    			binval=(long)Math.pow(2, SpriteIndex);
-    			
-    			Piano.this.setStateToneKeys(0);
-    			Piano.this.setStateSTKeys(0);
-    			
+    			PointerID=pAreaTouchEvent.getPointerID();
 				switch(pAreaTouchEvent.getAction()) 
 				{
                     case TouchEvent.ACTION_DOWN:
-                    	//Log.d("Piano","DOWN "+SpriteIndex);
                     	if(tmpIsTone)
                     	{
                     		Piano.this.getToneKeys()[SpriteIndex].setPressed(true);
-                    		Piano.this.getToneKeys()[SpriteIndex].setMoving(true);
+                    		if(!Piano.this.getTouchIDs().containsKey(PointerID))
+                    		{
+                    			Piano.this.getTouchIDs().put(PointerID,Piano.this.getToneKeys()[SpriteIndex]);
+                    		}
+                    		else
+                    		{
+                    			Piano.this.getTouchIDs().remove(PointerID);
+                    			Piano.this.getTouchIDs().put(PointerID,Piano.this.getToneKeys()[SpriteIndex]);
+                    		}
                     	}
                     	else
                     	{
                     		Piano.this.getSemitoneKeys()[SpriteIndex].setPressed(true);
-                    		Piano.this.getSemitoneKeys()[SpriteIndex].setMoving(true);
+                    		if(!Piano.this.getTouchIDs().containsKey(PointerID))
+                    		{
+                    			Piano.this.getTouchIDs().put(PointerID,Piano.this.getSemitoneKeys()[SpriteIndex]);
+                    		}
+                    		else
+                    		{
+                    			Piano.this.getTouchIDs().remove(PointerID);
+                    			Piano.this.getTouchIDs().put(PointerID,Piano.this.getSemitoneKeys()[SpriteIndex]);
+                    		}
                     	}
                     	break;
                     case TouchEvent.ACTION_UP: 
-                    	//Log.d("Piano","UP "+SpriteIndex);
                     	if(tmpIsTone)
                     	{
                     		Piano.this.getToneKeys()[SpriteIndex].setPressed(false);
-                    		Piano.this.getToneKeys()[SpriteIndex].setMoving(false);
+                    		if(!Piano.this.getTouchIDs().containsKey(PointerID))
+                    		{
+                    			Piano.this.getTouchIDs().put(PointerID,Piano.this.getToneKeys()[SpriteIndex]);
+                    		}
+                    		else
+                    		{
+                    			Piano.this.getTouchIDs().remove(PointerID);
+                    			Piano.this.getTouchIDs().put(PointerID,Piano.this.getToneKeys()[SpriteIndex]);
+                    		}
                     	}
                     	else
                     	{
                     		Piano.this.getSemitoneKeys()[SpriteIndex].setPressed(false);
-                    		Piano.this.getSemitoneKeys()[SpriteIndex].setMoving(false);
+                    		if(!Piano.this.getTouchIDs().containsKey(PointerID))
+                    		{
+                    			Piano.this.getTouchIDs().put(PointerID,Piano.this.getSemitoneKeys()[SpriteIndex]);
+                    		}
+                    		else
+                    		{
+                    			Piano.this.getTouchIDs().remove(PointerID);
+                    			Piano.this.getTouchIDs().put(PointerID,Piano.this.getSemitoneKeys()[SpriteIndex]);
+                    		}
                     	}
                         break;
                     case TouchEvent.ACTION_MOVE:                       	
-                    	//Log.d("Piano","MOVE "+SpriteIndex);
                     	if(tmpIsTone)
                     	{
-                    		if((Piano.this.getStateToneKeys() & binval)!=binval)
-                    		{
-                            	Piano.this.setStateToneKeys(Piano.this.getStateToneKeys()+binval);
-                    		}
                     		Piano.this.getToneKeys()[SpriteIndex].setPressed(true);
-                    		Piano.this.getToneKeys()[SpriteIndex].setMoving(true);
+                    		if(!Piano.this.getTouchIDs().containsKey(PointerID))
+                    		{
+                    			Piano.this.getTouchIDs().put(PointerID,Piano.this.getToneKeys()[SpriteIndex]);
+                    		}
+                    		else
+                    		{
+                    			if(!Piano.this.getTouchIDs().get(PointerID).equals(Piano.this.getToneKeys()[SpriteIndex]))
+                    			{
+                    				Piano.this.getToneKeys()[Piano.this.getTouchIDs().get(PointerID).getSpriteIndex()].setPressed(false);
+                    			}
+                    			Piano.this.getTouchIDs().remove(PointerID);
+                    			Piano.this.getTouchIDs().put(PointerID,Piano.this.getToneKeys()[SpriteIndex]);
+                    		}
                     	}
                     	else
                     	{
-                    		if((Piano.this.getStateSTKeys() & binval)!=binval)
-                    		{
-                            	Piano.this.setStateSTKeys(Piano.this.getStateSTKeys()+binval);
-                    		}
                     		Piano.this.getSemitoneKeys()[SpriteIndex].setPressed(true);
-                    		Piano.this.getSemitoneKeys()[SpriteIndex].setMoving(true);
+                    		if(!Piano.this.getTouchIDs().containsKey(PointerID))
+                    		{
+                    			Piano.this.getTouchIDs().put(PointerID,Piano.this.getSemitoneKeys()[SpriteIndex]);
+                    		}
+                    		else
+                    		{
+                    			if(!Piano.this.getTouchIDs().get(PointerID).equals(Piano.this.getSemitoneKeys()[SpriteIndex]))
+                    			{
+                    				Piano.this.getSemitoneKeys()[Piano.this.getTouchIDs().get(PointerID).getSpriteIndex()].setPressed(false);
+                    			}
+                    			Piano.this.getTouchIDs().remove(PointerID);
+                    			Piano.this.getTouchIDs().put(PointerID,Piano.this.getSemitoneKeys()[SpriteIndex]);
+                    		}
                     	}
                     	break;	
 				}
-				Log.d("Piano","state tone keys:"+Piano.this.getStateToneKeys()+" state semitone keys:"+Piano.this.getStateSTKeys()+" spriteindex:"+SpriteIndex);
-
 				for (int i=0;i<49;i++)
-        		{
-        			if(Piano.this.getToneKeys()[i].getPressed() && i!=SpriteIndex)
-        			{
-        				if(Piano.this.getToneKeys()[i].getMoving())
-        				{
-        					Piano.this.getToneKeys()[i].setMoving(false);
-        					Piano.this.getTones().getChild(i).setVisible(false);
-        				}
-        				else
-        				{
-        					Piano.this.getToneKeys()[i].setPressed(false);
-        					Piano.this.getTones().getChild(i).setVisible(true);
-        				}
-        			}
-        			else if(Piano.this.getToneKeys()[i].getPressed() && i==SpriteIndex)
-        			{
-        				Piano.this.getTones().getChild(i).setVisible(false);
-        			}
-        			else if(!Piano.this.getToneKeys()[i].getPressed())
-        			{
-        				Piano.this.getTones().getChild(i).setVisible(true);
-        			}
-        		}
-        		
-        		for (int i=0;i<35;i++)
-        		{
-        			if(Piano.this.getSemitoneKeys()[i].getPressed() && i!=SpriteIndex)
-        			{
-        				if(Piano.this.getSemitoneKeys()[i].getMoving())
-        				{
-        					Piano.this.getSemitoneKeys()[i].setMoving(false);
-        					Piano.this.getST().getChild(i).setVisible(false);
-        				}
-        				else
-        				{
-        					Piano.this.getSemitoneKeys()[i].setPressed(false);
-        					Piano.this.getST().getChild(i).setVisible(true);
-        				}
-        			}
-        			else if(Piano.this.getSemitoneKeys()[i].getPressed() && i==SpriteIndex)
-        			{
-        				Piano.this.getST().getChild(i).setVisible(false);
-        			}
-        			else if(!Piano.this.getSemitoneKeys()[i].getPressed())
-        			{
-        				Piano.this.getST().getChild(i).setVisible(true);
-        			}
-        		}
-                
+				{
+					if(Piano.this.getToneKeys()[i].getPressed())
+					{
+						Piano.this.getTones().getChild(i).setVisible(false);
+					}
+					else
+					{
+						Piano.this.getTones().getChild(i).setVisible(true);
+					}
+				}
+				
+				for (int i=0;i<35;i++)
+				{
+					if(Piano.this.getSemitoneKeys()[i].getPressed())
+					{
+						Piano.this.getST().getChild(i).setVisible(false);
+					}
+					else
+					{
+						Piano.this.getST().getChild(i).setVisible(true);
+					}
+				}
                 return true;
             }
 		};
@@ -539,14 +550,9 @@ public class Piano extends Entity {
 		this.semitonekeys=st;
 	}
 	
-	public void setStateToneKeys(long s)
+	public void setTouchIDs(Hashtable<Integer,Key> t)
 	{
-		this.stateToneKeys=s;
-	}
-	
-	public void setStateSTKeys(long s)
-	{
-		this.stateSTKeys=s;
+		this.TouchIDs=t;
 	}
 	
 	//GET}
@@ -631,13 +637,8 @@ public class Piano extends Entity {
 		return this.semitonekeys;
 	}
 	
-	public long getStateToneKeys()
+	public Hashtable<Integer,Key> getTouchIDs()
 	{
-		return this.stateToneKeys;
-	}
-	
-	public long getStateSTKeys()
-	{
-		return this.stateSTKeys;
+		return this.TouchIDs;
 	}
 }

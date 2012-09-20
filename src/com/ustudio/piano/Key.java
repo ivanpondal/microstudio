@@ -2,27 +2,42 @@ package com.ustudio.piano;
 
 public class Key {
 	private boolean pressed;
-	private boolean moving;
-
+	private boolean istone;
+	private int spriteindex;
+	
 	public Key()
 	{
 		this.pressed = false;
-		this.moving = false;
+		this.istone = false;
+		this.spriteindex = 0;
 	}
 	
-	public Key(boolean p,boolean m)
+	public Key(boolean p,boolean t)
 	{
-		this.pressed=p;
-		this.moving=m;
+		this.pressed = p;
+		this.istone = t;
+		this.spriteindex = 0;
+	}
+	
+	public Key(boolean p,boolean t,int s)
+	{
+		this.pressed = p;
+		this.istone = t;
+		this.spriteindex = s;
 	}
 	
 	public void setPressed(boolean p){
 		this.pressed = p;
 		
 	}
-
-	public void setMoving(boolean m){
-		this.moving = m;
+	
+	public void setIsTone(boolean t){
+		this.istone = t;
+		
+	}
+	
+	public void setSpriteIndex(int s){
+		this.spriteindex = s;
 		
 	}
 	
@@ -30,7 +45,11 @@ public class Key {
 		return this.pressed;
 	}
 	
-	public boolean getMoving(){
-		return this.moving;
+	public boolean getIsTone(){
+		return this.istone;
+	}
+	
+	public int getSpriteIndex(){
+		return this.spriteindex;
 	}
 }
