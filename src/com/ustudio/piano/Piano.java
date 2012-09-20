@@ -107,124 +107,22 @@ public class Piano extends Entity {
 				MIDInote=Piano.this.SelKey2MIDI(Piano.this.TouchX2SelKey(pTouchAreaLocalX,tmpIsTone), tmpIsTone);
 				SpriteIndex=Piano.this.MIDI2SpriteIndex(MIDInote, tmpIsTone);
     			PointerID=pAreaTouchEvent.getPointerID();
+    			
 				switch(pAreaTouchEvent.getAction()) 
 				{
                     case TouchEvent.ACTION_DOWN:
-                    	if(tmpIsTone)
-                    	{
-                    		Piano.this.getToneKeys()[SpriteIndex].setPressed(true);
-                    		if(!Piano.this.getTouchIDs().containsKey(PointerID))
-                    		{
-                    			Piano.this.getTouchIDs().put(PointerID,Piano.this.getToneKeys()[SpriteIndex]);
-                    		}
-                    		else
-                    		{
-                    			Piano.this.getTouchIDs().remove(PointerID);
-                    			Piano.this.getTouchIDs().put(PointerID,Piano.this.getToneKeys()[SpriteIndex]);
-                    		}
-                    	}
-                    	else
-                    	{
-                    		Piano.this.getSemitoneKeys()[SpriteIndex].setPressed(true);
-                    		if(!Piano.this.getTouchIDs().containsKey(PointerID))
-                    		{
-                    			Piano.this.getTouchIDs().put(PointerID,Piano.this.getSemitoneKeys()[SpriteIndex]);
-                    		}
-                    		else
-                    		{
-                    			Piano.this.getTouchIDs().remove(PointerID);
-                    			Piano.this.getTouchIDs().put(PointerID,Piano.this.getSemitoneKeys()[SpriteIndex]);
-                    		}
-                    	}
+                    	Piano.this.doUpDownAction(tmpIsTone, true, PointerID, SpriteIndex);
                     	break;
                     case TouchEvent.ACTION_UP: 
-                    	if(tmpIsTone)
-                    	{
-                    		Piano.this.getToneKeys()[SpriteIndex].setPressed(false);
-                    		if(!Piano.this.getTouchIDs().containsKey(PointerID))
-                    		{
-                    			Piano.this.getTouchIDs().put(PointerID,Piano.this.getToneKeys()[SpriteIndex]);
-                    		}
-                    		else
-                    		{
-                    			Piano.this.getTouchIDs().remove(PointerID);
-                    			Piano.this.getTouchIDs().put(PointerID,Piano.this.getToneKeys()[SpriteIndex]);
-                    		}
-                    	}
-                    	else
-                    	{
-                    		Piano.this.getSemitoneKeys()[SpriteIndex].setPressed(false);
-                    		if(!Piano.this.getTouchIDs().containsKey(PointerID))
-                    		{
-                    			Piano.this.getTouchIDs().put(PointerID,Piano.this.getSemitoneKeys()[SpriteIndex]);
-                    		}
-                    		else
-                    		{
-                    			Piano.this.getTouchIDs().remove(PointerID);
-                    			Piano.this.getTouchIDs().put(PointerID,Piano.this.getSemitoneKeys()[SpriteIndex]);
-                    		}
-                    	}
+                    	Piano.this.doUpDownAction(tmpIsTone, false, PointerID, SpriteIndex);
                         break;
                     case TouchEvent.ACTION_MOVE:                       	
-                    	if(tmpIsTone)
-                    	{
-                    		Piano.this.getToneKeys()[SpriteIndex].setPressed(true);
-                    		if(!Piano.this.getTouchIDs().containsKey(PointerID))
-                    		{
-                    			Piano.this.getTouchIDs().put(PointerID,Piano.this.getToneKeys()[SpriteIndex]);
-                    		}
-                    		else
-                    		{
-                    			if(!Piano.this.getTouchIDs().get(PointerID).equals(Piano.this.getToneKeys()[SpriteIndex]))
-                    			{
-                    				Piano.this.getToneKeys()[Piano.this.getTouchIDs().get(PointerID).getSpriteIndex()].setPressed(false);
-                    			}
-                    			Piano.this.getTouchIDs().remove(PointerID);
-                    			Piano.this.getTouchIDs().put(PointerID,Piano.this.getToneKeys()[SpriteIndex]);
-                    		}
-                    	}
-                    	else
-                    	{
-                    		Piano.this.getSemitoneKeys()[SpriteIndex].setPressed(true);
-                    		if(!Piano.this.getTouchIDs().containsKey(PointerID))
-                    		{
-                    			Piano.this.getTouchIDs().put(PointerID,Piano.this.getSemitoneKeys()[SpriteIndex]);
-                    		}
-                    		else
-                    		{
-                    			if(!Piano.this.getTouchIDs().get(PointerID).equals(Piano.this.getSemitoneKeys()[SpriteIndex]))
-                    			{
-                    				Piano.this.getSemitoneKeys()[Piano.this.getTouchIDs().get(PointerID).getSpriteIndex()].setPressed(false);
-                    			}
-                    			Piano.this.getTouchIDs().remove(PointerID);
-                    			Piano.this.getTouchIDs().put(PointerID,Piano.this.getSemitoneKeys()[SpriteIndex]);
-                    		}
-                    	}
+                    	Piano.this.doMoveAction(tmpIsTone, PointerID, SpriteIndex);
                     	break;	
 				}
-				for (int i=0;i<49;i++)
-				{
-					if(Piano.this.getToneKeys()[i].getPressed())
-					{
-						Piano.this.getTones().getChild(i).setVisible(false);
-					}
-					else
-					{
-						Piano.this.getTones().getChild(i).setVisible(true);
-					}
-				}
 				
-				for (int i=0;i<35;i++)
-				{
-					if(Piano.this.getSemitoneKeys()[i].getPressed())
-					{
-						Piano.this.getST().getChild(i).setVisible(false);
-					}
-					else
-					{
-						Piano.this.getST().getChild(i).setVisible(true);
-					}
-				}
+				Piano.this.processKeys();
+				
                 return true;
             }
 		};
@@ -466,6 +364,115 @@ public class Piano extends Entity {
 			spriteindex=octave*5+modifier;
 		}
 		return spriteindex;
+	}
+	
+	public void doUpDownAction(boolean tmpIsTone,boolean isDown, int PointerID, int SpriteIndex)
+	{
+		if(tmpIsTone)
+    	{
+    		this.getToneKeys()[SpriteIndex].setPressed(isDown);
+    		if(!this.getTouchIDs().containsKey(PointerID))
+    		{
+    			this.getTouchIDs().put(PointerID,this.getToneKeys()[SpriteIndex]);
+    		}
+    		else
+    		{
+    			this.getTouchIDs().remove(PointerID);
+    			this.getTouchIDs().put(PointerID,this.getToneKeys()[SpriteIndex]);
+    		}
+    	}
+    	else
+    	{
+    		this.getSemitoneKeys()[SpriteIndex].setPressed(isDown);
+    		if(!this.getTouchIDs().containsKey(PointerID))
+    		{
+    			this.getTouchIDs().put(PointerID,this.getSemitoneKeys()[SpriteIndex]);
+    		}
+    		else
+    		{
+    			this.getTouchIDs().remove(PointerID);
+    			this.getTouchIDs().put(PointerID,this.getSemitoneKeys()[SpriteIndex]);
+    		}
+    	}
+	}
+	
+	public void doMoveAction(boolean tmpIsTone, int PointerID, int SpriteIndex)
+	{
+     	if(tmpIsTone)
+    	{
+    		this.getToneKeys()[SpriteIndex].setPressed(true);
+    		if(!this.getTouchIDs().containsKey(PointerID))
+    		{
+    			this.getTouchIDs().put(PointerID,this.getToneKeys()[SpriteIndex]);
+    		}
+    		else
+    		{
+    			if(!this.getTouchIDs().get(PointerID).equals(this.getToneKeys()[SpriteIndex]))
+    			{
+    				if(this.getTouchIDs().get(PointerID).getIsTone())
+    				{
+    					this.getToneKeys()[this.getTouchIDs().get(PointerID).getSpriteIndex()].setPressed(false);
+    				}
+    				else
+    				{
+        				this.getSemitoneKeys()[this.getTouchIDs().get(PointerID).getSpriteIndex()].setPressed(false);
+    				}
+    			}
+    			this.getTouchIDs().remove(PointerID);
+    			this.getTouchIDs().put(PointerID,this.getToneKeys()[SpriteIndex]);
+    		}
+    	}
+    	else
+    	{
+    		this.getSemitoneKeys()[SpriteIndex].setPressed(true);
+    		if(!this.getTouchIDs().containsKey(PointerID))
+    		{
+    			this.getTouchIDs().put(PointerID,this.getSemitoneKeys()[SpriteIndex]);
+    		}
+    		else
+    		{
+    			if(!this.getTouchIDs().get(PointerID).equals(Piano.this.getSemitoneKeys()[SpriteIndex]))
+    			{
+    				if(this.getTouchIDs().get(PointerID).getIsTone())
+    				{
+        				this.getToneKeys()[this.getTouchIDs().get(PointerID).getSpriteIndex()].setPressed(false);
+    				}
+    				else
+    				{
+        				this.getSemitoneKeys()[this.getTouchIDs().get(PointerID).getSpriteIndex()].setPressed(false);
+    				}
+    			}
+    			this.getTouchIDs().remove(PointerID);
+    			this.getTouchIDs().put(PointerID,this.getSemitoneKeys()[SpriteIndex]);
+    		}
+    	}
+	}
+	
+	public void processKeys()
+	{
+		for (int i=0;i<49;i++)
+		{
+			if(this.getToneKeys()[i].getPressed())
+			{
+				this.getTones().getChild(i).setVisible(false);
+			}
+			else
+			{
+				this.getTones().getChild(i).setVisible(true);
+			}
+		}
+		
+		for (int i=0;i<35;i++)
+		{
+			if(this.getSemitoneKeys()[i].getPressed())
+			{
+				this.getST().getChild(i).setVisible(false);
+			}
+			else
+			{
+				this.getST().getChild(i).setVisible(true);
+			}
+		}
 	}
 	
 	// SET
