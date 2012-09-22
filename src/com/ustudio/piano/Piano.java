@@ -16,6 +16,8 @@ import android.util.Log;
 import java.util.Hashtable;
 
 import com.ustudio.main.MainActivity;
+import com.ustudio.audio.Instrument;
+import com.ustudio.midi.MIDIMessage;
 
 public class Piano extends Entity {
 	
@@ -51,7 +53,9 @@ public class Piano extends Entity {
 	private int midioffset;
 	private Hashtable<Integer,Key> TouchIDs;
 	
-	public Piano(Scene pScene, int w, int h) {
+	private Instrument mInstrument;
+	
+	public Piano(Scene pScene, int w, int h, Instrument Instr) {
 		Key tmptonekeys[];
 		Key tmpsemitonekeys[];
 		Hashtable<Integer,Key> tmpTouchIDs;
@@ -72,6 +76,7 @@ public class Piano extends Entity {
 		this.setKeyboardWidth(CAMERA_WIDTH*7);
 		this.setKeyboardY(CAMERA_HEIGHT*0.2f);
 		this.setMIDIOffset(24);
+		this.setInstrument(Instr);
 		
 		tmptonekeys=new Key[49];
 		tmpsemitonekeys=new Key[35];
@@ -121,7 +126,7 @@ public class Piano extends Entity {
                     	break;	
 				}
 				
-				Piano.this.processKeys();
+				Piano.this.processKeys(MIDInote);
 				
                 return true;
             }
@@ -448,17 +453,28 @@ public class Piano extends Entity {
     	}
 	}
 	
-	public void processKeys()
+	public void processKeys(int MIDInote)
 	{
+		MIDIMessage tmpMIDI;
 		for (int i=0;i<49;i++)
 		{
 			if(this.getToneKeys()[i].getPressed())
 			{
-				this.getTones().getChild(i).setVisible(false);
+				if(this.getTones().getChild(i).isVisible())
+				{
+					this.getTones().getChild(i).setVisible(false);
+					tmpMIDI=new MIDIMessage((byte)0x90,(byte)0x00,(byte)MIDInote,(byte)0x7F);
+					this.getInstrument().processMIDI(tmpMIDI);
+				}
 			}
 			else
 			{
-				this.getTones().getChild(i).setVisible(true);
+				if(!this.getTones().getChild(i).isVisible())
+				{
+					this.getTones().getChild(i).setVisible(true);
+					tmpMIDI=new MIDIMessage((byte)0x80,(byte)0x00,(byte)MIDInote,(byte)0x7F);
+					this.getInstrument().processMIDI(tmpMIDI);
+				}
 			}
 		}
 		
@@ -466,11 +482,21 @@ public class Piano extends Entity {
 		{
 			if(this.getSemitoneKeys()[i].getPressed())
 			{
-				this.getST().getChild(i).setVisible(false);
+				if(this.getST().getChild(i).isVisible())
+				{
+					this.getST().getChild(i).setVisible(false);
+					tmpMIDI=new MIDIMessage((byte)0x90,(byte)0x00,(byte)MIDInote,(byte)0x7F);
+					this.getInstrument().processMIDI(tmpMIDI);
+				}
 			}
 			else
 			{
-				this.getST().getChild(i).setVisible(true);
+				if(!this.getST().getChild(i).isVisible())
+				{
+					this.getST().getChild(i).setVisible(true);
+					tmpMIDI=new MIDIMessage((byte)0x80,(byte)0x00,(byte)MIDInote,(byte)0x7F);
+					this.getInstrument().processMIDI(tmpMIDI);
+				}
 			}
 		}
 	}
@@ -561,6 +587,11 @@ public class Piano extends Entity {
 	{
 		this.TouchIDs=t;
 	}
+
+	public void setInstrument(Instrument i)
+	{
+		this.mInstrument=i;
+	}
 	
 	//GET}
 	
@@ -647,5 +678,10 @@ public class Piano extends Entity {
 	public Hashtable<Integer,Key> getTouchIDs()
 	{
 		return this.TouchIDs;
+	}
+	
+	public Instrument getInstrument()
+	{
+		return this.mInstrument;
 	}
 }

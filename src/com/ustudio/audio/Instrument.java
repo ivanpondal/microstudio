@@ -97,7 +97,7 @@ public class Instrument {
 		switch(msg.getFunction())
 		{
 			case (byte)0x80://note off	
-				stopMIDI(msg.getParam1(),msg.getParam2());		
+				stopMIDI(msg.getParam1());		
 				break;
 			case (byte)0x90://note on
 				playMIDI(msg.getParam1(),msg.getParam2());			
@@ -113,11 +113,11 @@ public class Instrument {
 		}
 	}
 	
-	public void stopMIDI(byte note,byte velocity)
+	public void stopMIDI(byte note)
 	{
 		if(dat_notes[note].getEnabled())
 		{
-			dat_notes[note].stopNote(velocity, val_decay);
+			dat_notes[note].stopNote(val_decay);
 		}
 	}
 	
