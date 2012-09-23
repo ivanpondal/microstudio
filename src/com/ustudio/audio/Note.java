@@ -15,9 +15,9 @@ public class Note {
 	private byte val_midi;
 	private boolean val_enabled; 
 	
-	public Note(byte m, byte s, String n)//midi note, samples, instrument
+	public Note(byte m, byte s, String n, String[] l)//midi note, samples, instrument
 	{
-		setSamples(m,s,n);
+		setSamples(m,s,n,l);
 	}
 	
 	public void setName(String n)
@@ -25,17 +25,18 @@ public class Note {
 		this.str_name=n;
 	}
 	
-	public void setSamples(byte m, byte s, String n)
+	public void setSamples(byte m, byte s, String n,String[] l)
 	{
 		String[] files,filename;
 		String str_regex;
 		boolean found=false,finished=false;
 		int i;
-		AssetManager SamplesDir = MainActivity.getInstance().getAssets();
+		
 		MusicFactory.setAssetBasePath("sfx/"+n+"/");
 		this.dat_samples=new Music[s];
 		try {
-			files=SamplesDir.list("sfx/"+n);
+			
+			files=l; //load all the files in the instruments folder
 			i=0;
 			while(!finished)
 			{
@@ -45,7 +46,7 @@ public class Note {
 				}
 				else
 				{
-					str_regex=m+"_[_a-zA-Z0-9#]*.ogg";
+					str_regex=m+"_[_a-zA-Z0-9#]*.ogg"; //search for the sound that belongs to the midi value asked
 					if(files[i].matches(str_regex))
 					{
 						found=true;
@@ -70,7 +71,7 @@ public class Note {
 						}
 						else
 						{
-							str_regex=m+"_"+samp+"_[a-zA-Z0-9#]*.ogg";
+							str_regex=m+"_"+samp+"_[a-zA-Z0-9#]*.ogg"; //search for the sound's samples
 							if(files[i].matches(str_regex))
 							{
 								found=true;

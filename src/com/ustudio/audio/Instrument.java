@@ -1,7 +1,11 @@
 package com.ustudio.audio;
 
+import java.io.IOException;
+
+import android.content.res.AssetManager;
 import android.util.Log;
 
+import com.ustudio.main.MainActivity;
 import com.ustudio.midi.MIDIMessage;
 
 public class Instrument {
@@ -11,11 +15,15 @@ public class Instrument {
 	private float val_right_vol;
 	private byte val_samples;
 	private long val_decay;
+	private byte val_first_midi;
+	private byte val_last_midi;
 	
-	public Instrument(String n, byte s, long d)
+	public Instrument(String n, byte s, long d, byte f, byte l)
 	{
 		setName(n);
 		setSamples(s);
+		setFirstMIDI(f);
+		setLastMIDI(l);
 		setNotes();
 		setDecay(d);
 		setVolumeLeft(1.0f);
@@ -29,10 +37,22 @@ public class Instrument {
 	
 	public void setNotes()
 	{
+		AssetManager SamplesDir = MainActivity.getInstance().getAssets();
+		String[] list=null;
+		
+		try {
+			list=SamplesDir.list("sfx/"+this.str_name.toLowerCase());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		byte notes=(byte)(this.val_last_midi-this.val_first_midi);
 		this.dat_notes=new Note[128];
-		for(byte i=0;i!=-128;i++)//using -129 because it overflows as 128 to -128
+		
+		for(byte i=this.val_first_midi;i<(this.val_last_midi+1);i++)//using -129 because it overflows as 128 to -128
 		{
-			this.dat_notes[i]=new Note(i,this.val_samples,str_name.toLowerCase());
+			this.dat_notes[i]=new Note(i,this.val_samples,this.str_name.toLowerCase(),list);
 		}
 	}
 	
@@ -60,6 +80,16 @@ public class Instrument {
 	public void setDecay(long d)
 	{
 		this.val_decay=d;
+	}
+	
+	public void setFirstMIDI(byte f)
+	{
+		this.val_first_midi=f;
+	}
+	
+	public void setLastMIDI(byte l)
+	{
+		this.val_last_midi=l;
 	}
 	
 	public String getName()
@@ -90,6 +120,16 @@ public class Instrument {
 	public long getDecay()
 	{
 		return this.val_decay;
+	}
+	
+	public byte getFirstMIDI()
+	{
+		return this.val_first_midi;
+	}
+	
+	public byte getLastMIDI()
+	{
+		return this.val_last_midi;
 	}
 	
 	public void processMIDI(MIDIMessage msg)

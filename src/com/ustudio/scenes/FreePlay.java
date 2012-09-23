@@ -26,7 +26,7 @@ public class FreePlay extends Scene {
 	
 		//this.mMainActivity = pMainActivity;
         this.setBackground(new ColorBackground(0, 0.8784f, 0));
-        this.mInsPiano=new Instrument("Piano",(byte)3,750);
+        this.mInsPiano=new Instrument("Piano",(byte)3,750,(byte)60,(byte)74);
         
 		this.mTouchPiano = new Piano(this, CAMERA_WIDTH, CAMERA_HEIGHT, this.mInsPiano);
 		this.attachChild(this.mTouchPiano);
