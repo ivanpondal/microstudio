@@ -50,7 +50,7 @@ public class Piano extends Entity {
 	private float widthKeyboard;
 	private float heightKeyboard;
 	
-	private int midioffset;
+	private byte midioffset;
 	private Hashtable<Integer,Key> TouchIDs;
 	
 	private Instrument mInstrument;
@@ -75,17 +75,17 @@ public class Piano extends Entity {
 		this.setKeyboardHeight(CAMERA_HEIGHT*0.8f);
 		this.setKeyboardWidth(CAMERA_WIDTH*7);
 		this.setKeyboardY(CAMERA_HEIGHT*0.2f);
-		this.setMIDIOffset(24);
+		this.setMIDIOffset((byte)24);
 		this.setInstrument(Instr);
 		
 		tmptonekeys=new Key[49];
 		tmpsemitonekeys=new Key[35];
-		for (int i=0;i<49;i++)
+		for (byte i=0;i<49;i++)
 		{
 			tmptonekeys[i]=new Key(false,true,i,this.SpriteIndex2MIDI(i, true));
 		}
 		
-		for (int i=0;i<35;i++)
+		for (byte i=0;i<35;i++)
 		{
 			tmpsemitonekeys[i]=new Key(false,false,i,this.SpriteIndex2MIDI(i, false));
 		}
@@ -106,12 +106,13 @@ public class Piano extends Entity {
 		
 		Sprite touchControl = new Sprite(0,this.getKeyboardY(),this.mFTR_STN){
 			public boolean onAreaTouched(final TouchEvent pAreaTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
-				int SpriteIndex,PointerID;
-				byte MIDInote=0;
+				int PointerID,SelKey;
+				byte SpriteIndex;
 				boolean tmpIsTone;
 				tmpIsTone=Piano.this.isTone(pTouchAreaLocalX, pTouchAreaLocalY);
-				MIDInote=Piano.this.SelKey2MIDI(Piano.this.TouchX2SelKey(pTouchAreaLocalX,tmpIsTone), tmpIsTone);
-				SpriteIndex=Piano.this.MIDI2SpriteIndex(MIDInote, tmpIsTone);
+				SelKey=Piano.this.TouchX2SelKey(pTouchAreaLocalX,tmpIsTone);
+				SpriteIndex=Piano.this.SelKey2SpriteIndex(SelKey, tmpIsTone);
+				
     			PointerID=pAreaTouchEvent.getPointerID();
     			
 				switch(pAreaTouchEvent.getAction()) 
@@ -122,13 +123,12 @@ public class Piano extends Entity {
                     case TouchEvent.ACTION_UP: 
                     	Piano.this.doUpDownAction(tmpIsTone, false, PointerID, SpriteIndex);
                         break;
-                    case TouchEvent.ACTION_MOVE:                       	
+                    case TouchEvent.ACTION_MOVE:    
                     	Piano.this.doMoveAction(tmpIsTone, PointerID, SpriteIndex);
                     	break;	
 				}
-				
+
 				Piano.this.processKeys();
-				
                 return true;
             }
 		};
@@ -235,15 +235,52 @@ public class Piano extends Entity {
 		return posBlanca;
 	}
 	
-	public byte SelKey2MIDI(int SelKey,boolean isTone){
-		int octave;
-		int noteindex;
-		byte midinote;
-		int modifier=0;
+
+	public byte SelKey2SpriteIndex(int SelKey,boolean isTone){
+		byte octave;
+		byte noteindex;
+		byte modifier=0;
+		byte SpriteIndex=0;
 		if(isTone)
 		{
-			octave=(int)Math.floor(SelKey/7);
-			noteindex=SelKey-7*octave;
+			SpriteIndex=(byte)SelKey;
+		}
+		else
+		{
+			octave=(byte)Math.floor(SelKey/14);
+			noteindex=(byte)(SelKey-14*octave);
+			switch(noteindex)
+			{
+				case 2:
+					modifier=0;
+					break;
+				case 4:
+					modifier=1;
+					break;
+				case 8:
+					modifier=2;
+					break;
+				case 10:
+					modifier=3;
+					break;
+				case 12:
+					modifier=4;
+					break;
+			}
+			SpriteIndex=(byte)(modifier+octave*5);
+		}
+		return SpriteIndex;
+	}
+	
+	public byte SelKey2MIDI(int SelKey,boolean isTone){
+		byte octave;
+		byte noteindex;
+		byte midinote;
+		byte modifier=0;
+		if(isTone)
+		{
+			octave=(byte)Math.floor(SelKey/7);
+			noteindex=(byte)(SelKey-7*octave);
 			switch(noteindex)
 			{
 				case 0:
@@ -272,8 +309,8 @@ public class Piano extends Entity {
 		}
 		else
 		{
-			octave=(int)Math.floor(SelKey/14);
-			noteindex=SelKey-14*octave;
+			octave=(byte)Math.floor(SelKey/14);
+			noteindex=(byte)(SelKey-14*octave);
 			switch(noteindex)
 			{
 				case 2:
@@ -297,92 +334,17 @@ public class Piano extends Entity {
 		return midinote;
 	}
 	
-	public boolean isMIDITone(byte midi){
-		int octave;
-		int noteindex;
-		midi-=this.getMIDIOffset();
-		octave=midi/12;
-		noteindex=midi-octave*12;
-		if((noteindex==1)||(noteindex==3)||(noteindex==6)||(noteindex==8)||(noteindex==10))
-		{
-			return false;
-		}
-		return true;
-	}
-	
-	public int MIDI2SpriteIndex(byte midi,boolean isTone)
-	{
-		int octave;
-		int noteindex;
-		int modifier=0;
-		int spriteindex;
-		midi-=this.getMIDIOffset();
-		octave=midi/12;
-		noteindex=midi-octave*12;
-		if(isTone)
-		{
-			switch(noteindex)
-			{
-				case 0:
-					modifier=0;
-					break;
-				case 2:
-					modifier=1;
-					break;
-				case 4:
-					modifier=2;
-					break;
-				case 5:
-					modifier=3;
-					break;
-				case 7:
-					modifier=4;
-					break;
-				case 9:
-					modifier=5;
-					break;
-				case 11:
-					modifier=6;
-					break;
-			}
-			spriteindex=octave*7+modifier;
-		}
-		else
-		{
-			switch(noteindex)
-			{
-				case 1:
-					modifier=0;
-					break;
-				case 3:
-					modifier=1;
-					break;
-				case 6:
-					modifier=2;
-					break;
-				case 8:
-					modifier=3;
-					break;
-				case 10:
-					modifier=4;
-					break;
-			}
-			spriteindex=octave*5+modifier;
-		}
-		return spriteindex;
-	}
-	
 	public byte SpriteIndex2MIDI(int SpriteIndex,boolean isTone)
 	{
-		int octave;
-		int noteindex;
-		int modifier=0;
+		byte octave;
+		byte noteindex;
+		byte modifier=0;
 		byte midi=0;
 		midi+=this.getMIDIOffset();
 		if(isTone)
 		{
-			octave=SpriteIndex/7;
-			noteindex=SpriteIndex-octave*7;
+			octave=(byte)(SpriteIndex/7);
+			noteindex=(byte)(SpriteIndex-octave*7);
 			switch(noteindex)
 			{
 				case 0:
@@ -411,8 +373,8 @@ public class Piano extends Entity {
 		}
 		else
 		{
-			octave=SpriteIndex/5;
-			noteindex=SpriteIndex-octave*5;
+			octave=(byte)(SpriteIndex/5);
+			noteindex=(byte)(SpriteIndex-octave*5);
 			switch(noteindex)
 			{
 				case 0:
@@ -436,7 +398,83 @@ public class Piano extends Entity {
 		return midi;
 	}
 	
-	public void doUpDownAction(boolean tmpIsTone,boolean isDown, int PointerID, int SpriteIndex)
+	public byte MIDI2SpriteIndex(byte midi,boolean isTone)
+	{
+		byte octave;
+		byte noteindex;
+		byte modifier=0;
+		byte spriteindex;
+		midi-=this.getMIDIOffset();
+		octave=(byte)(midi/12);
+		noteindex=(byte)(midi-octave*12);
+		if(isTone)
+		{
+			switch(noteindex)
+			{
+				case 0:
+					modifier=0;
+					break;
+				case 2:
+					modifier=1;
+					break;
+				case 4:
+					modifier=2;
+					break;
+				case 5:
+					modifier=3;
+					break;
+				case 7:
+					modifier=4;
+					break;
+				case 9:
+					modifier=5;
+					break;
+				case 11:
+					modifier=6;
+					break;
+			}
+			spriteindex=(byte)(octave*7+modifier);
+		}
+		else
+		{
+			switch(noteindex)
+			{
+				case 1:
+					modifier=0;
+					break;
+				case 3:
+					modifier=1;
+					break;
+				case 6:
+					modifier=2;
+					break;
+				case 8:
+					modifier=3;
+					break;
+				case 10:
+					modifier=4;
+					break;
+			}
+			spriteindex=(byte)(octave*5+modifier);
+		}
+		return spriteindex;
+	}
+	
+	public boolean isMIDITone(byte midi){
+		byte octave;
+		byte noteindex;
+		midi-=this.getMIDIOffset();
+		octave=(byte)(midi/12);
+		noteindex=(byte)(midi-octave*12);
+		if((noteindex==1)||(noteindex==3)||(noteindex==6)||(noteindex==8)||(noteindex==10))
+		{
+			return false;
+		}
+		return true;
+	}
+	
+	
+	public void doUpDownAction(boolean tmpIsTone,boolean isDown, int PointerID, byte SpriteIndex)
 	{
 		if(tmpIsTone)
     	{
@@ -466,7 +504,7 @@ public class Piano extends Entity {
     	}
 	}
 	
-	public void doMoveAction(boolean tmpIsTone, int PointerID, int SpriteIndex)
+	public void doMoveAction(boolean tmpIsTone, int PointerID, byte SpriteIndex)
 	{
      	if(tmpIsTone)
     	{
@@ -521,6 +559,7 @@ public class Piano extends Entity {
 	public void processKeys()
 	{
 		MIDIMessage tmpMIDI;
+		
 		for (int i=0;i<49;i++)
 		{
 			if(this.getToneKeys()[i].getPressed())
@@ -633,9 +672,9 @@ public class Piano extends Entity {
 		this.semitonesp=st;
 	}
 	
-	public void setMIDIOffset(int s)
+	public void setMIDIOffset(byte o)
 	{
-		this.midioffset=s;
+		this.midioffset=o;
 	}
 	
 	public void setToneKeys(Key t[])
@@ -725,7 +764,7 @@ public class Piano extends Entity {
 		return this.semitonesp;
 	}
 	
-	public int getMIDIOffset()
+	public byte getMIDIOffset()
 	{
 		return this.midioffset;
 	}

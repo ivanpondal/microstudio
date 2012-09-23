@@ -3,7 +3,7 @@ package com.ustudio.piano;
 public class Key {
 	private boolean pressed;
 	private boolean istone;
-	private int spriteindex;
+	private byte spriteindex;
 	private byte midi;
 	
 	public Key()
@@ -22,7 +22,7 @@ public class Key {
 		this.midi = 0;
 	}
 	
-	public Key(boolean p,boolean t,int s,byte m)
+	public Key(boolean p,boolean t,byte s,byte m)
 	{
 		this.pressed = p;
 		this.istone = t;
@@ -40,7 +40,7 @@ public class Key {
 		
 	}
 	
-	public void setSpriteIndex(int s){
+	public void setSpriteIndex(byte s){
 		this.spriteindex = s;
 		
 	}
@@ -57,7 +57,7 @@ public class Key {
 		return this.istone;
 	}
 	
-	public int getSpriteIndex(){
+	public byte getSpriteIndex(){
 		return this.spriteindex;
 	}
 	

@@ -12,10 +12,6 @@ import org.anddev.andengine.extension.input.touch.controller.MultiTouchControlle
 import org.anddev.andengine.extension.input.touch.exception.MultiTouchException;
 import org.anddev.andengine.ui.activity.BaseGameActivity;
 
-import android.util.Log;
-import android.widget.Toast;
-
-import com.ustudio.audio.*;
 import com.ustudio.managers.SceneManager;
 
 public class MainActivity extends BaseGameActivity {

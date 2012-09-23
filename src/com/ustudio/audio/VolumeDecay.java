@@ -1,7 +1,6 @@
 package com.ustudio.audio;
 import org.anddev.andengine.audio.music.*;
 
-import android.util.Log;
 
 class VolumeDecay extends Thread {
 	private long val_decay_ms;

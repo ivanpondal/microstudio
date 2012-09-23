@@ -5,9 +5,6 @@ import org.anddev.andengine.entity.scene.Scene;
 import org.anddev.andengine.entity.scene.background.ColorBackground;
 
 
-import android.util.Log;
-
-import com.ustudio.main.MainActivity;
 import com.ustudio.piano.Piano;
 import com.ustudio.audio.*;
 

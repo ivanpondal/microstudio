@@ -3,7 +3,6 @@ package com.ustudio.audio;
 import java.io.IOException;
 
 import android.content.res.AssetManager;
-import android.util.Log;
 
 import com.ustudio.main.MainActivity;
 import com.ustudio.midi.MIDIMessage;
@@ -47,7 +46,6 @@ public class Instrument {
 			e.printStackTrace();
 		}
 		
-		byte notes=(byte)(this.val_last_midi-this.val_first_midi);
 		this.dat_notes=new Note[128];
 		
 		for(byte i=this.val_first_midi;i<(this.val_last_midi+1);i++)//using -129 because it overflows as 128 to -128

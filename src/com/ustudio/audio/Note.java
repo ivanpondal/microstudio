@@ -3,10 +3,10 @@ import java.io.IOException;
 
 import org.anddev.andengine.audio.music.*;
 
+import android.util.Log;
+
 import com.ustudio.main.MainActivity;
 
-import android.content.res.AssetManager;
-import android.util.Log;
 
 public class Note {
 	private String str_name;
