@@ -4,12 +4,14 @@ public class Key {
 	private boolean pressed;
 	private boolean istone;
 	private int spriteindex;
+	private byte midi;
 	
 	public Key()
 	{
 		this.pressed = false;
 		this.istone = false;
 		this.spriteindex = 0;
+		this.midi = 0;
 	}
 	
 	public Key(boolean p,boolean t)
@@ -17,13 +19,15 @@ public class Key {
 		this.pressed = p;
 		this.istone = t;
 		this.spriteindex = 0;
+		this.midi = 0;
 	}
 	
-	public Key(boolean p,boolean t,int s)
+	public Key(boolean p,boolean t,int s,byte m)
 	{
 		this.pressed = p;
 		this.istone = t;
 		this.spriteindex = s;
+		this.midi = m;
 	}
 	
 	public void setPressed(boolean p){
@@ -41,6 +45,10 @@ public class Key {
 		
 	}
 	
+	public void setMIDI(byte m){
+		this.midi = m;
+	}
+	
 	public boolean getPressed(){
 		return this.pressed;
 	}
@@ -51,5 +59,9 @@ public class Key {
 	
 	public int getSpriteIndex(){
 		return this.spriteindex;
+	}
+	
+	public byte getMIDI(){
+		return this.midi;
 	}
 }

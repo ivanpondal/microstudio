@@ -11,9 +11,9 @@ import android.util.Log;
 public class Note {
 	private String str_name;
 	private Music[] dat_samples;
+	private VolumeDecay decay;
 	private byte val_midi;
 	private boolean val_enabled; 
-	private VolumeDecay decay;
 	
 	public Note(byte m, byte s, String n)//midi note, samples, instrument
 	{
@@ -45,7 +45,7 @@ public class Note {
 				}
 				else
 				{
-					str_regex=m+"_[0-9]_[a-zA-Z0-9]*.ogg";
+					str_regex=m+"_[_a-zA-Z0-9#]*.ogg";
 					if(files[i].matches(str_regex))
 					{
 						found=true;
@@ -70,7 +70,7 @@ public class Note {
 						}
 						else
 						{
-							str_regex=m+"_"+samp+"_[a-zA-Z0-9]*.ogg";
+							str_regex=m+"_"+samp+"_[a-zA-Z0-9#]*.ogg";
 							if(files[i].matches(str_regex))
 							{
 								found=true;
@@ -138,7 +138,7 @@ public class Note {
 				this.decay.stopthread();
 				while(this.decay.isAlive())
 				{
-					
+					//espero;
 				}
 			}
 		}
