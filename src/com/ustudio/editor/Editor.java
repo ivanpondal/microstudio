@@ -72,7 +72,10 @@ public class Editor extends Entity{
 		all.attachChild(scroll);
 		pScene.registerTouchArea(scroll);
 		
-		addNote(1,2,43,200,1);
+		addNote(1, 2, 43, 200, 1);
+		addNote(2, 4, 20, 100, 0.5f);
+		addNote(3, 5, 50, 50, 0.4f);
+		addNote(4, 1, 100, 300, 0.8f);
 		
 		this.attachChild(all); //No tocar.
 	}
@@ -80,7 +83,6 @@ public class Editor extends Entity{
 	public void addNote(int id, int note, float tempo, float lenght, float volume){
 		Key k = new Key(id, note, tempo, lenght, volume);
 		all.attachChild(k);
-		
 	}
 	
 }

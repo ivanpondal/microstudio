@@ -28,7 +28,7 @@ public class Key extends Entity{
 		lenght = l;
 		volume = v;
 		this.mTexture = new BitmapTextureAtlas(256, 1024, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
-		this.keyTexture = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "gfx/Teclas/Negras/NN.png", 0, 0);
+		this.keyTexture = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "gfx/key/Unknown.jpeg", 0, 0);
 		MainActivity.getInstance().getEngine().getTextureManager().loadTexture(this.mTexture);
 		
 		 key = new Sprite(tempo, note*100, keyTexture);
