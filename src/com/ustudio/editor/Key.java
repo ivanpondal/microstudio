@@ -37,5 +37,8 @@ public class Key extends Entity{
 		 key.setHeight(100);
 		 this.attachChild(key);
 	}
-	
+	public void setLenght(float l){
+		lenght = l;
+		key.setWidth(lenght);
+	}
 }
