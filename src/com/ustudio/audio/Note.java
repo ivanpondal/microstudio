@@ -1,7 +1,7 @@
 package com.ustudio.audio;
 import java.io.IOException;
 
-import org.anddev.andengine.audio.music.*;
+import org.anddev.andengine.audio.sound.*;
 
 import android.util.Log;
 
@@ -10,9 +10,10 @@ import com.ustudio.main.MainActivity;
 
 public class Note {
 	private String str_name;
-	private Music[] dat_samples;
+	private Sound[] dat_samples;
 	private VolumeDecay decay;
 	private byte val_midi;
+	private byte val_velocity;
 	private boolean val_enabled; 
 	
 	public Note(byte m, byte s, String n, String[] l)//midi note, samples, instrument
@@ -31,9 +32,12 @@ public class Note {
 		String str_regex;
 		boolean found=false,finished=false;
 		int i;
+		long milis;
 		
-		MusicFactory.setAssetBasePath("sfx/"+n+"/");
-		this.dat_samples=new Music[s];
+		milis=System.currentTimeMillis();
+		
+		SoundFactory.setAssetBasePath("sfx/"+n+"/");
+		this.dat_samples=new Sound[s];
 		try {
 			
 			files=l; //load all the files in the instruments folder
@@ -78,7 +82,7 @@ public class Note {
 								finished=true;
 								filename=files[i].split("_");
 								this.str_name=filename[2].substring(0, filename[2].length()-4);
-								this.dat_samples[samp] = MusicFactory.createMusicFromAsset(MainActivity.getInstance().getMusicManager(), MainActivity.getInstance().getApplicationContext(), files[i]);
+								this.dat_samples[samp] = SoundFactory.createSoundFromAsset(MainActivity.getInstance().getSoundManager(), MainActivity.getInstance().getApplicationContext(), files[i]);
 							}
 							i++;
 						}
@@ -89,6 +93,7 @@ public class Note {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		Log.d("Piano","time in ms:"+(System.currentTimeMillis()-milis));
 	}
 
 	public void setMidi(byte m)
@@ -101,12 +106,17 @@ public class Note {
 		this.val_enabled=e;
 	}
 	
+	public void setVelocity(byte v)
+	{
+		this.val_velocity=v;
+	}
+	
 	public String getName()
 	{
 		return this.str_name;
 	}
 	
-	public Music[] getSamples()
+	public Sound[] getSamples()
 	{
 		return this.dat_samples;
 	}
@@ -121,6 +131,11 @@ public class Note {
 		return this.val_enabled;
 	}
 	
+	public byte getVelocity()
+	{
+		return this.val_velocity;
+	}
+	
 	public void playNote(byte v, float l, float r)
 	{
 		float samplerange,left,right;
@@ -131,6 +146,7 @@ public class Note {
 		sample--;
 		left=1.0f*l;
 		right=1.0f*r;
+
 		if(this.decay!=null)
 		{
 			
@@ -143,6 +159,7 @@ public class Note {
 				}
 			}
 		}
+		this.setVelocity(v);
 		this.dat_samples[sample].setVolume(right, left);
 		this.dat_samples[sample].play();
 	}
@@ -150,37 +167,20 @@ public class Note {
 	public void stopNote(long d)
 	{
 		byte sample=0;
-		boolean finished=false;
-		boolean found=false;
-		byte i=0;
+		float samplerange;
+
+		samplerange=(float)Math.ceil(128/(float)dat_samples.length);
+		sample=(byte)Math.ceil(this.getVelocity()/samplerange);
+		sample--;
 		
-		while(finished==false)
+		if(d==0)
 		{
-			if(this.dat_samples[i].isPlaying())
-			{
-				sample=i;
-				found=true;
-				finished=true;
-			}
-			i++;
-			if(i==this.dat_samples.length)
-			{
-				finished=true;
-			}
+			this.dat_samples[sample].stop();
 		}
-		
-		if(found)
-		{
-			if(d==0)
-			{
-				this.dat_samples[sample].pause();
-				this.dat_samples[sample].seekTo(0);
-			}
-			else
-			{	
-				this.decay=new VolumeDecay(d,this.dat_samples[sample]);
-				this.decay.start();
-			}
+		else
+		{	
+			this.decay=new VolumeDecay(d,this.dat_samples[sample]);
+			this.decay.start();
 		}
 	}
 	

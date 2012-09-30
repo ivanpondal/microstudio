@@ -109,10 +109,11 @@ public class Piano extends Entity {
 				int PointerID,SelKey;
 				byte SpriteIndex;
 				boolean tmpIsTone;
+
 				tmpIsTone=Piano.this.isTone(pTouchAreaLocalX, pTouchAreaLocalY);
 				SelKey=Piano.this.TouchX2SelKey(pTouchAreaLocalX,tmpIsTone);
 				SpriteIndex=PianoMath.SelKey2SpriteIndex(SelKey, tmpIsTone);
-				
+
     			PointerID=pAreaTouchEvent.getPointerID();
     			
 				switch(pAreaTouchEvent.getAction()) 
@@ -129,6 +130,7 @@ public class Piano extends Entity {
 				}
 
 				Piano.this.processKeys();
+
                 return true;
             }
 		};
@@ -319,7 +321,6 @@ public class Piano extends Entity {
 	public void processKeys()
 	{
 		MIDIMessage tmpMIDI;
-		
 		for (int i=0;i<49;i++)
 		{
 			if(this.getToneKeys()[i].getPressed())
