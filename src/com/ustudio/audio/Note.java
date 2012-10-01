@@ -79,7 +79,7 @@ public class Note {
 								finished=true;
 								filename=files[i].split("_");
 								this.str_name=filename[2].substring(0, filename[2].length()-4);
-								this.dat_samples[samp] = SoundFactory.createSoundFromAsset(MainActivity.getInstance().getSoundManager(), MainActivity.getInstance().getApplicationContext(), files[i]);
+								this.dat_samples[samp] = SoundFactory.createSoundFromAsset(MainActivity.getInstance().getSoundManager(), MainActivity.getInstance().getApplicationContext(), files[i]);								
 							}
 							i++;
 						}
