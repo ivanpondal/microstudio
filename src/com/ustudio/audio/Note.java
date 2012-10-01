@@ -16,9 +16,9 @@ public class Note {
 	private byte val_velocity;
 	private boolean val_enabled; 
 	
-	public Note(byte m, byte s, String n, String[] l)//midi note, samples, instrument
+	public Note(byte m, byte s, String[] l)//midi note, samples, instrument
 	{
-		setSamples(m,s,n,l);
+		setSamples(m,s,l);
 	}
 	
 	public void setName(String n)
@@ -26,17 +26,13 @@ public class Note {
 		this.str_name=n;
 	}
 	
-	public void setSamples(byte m, byte s, String n,String[] l)
+	public void setSamples(byte m, byte s,String[] l)
 	{
 		String[] files,filename;
 		String str_regex;
 		boolean found=false,finished=false;
 		int i;
-		long milis;
-		
-		milis=System.currentTimeMillis();
-		
-		SoundFactory.setAssetBasePath("sfx/"+n+"/");
+
 		this.dat_samples=new Sound[s];
 		try {
 			
@@ -67,6 +63,7 @@ public class Note {
 					i=0;
 					found=false;
 					finished=false;
+
 					while(!finished)
 					{
 						if(i==files.length)
@@ -93,7 +90,6 @@ public class Note {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		Log.d("Piano","time in ms:"+(System.currentTimeMillis()-milis));
 	}
 
 	public void setMidi(byte m)

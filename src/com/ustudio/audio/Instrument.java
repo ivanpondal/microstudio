@@ -2,7 +2,10 @@ package com.ustudio.audio;
 
 import java.io.IOException;
 
+import org.anddev.andengine.audio.sound.SoundFactory;
+
 import android.content.res.AssetManager;
+import android.util.Log;
 
 import com.ustudio.main.MainActivity;
 import com.ustudio.midi.MIDIMessage;
@@ -38,9 +41,10 @@ public class Instrument {
 	{
 		AssetManager SamplesDir = MainActivity.getInstance().getAssets();
 		String[] list=null;
-		
+		String name=this.str_name.toLowerCase();
+	
 		try {
-			list=SamplesDir.list("sfx/"+this.str_name.toLowerCase());
+			list=SamplesDir.list("sfx/"+name);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -48,10 +52,13 @@ public class Instrument {
 		
 		this.dat_notes=new Note[128];
 		
+		SoundFactory.setAssetBasePath("sfx/"+name+"/");
+
 		for(byte i=this.val_first_midi;i<(this.val_last_midi+1);i++)//using -129 because it overflows as 128 to -128
 		{
-			this.dat_notes[i]=new Note(i,this.val_samples,this.str_name.toLowerCase(),list);
+			this.dat_notes[i]=new Note(i,this.val_samples,list);
 		}
+
 	}
 	
 	public void setVolumeLeft(float l)
