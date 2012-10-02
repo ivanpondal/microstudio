@@ -21,7 +21,6 @@ import com.ustudio.midi.MIDIMessage;
 
 public class Piano extends Entity {
 	
-	
 	static int CAMERA_WIDTH;
 	static int CAMERA_HEIGHT;
 	static Scene scene;
@@ -65,16 +64,15 @@ public class Piano extends Entity {
 		
 		
 		scene = pScene;
-		
-		this.setTonesWidth(CAMERA_WIDTH/8);
-		this.setTonesHeight(CAMERA_HEIGHT*0.8f);
-		this.setSTWidth(CAMERA_WIDTH/16);
-		this.setSTHeight(CAMERA_HEIGHT*0.5f);
-		this.setSpaceST(CAMERA_WIDTH/32);
-		this.setTorST(CAMERA_HEIGHT*0.5f);
-		this.setKeyboardHeight(CAMERA_HEIGHT*0.8f);
+		this.setKeyboardHeight(CAMERA_HEIGHT/1.6f);
 		this.setKeyboardWidth(CAMERA_WIDTH*7);
-		this.setKeyboardY(CAMERA_HEIGHT*0.2f);
+		this.setKeyboardY(CAMERA_HEIGHT/2.5f);
+		this.setTonesWidth(CAMERA_WIDTH/8);
+		this.setTonesHeight(this.getKeyboardHeight());
+		this.setSTWidth(CAMERA_WIDTH/16);
+		this.setSTHeight(this.getTonesHeight()/1.80f);
+		this.setSpaceST(CAMERA_WIDTH/32);
+		this.setTorST(this.getSTHeight());
 		this.setMIDIOffset((byte)24);
 		this.setInstrument(Instr);
 		
@@ -95,12 +93,12 @@ public class Piano extends Entity {
 		
 		tmpTouchIDs=new Hashtable<Integer,Key>();
 		this.setTouchIDs(tmpTouchIDs);
-		
+		BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/Piano/Keys/");
 		this.mTexture = new BitmapTextureAtlas(256, 1024, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
-		this.mFTR_TN = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "gfx/Teclas/Blancas/BN.png", 0, 0);
-		this.mFTR_TP = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "gfx/Teclas/Blancas/BP.png", 0,500);
-		this.mFTR_STN = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "gfx/Teclas/Negras/NN.png", 99, 0);
-		this.mFTR_STP = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "gfx/Teclas/Negras/NP.png", 99,500);
+		this.mFTR_TN = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "Tones/to_released.png", 0, 0);
+		this.mFTR_TP = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "Tones/to_pressed.png", 0,500);
+		this.mFTR_STN = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "Semitones/st_released.png", 99, 0);
+		this.mFTR_STP = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "Semitones/st_pressed.png", 99,500);
 		
 		MainActivity.getInstance().getEngine().getTextureManager().loadTexture(this.mTexture);
 		
