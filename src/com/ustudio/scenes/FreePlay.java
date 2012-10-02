@@ -15,14 +15,17 @@ import android.util.Log;
 
 import com.ustudio.audio.Instrument;
 import com.ustudio.main.MainActivity;
-import com.ustudio.piano.Piano;
+import com.ustudio.piano.*;
 
 public class FreePlay extends Scene {
 
 	static int CAMERA_WIDTH;
 	static int CAMERA_HEIGHT;
 	
+	private MiniPiano mMiniPiano;
+	
 	private Piano mTouchPiano;
+	
 	private Instrument mInsPiano;
 	
 	private Texture mTexture;
@@ -30,15 +33,31 @@ public class FreePlay extends Scene {
 	private TextureRegion mBackground;
 	private TextureRegion[] mButton_N;
 	private TextureRegion[] mButton_P;
-
+	private TextureRegion mStep;
 	
 	private Entity mToolBar;
+	private Entity mWholeStep;
+	private Entity mSingleStep;
 	
 	private float ButtonWidth;
 	private float ButtonHeight;
 	private float BGHeight;
 	private float ToolbarY;
 	private float ToolbarX;
+	private float PianoY;
+	private float PianoX;
+	private float MiniPianoY;
+	private float MiniPianoX;
+	private float StepHeight;
+	private float StepWidth;
+	private float WholeStepBwX;
+	private float WholeStepBwY;
+	private float WholeStepFwX;
+	private float WholeStepFwY;
+	private float StepBwX;
+	private float StepBwY;
+	private float StepFwX;
+	private float StepFwY;
 	
 	public FreePlay(int w, int h) {
 		CAMERA_WIDTH = w;
@@ -48,6 +67,7 @@ public class FreePlay extends Scene {
 		loadGUITextures();
 		drawBG();
 		drawToolBar();
+		drawMiniPiano();
 		drawPiano();
 	}
 	
@@ -58,6 +78,12 @@ public class FreePlay extends Scene {
 		this.ButtonHeight=CAMERA_HEIGHT/6.9f;
 		this.ToolbarY=CAMERA_HEIGHT/24;
 		this.ToolbarX=(CAMERA_WIDTH-this.ButtonWidth*6)/2;
+		this.PianoX=(CAMERA_WIDTH-CAMERA_WIDTH/8)*-3;//hago que empieze desde el middle C
+		this.MiniPianoY=CAMERA_HEIGHT/4.4f;
+		this.StepWidth=CAMERA_WIDTH/50;
+		this.StepHeight=CAMERA_HEIGHT/15;
+		this.WholeStepFwX=CAMERA_WIDTH-(CAMERA_WIDTH/6f);
+		this.WholeStepFwY=CAMERA_HEIGHT/4f;
 	}
 	
 	private void loadGUITextures()
@@ -75,6 +101,8 @@ public class FreePlay extends Scene {
 			this.mButton_N[i] = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "Buttons/"+i+"_released.png", 1600, i*139);
 			this.mButton_P[i] = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "Buttons/"+i+"_pressed.png", 1811, i*139);
 		}
+		
+		this.mStep = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "Buttons/step.png", 1600, 834);
 		
 		MainActivity.getInstance().getEngine().getTextureManager().loadTexture(this.mTexture);
 	}
@@ -130,11 +158,37 @@ public class FreePlay extends Scene {
 		this.attachChild(this.mToolBar);
 	}
 	
+	private void drawMiniPiano()
+	{
+		this.mWholeStep=new Entity();
+		Sprite step1_sprite = new Sprite(0,0,this.mStep);
+		Sprite step2_sprite = new Sprite(this.StepWidth/1.5f,0,this.mStep);
+		
+		step1_sprite.setWidth(this.StepWidth);
+		step1_sprite.setHeight(this.StepHeight);
+		
+		step2_sprite.setWidth(this.StepWidth);
+		step2_sprite.setHeight(this.StepHeight);
+		
+		this.mWholeStep.attachChild(step1_sprite);
+		this.mWholeStep.attachChild(step2_sprite);
+		
+		this.mWholeStep.setPosition(this.WholeStepFwX, this.WholeStepFwY);
+		
+		this.attachChild(this.mWholeStep);
+		
+		this.mMiniPiano = new MiniPiano(this, CAMERA_WIDTH, CAMERA_HEIGHT);
+		this.MiniPianoX=(CAMERA_WIDTH-this.mMiniPiano.getKeyboardWidth())/2;
+		this.mMiniPiano.setPosition(this.MiniPianoX, this.MiniPianoY);
+		this.attachChild(this.mMiniPiano);	
+	}
+	
 	private void drawPiano()
 	{
 		this.mInsPiano=new Instrument("Piano",(byte)1,400,(byte)60,(byte)73);
 		this.mTouchPiano = new Piano(this, CAMERA_WIDTH, CAMERA_HEIGHT, this.mInsPiano);
-		this.attachChild(this.mTouchPiano);
-		this.mTouchPiano.setPosition((CAMERA_WIDTH-CAMERA_WIDTH/8)*-3, 0.0f);//hago que empieze desde el middle C
+		this.PianoY=CAMERA_HEIGHT-this.mTouchPiano.getKeyboardHeight();
+		this.mTouchPiano.setPosition(this.PianoX, this.PianoY);
+		this.attachChild(this.mTouchPiano);		
 	}
 }

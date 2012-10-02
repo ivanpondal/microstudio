@@ -69,9 +69,9 @@ public class Piano extends Entity {
 		this.setKeyboardY(CAMERA_HEIGHT-this.getKeyboardHeight());
 		this.setTonesWidth(CAMERA_WIDTH/8);
 		this.setTonesHeight(this.getKeyboardHeight());
-		this.setSTWidth(CAMERA_WIDTH/16);
+		this.setSTWidth(this.getTonesWidth()/2);
 		this.setSTHeight(this.getTonesHeight()/1.75f);
-		this.setSpaceST(CAMERA_WIDTH/32);
+		this.setSpaceST(this.getSTWidth()/2);
 		this.setTorST(this.getSTHeight());
 		this.setMIDIOffset((byte)24);
 		this.setInstrument(Instr);
@@ -102,7 +102,7 @@ public class Piano extends Entity {
 		
 		MainActivity.getInstance().getEngine().getTextureManager().loadTexture(this.mTexture);
 		
-		Sprite touchControl = new Sprite(0,this.getKeyboardY(),this.mFTR_STN){
+		Sprite touchControl = new Sprite(0,0,this.mFTR_STN){
 			public boolean onAreaTouched(final TouchEvent pAreaTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
 				int PointerID,SelKey;
 				byte SpriteIndex;
@@ -157,12 +157,12 @@ public class Piano extends Entity {
 		tmp_tones = new Entity();
 		tmp_tonesp = new Entity();
 		for (int i = 0; i < 83; i++){
-			Sprite tp = new Sprite(i*this.getTonesWidth(),this.getKeyboardY(),this.mFTR_TP);
+			Sprite tp = new Sprite(i*this.getTonesWidth(),0,this.mFTR_TP);
 			tp.setWidth(this.getTonesWidth());
 			tp.setHeight(this.getTonesHeight());
 			tmp_tonesp.attachChild(tp);
 			
-			Sprite t = new Sprite(i*this.getTonesWidth(),this.getKeyboardY(),this.mFTR_TN){
+			Sprite t = new Sprite(i*this.getTonesWidth(),0,this.mFTR_TN){
 
 			};
 			t.setWidth(this.getTonesWidth());
@@ -182,12 +182,12 @@ public class Piano extends Entity {
 		tmp_semitonesp = new Entity();
 		for (int i = 0; i < 83; i++){
 			if ((i-2)%7!=0 && (i+1)%7!=0){
-				Sprite stp = new Sprite(this.getSTWidth() + this.getSpaceST() + i*this.getTonesWidth(),this.getKeyboardY(),this.mFTR_STP);
+				Sprite stp = new Sprite(this.getSTWidth() + this.getSpaceST() + i*this.getTonesWidth(),0,this.mFTR_STP);
 				stp.setWidth(this.getSTWidth());
 		        stp.setHeight(this.getSTHeight());
 		        tmp_semitonesp.attachChild(stp);
 
-				Sprite st = new Sprite(this.getSTWidth() + this.getSpaceST() + i*this.getTonesWidth(),this.getKeyboardY(),this.mFTR_STN);		
+				Sprite st = new Sprite(this.getSTWidth() + this.getSpaceST() + i*this.getTonesWidth(),0,this.mFTR_STN);		
 				st.setWidth(this.getSTWidth());
 		        st.setHeight(this.getSTHeight());
 		        tmp_semitones.attachChild(st);
@@ -488,10 +488,6 @@ public class Piano extends Entity {
 		return this.TorST;
 	}
 	
-	public float getKeyboardY()
-	{
-		return this.KeyboardY;
-	}
 	
 	public float getKeyboardWidth()
 	{
