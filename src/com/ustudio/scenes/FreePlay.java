@@ -31,13 +31,16 @@ public class FreePlay extends Scene {
 	private Texture mTexture;
 	
 	private TextureRegion mBackground;
+	private TextureRegion mTransparent;
 	private TextureRegion[] mButton_N;
 	private TextureRegion[] mButton_P;
 	private TextureRegion mStep;
 	
 	private Entity mToolBar;
-	private Entity mWholeStep;
-	private Entity mSingleStep;
+	private Entity mWholeStepFW;
+	private Entity mWholeStepBW;
+	private Entity mStepFW;
+	private Entity mStepBW;
 	
 	private float ButtonWidth;
 	private float ButtonHeight;
@@ -68,6 +71,7 @@ public class FreePlay extends Scene {
 		drawBG();
 		drawToolBar();
 		drawMiniPiano();
+		drawSteps();
 		drawPiano();
 	}
 	
@@ -82,8 +86,6 @@ public class FreePlay extends Scene {
 		this.MiniPianoY=CAMERA_HEIGHT/4.4f;
 		this.StepWidth=CAMERA_WIDTH/50;
 		this.StepHeight=CAMERA_HEIGHT/15;
-		this.WholeStepFwX=CAMERA_WIDTH-(CAMERA_WIDTH/6f);
-		this.WholeStepFwY=CAMERA_HEIGHT/4f;
 	}
 	
 	private void loadGUITextures()
@@ -91,6 +93,7 @@ public class FreePlay extends Scene {
 		BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/Piano/");
 		this.mTexture = new BitmapTextureAtlas(2048, 1024, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 		
+		this.mTransparent = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "Background/2048x1024.png", 0, 0);
 		this.mBackground = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "Background/bg.png", 0, 0);
 		
 		this.mButton_N=new TextureRegion[6];
@@ -102,7 +105,7 @@ public class FreePlay extends Scene {
 			this.mButton_P[i] = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "Buttons/"+i+"_pressed.png", 1811, i*139);
 		}
 		
-		this.mStep = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "Buttons/step.png", 1600, 834);
+		this.mStep = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "Buttons/step.png", 0, 375);
 		
 		MainActivity.getInstance().getEngine().getTextureManager().loadTexture(this.mTexture);
 	}
@@ -158,25 +161,71 @@ public class FreePlay extends Scene {
 		this.attachChild(this.mToolBar);
 	}
 	
-	private void drawMiniPiano()
+	private void drawSteps()
 	{
-		this.mWholeStep=new Entity();
-		Sprite step1_sprite = new Sprite(0,0,this.mStep);
-		Sprite step2_sprite = new Sprite(this.StepWidth/1.5f,0,this.mStep);
+		this.WholeStepFwX=this.mMiniPiano.getKeyboardWidth()+this.mMiniPiano.getX()+(CAMERA_WIDTH/20);
+		this.WholeStepFwY=this.mMiniPiano.getY()+(this.mMiniPiano.getKeyboardHeight()-this.StepHeight)/2.0f;
+		this.WholeStepBwX=this.mMiniPiano.getX()-(CAMERA_WIDTH/32)-(CAMERA_WIDTH/20);
+		this.WholeStepBwY=this.WholeStepFwY;
+		this.StepFwY=this.WholeStepFwY;
+		this.StepFwX=this.mMiniPiano.getKeyboardWidth()+this.mMiniPiano.getX()+(CAMERA_WIDTH/55);
+		this.StepBwY=this.WholeStepFwY;
+		this.StepBwX=this.mMiniPiano.getX()-(CAMERA_WIDTH/48)-(CAMERA_WIDTH/55);
 		
-		step1_sprite.setWidth(this.StepWidth);
-		step1_sprite.setHeight(this.StepHeight);
+		this.mWholeStepFW=new Entity();
+		this.mWholeStepBW=new Entity();
+		this.mStepFW=new Entity();
+		this.mStepBW=new Entity();
 		
-		step2_sprite.setWidth(this.StepWidth);
-		step2_sprite.setHeight(this.StepHeight);
+		Sprite[] step1_sprite=new Sprite[4];
+		Sprite[] step2_sprite=new Sprite[2];
 		
-		this.mWholeStep.attachChild(step1_sprite);
-		this.mWholeStep.attachChild(step2_sprite);
+		for(byte i=0;i<4;i++)
+		{
+			step1_sprite[i] = new Sprite(0,0,this.mStep);
+			step1_sprite[i].setWidth(this.StepWidth);
+			step1_sprite[i].setHeight(this.StepHeight);
+			if(i<2)
+			{
+				step2_sprite[i] = new Sprite(this.StepWidth/1.5f,0,this.mStep);
+				step2_sprite[i].setWidth(this.StepWidth);
+				step2_sprite[i].setHeight(this.StepHeight);
+			}
+		}
 		
-		this.mWholeStep.setPosition(this.WholeStepFwX, this.WholeStepFwY);
 		
-		this.attachChild(this.mWholeStep);
+		this.mStepFW.attachChild(step1_sprite[0]);
 		
+		this.mWholeStepFW.attachChild(step1_sprite[1]);
+		this.mWholeStepFW.attachChild(step2_sprite[0]);
+		
+		step1_sprite[2].setRotationCenterX(step1_sprite[2].getWidth()/2);
+		step1_sprite[2].setRotationCenterY(step1_sprite[2].getHeight()/2);
+		step1_sprite[3].setRotationCenter(step1_sprite[2].getRotationCenterX(), step1_sprite[2].getRotationCenterY());
+		step2_sprite[1].setRotationCenter(step1_sprite[2].getRotationCenterX(), step1_sprite[2].getRotationCenterY());
+		
+		step1_sprite[2].setRotation(180);
+		step1_sprite[3].setRotation(180);
+		step2_sprite[1].setRotation(180);
+		
+		this.mStepBW.attachChild(step1_sprite[2]);
+		
+		this.mWholeStepBW.attachChild(step1_sprite[3]);
+		this.mWholeStepBW.attachChild(step2_sprite[1]);
+		
+		this.mWholeStepFW.setPosition(this.WholeStepFwX,this.WholeStepFwY);
+		this.mWholeStepBW.setPosition(this.WholeStepBwX,this.WholeStepBwY);
+		this.mStepFW.setPosition(this.StepFwX,this.StepFwY);
+		this.mStepBW.setPosition(this.StepBwX,this.StepBwY);
+		
+		this.attachChild(this.mStepBW);
+		this.attachChild(this.mStepFW);
+		this.attachChild(this.mWholeStepBW);
+		this.attachChild(this.mWholeStepFW);
+	}
+	
+	private void drawMiniPiano()
+	{		
 		this.mMiniPiano = new MiniPiano(this, CAMERA_WIDTH, CAMERA_HEIGHT);
 		this.MiniPianoX=(CAMERA_WIDTH-this.mMiniPiano.getKeyboardWidth())/2;
 		this.mMiniPiano.setPosition(this.MiniPianoX, this.MiniPianoY);
