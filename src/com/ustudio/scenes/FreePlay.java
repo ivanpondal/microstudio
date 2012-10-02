@@ -34,7 +34,8 @@ public class FreePlay extends Scene {
 	private TextureRegion mTransparent;
 	private TextureRegion[] mButton_N;
 	private TextureRegion[] mButton_P;
-	private TextureRegion mStep;
+	private TextureRegion mSingleStep;
+	private TextureRegion mWholeStep;
 	
 	private Entity mToolBar;
 	private Entity mWholeStepFW;
@@ -105,7 +106,8 @@ public class FreePlay extends Scene {
 			this.mButton_P[i] = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "Buttons/"+i+"_pressed.png", 1811, i*139);
 		}
 		
-		this.mStep = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "Buttons/step.png", 0, 375);
+		this.mSingleStep = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "Buttons/single_step.png", 1600, 835);
+		this.mWholeStep = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "Buttons/whole_step.png",1632, 835);
 		
 		MainActivity.getInstance().getEngine().getTextureManager().loadTexture(this.mTexture);
 	}
@@ -163,9 +165,12 @@ public class FreePlay extends Scene {
 	
 	private void drawSteps()
 	{
+		float rotationX;
+		float rotationY;
+		
 		this.WholeStepFwX=this.mMiniPiano.getKeyboardWidth()+this.mMiniPiano.getX()+(CAMERA_WIDTH/20);
 		this.WholeStepFwY=this.mMiniPiano.getY()+(this.mMiniPiano.getKeyboardHeight()-this.StepHeight)/2.0f;
-		this.WholeStepBwX=this.mMiniPiano.getX()-(CAMERA_WIDTH/32)-(CAMERA_WIDTH/20);
+		this.WholeStepBwX=this.mMiniPiano.getX()-(CAMERA_WIDTH/45)-(CAMERA_WIDTH/20);
 		this.WholeStepBwY=this.WholeStepFwY;
 		this.StepFwY=this.WholeStepFwY;
 		this.StepFwX=this.mMiniPiano.getKeyboardWidth()+this.mMiniPiano.getX()+(CAMERA_WIDTH/55);
@@ -177,41 +182,96 @@ public class FreePlay extends Scene {
 		this.mStepFW=new Entity();
 		this.mStepBW=new Entity();
 		
-		Sprite[] step1_sprite=new Sprite[4];
-		Sprite[] step2_sprite=new Sprite[2];
+		Sprite[] stepFW_sprite=new Sprite[2];
+		Sprite[] stepBW_sprite=new Sprite[2];
 		
-		for(byte i=0;i<4;i++)
-		{
-			step1_sprite[i] = new Sprite(0,0,this.mStep);
-			step1_sprite[i].setWidth(this.StepWidth);
-			step1_sprite[i].setHeight(this.StepHeight);
-			if(i<2)
-			{
-				step2_sprite[i] = new Sprite(this.StepWidth/1.5f,0,this.mStep);
-				step2_sprite[i].setWidth(this.StepWidth);
-				step2_sprite[i].setHeight(this.StepHeight);
-			}
-		}
+		rotationX=this.StepWidth/2;
+		rotationY=this.StepHeight/2;
 		
+		stepFW_sprite[0] = new Sprite(0,0,this.mSingleStep){
+			public boolean onAreaTouched(final TouchEvent pAreaTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
+				switch(pAreaTouchEvent.getAction()) 
+				{
+                    case TouchEvent.ACTION_DOWN:
+                    	Log.d("Piano","SingleFW");
+                    	break;
+                    case TouchEvent.ACTION_UP: 
+                        break;
+                    case TouchEvent.ACTION_MOVE:    
+                    	break;	
+				}
+                return true;
+            }
+		};
+		stepFW_sprite[0].setWidth(this.StepWidth);
+		stepFW_sprite[0].setHeight(this.StepHeight);
+		stepFW_sprite[0].setAlpha(0.5f);
 		
-		this.mStepFW.attachChild(step1_sprite[0]);
+		stepBW_sprite[0] = new Sprite(0,0,this.mSingleStep){
+			public boolean onAreaTouched(final TouchEvent pAreaTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
+				switch(pAreaTouchEvent.getAction()) 
+				{
+                    case TouchEvent.ACTION_DOWN:
+                    	Log.d("Piano","SingleBW");
+                    	break;
+                    case TouchEvent.ACTION_UP: 
+                        break;
+                    case TouchEvent.ACTION_MOVE:    
+                    	break;	
+				}
+                return true;
+            }
+		};
+		stepBW_sprite[0].setWidth(this.StepWidth);
+		stepBW_sprite[0].setHeight(this.StepHeight);
+		stepBW_sprite[0].setAlpha(0.5f);
+		stepBW_sprite[0].setRotationCenter(rotationX,rotationY);
+		stepBW_sprite[0].setRotation(180);
 		
-		this.mWholeStepFW.attachChild(step1_sprite[1]);
-		this.mWholeStepFW.attachChild(step2_sprite[0]);
+		stepFW_sprite[1] = new Sprite(0,0,this.mWholeStep){
+			public boolean onAreaTouched(final TouchEvent pAreaTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
+				switch(pAreaTouchEvent.getAction()) 
+				{
+                    case TouchEvent.ACTION_DOWN:
+                    	Log.d("Piano","WholeFW");
+                    	break;
+                    case TouchEvent.ACTION_UP: 
+                        break;
+                    case TouchEvent.ACTION_MOVE:    
+                    	break;	
+				}
+                return true;
+            }
+		};
+		stepFW_sprite[1].setWidth(this.StepWidth*2);
+		stepFW_sprite[1].setHeight(this.StepHeight);
+		stepFW_sprite[1].setAlpha(0.5f);
 		
-		step1_sprite[2].setRotationCenterX(step1_sprite[2].getWidth()/2);
-		step1_sprite[2].setRotationCenterY(step1_sprite[2].getHeight()/2);
-		step1_sprite[3].setRotationCenter(step1_sprite[2].getRotationCenterX(), step1_sprite[2].getRotationCenterY());
-		step2_sprite[1].setRotationCenter(step1_sprite[2].getRotationCenterX(), step1_sprite[2].getRotationCenterY());
-		
-		step1_sprite[2].setRotation(180);
-		step1_sprite[3].setRotation(180);
-		step2_sprite[1].setRotation(180);
-		
-		this.mStepBW.attachChild(step1_sprite[2]);
-		
-		this.mWholeStepBW.attachChild(step1_sprite[3]);
-		this.mWholeStepBW.attachChild(step2_sprite[1]);
+		stepBW_sprite[1] = new Sprite(0,0,this.mWholeStep){
+			public boolean onAreaTouched(final TouchEvent pAreaTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
+				switch(pAreaTouchEvent.getAction()) 
+				{
+                    case TouchEvent.ACTION_DOWN:
+                    	Log.d("Piano","WholeBW");
+                    	break;
+                    case TouchEvent.ACTION_UP: 
+                        break;
+                    case TouchEvent.ACTION_MOVE:    
+                    	break;	
+				}
+                return true;
+            }
+		};
+		stepBW_sprite[1].setWidth(this.StepWidth*2);
+		stepBW_sprite[1].setHeight(this.StepHeight);
+		stepBW_sprite[1].setAlpha(0.5f);
+		stepBW_sprite[1].setRotationCenter(rotationX,rotationY);
+		stepBW_sprite[1].setRotation(180);
+
+		this.mStepFW.attachChild(stepFW_sprite[0]);
+		this.mWholeStepFW.attachChild(stepFW_sprite[1]);	
+		this.mStepBW.attachChild(stepBW_sprite[0]);
+		this.mWholeStepBW.attachChild(stepBW_sprite[1]);
 		
 		this.mWholeStepFW.setPosition(this.WholeStepFwX,this.WholeStepFwY);
 		this.mWholeStepBW.setPosition(this.WholeStepBwX,this.WholeStepBwY);
@@ -222,6 +282,11 @@ public class FreePlay extends Scene {
 		this.attachChild(this.mStepFW);
 		this.attachChild(this.mWholeStepBW);
 		this.attachChild(this.mWholeStepFW);
+		
+		this.registerTouchArea(stepFW_sprite[0]);
+		this.registerTouchArea(stepFW_sprite[1]);
+		this.registerTouchArea(stepBW_sprite[0]);
+		this.registerTouchArea(stepBW_sprite[1]);		
 	}
 	
 	private void drawMiniPiano()
