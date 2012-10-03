@@ -46,8 +46,8 @@ public class MenuScene extends Scene implements IScrollDetectorListener, IOnScen
         this.setBackground(new ColorBackground(0, 0, 0));
 
 		
-		this.mTexture = new BitmapTextureAtlas(512, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
-		this.mFaceTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "gfx/Botones/R-U S-D.png", 0, 0);
+		this.mTexture = new BitmapTextureAtlas(512, 512, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+		this.mFaceTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "gfx/menu/newButtonMenuPressed.png", 0, 0);
 		MainActivity.getInstance().getEngine().getTextureManager().loadTexture(this.mTexture);
 		
 		this.mTexture2 = new BitmapTextureAtlas(2048, 2048, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
@@ -71,18 +71,22 @@ public class MenuScene extends Scene implements IScrollDetectorListener, IOnScen
        backGround.setWidth(CAMERA_WIDTH);
        backGround.setHeight(CAMERA_HEIGHT);
        this.attachChild(backGround);
-        
+       
+      Sprite  ballP = new Sprite((CAMERA_WIDTH/13)*12 , CAMERA_WIDTH/13 + 3, this.mFaceTextureRegion);
+       ballP.setWidth(CAMERA_WIDTH/13); //h
+       ballP.setHeight(CAMERA_HEIGHT/3); //w
+       //ball.setRotation(-90);
+       this.attachChild(ballP);
+       
         ball = new Sprite((CAMERA_WIDTH/13)*12, CAMERA_WIDTH/13, this.mFaceTextureRegion3){
         	@Override
             public boolean onAreaTouched(final TouchEvent pAreaTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
                 switch(pAreaTouchEvent.getAction()) {
                     case TouchEvent.ACTION_DOWN:                    
-                        this.setScale(1.25f);
-                        this.setAlpha(0.5f);
+                        this.setVisible(false);
                         break;
                     case TouchEvent.ACTION_UP:  
-                        this.setScale(1.0f);
-                        this.setAlpha(1.0f);
+                        this.setVisible(true);
                         menuItemPressed(1);
                         break;
                         }
