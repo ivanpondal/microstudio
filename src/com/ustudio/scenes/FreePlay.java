@@ -15,6 +15,7 @@ import android.util.Log;
 
 import com.ustudio.project.*;
 import com.ustudio.audio.Instrument;
+import com.ustudio.audio.Player;
 import com.ustudio.audio.Record;
 import com.ustudio.main.MainActivity;
 import com.ustudio.piano.*;
@@ -314,7 +315,7 @@ public class FreePlay extends Scene {
 	private void drawPiano()
 	{
 		this.mTouchPiano = new Piano(this, CAMERA_WIDTH, CAMERA_HEIGHT, this.mInsPiano);
-		this.mTouchPiano.setActiveTrack(this.mProject.getTracks().get("Piano track"));
+		this.mTouchPiano.setActiveTrack(this.mProject.getTracks().get("Piano"));
 		this.PianoY=CAMERA_HEIGHT-this.mTouchPiano.getKeyboardHeight();
 		this.mTouchPiano.setPosition(this.PianoX, this.PianoY);
 		this.attachChild(this.mTouchPiano);		
@@ -340,6 +341,7 @@ public class FreePlay extends Scene {
 				if(pressed)
 				{
 					this.mToolBar.getChild(selindex).setVisible(false);
+					Player.PlayProject(this.mProject);
 				}
 				else
 				{

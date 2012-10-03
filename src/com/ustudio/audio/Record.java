@@ -10,6 +10,7 @@ public class Record {
 	//PUBLIC
 	public static void startRecTimer()
 	{
+		mIsRecording=true;
 		mRecTimer=System.currentTimeMillis();
 	}
 

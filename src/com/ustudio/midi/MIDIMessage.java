@@ -13,6 +13,7 @@ public class MIDIMessage {
 		setChannel(c);
 		setParam1(p1);
 		setParam2(p2);
+		setTime(t);
 	}
 	
 	public MIDIMessage(byte f, byte c, byte p1, byte p2)
@@ -21,6 +22,7 @@ public class MIDIMessage {
 		setChannel(c);
 		setParam1(p1);
 		setParam2(p2);
+		setTime(0);
 	}
 	
 	public MIDIMessage(byte f, byte c, byte p1)
@@ -29,6 +31,7 @@ public class MIDIMessage {
 		setChannel(c);
 		setParam1(p1);
 		setParam2((byte)0);
+		setTime(0);
 	}
 	
 	public MIDIMessage(byte f, byte c)
@@ -37,7 +40,23 @@ public class MIDIMessage {
 		setChannel(c);
 		setParam1((byte)0);
 		setParam2((byte)0);
+		setTime(0);
 	}
+	
+	//PUBLIC
+	
+	public String toString()
+	{
+		String tmpData;
+		tmpData="Function: "+this.sta_function+"\n";
+		tmpData+="Channel: "+this.sta_channel+"\n";
+		tmpData+="Parameter 1: "+this.dat_param1+"\n";
+		tmpData+="Parameter 2: "+this.dat_param2+"\n";
+		tmpData+="Time: "+this.dat_time+"\n";
+		return tmpData;
+	}	
+	
+	//SET
 	
 	public void setFunction(byte f)
 	{
@@ -63,6 +82,8 @@ public class MIDIMessage {
 	{
 		dat_time=t;
 	}
+	
+	//GET
 	
 	public byte getFunction()
 	{
