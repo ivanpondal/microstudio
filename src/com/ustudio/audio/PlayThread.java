@@ -69,20 +69,26 @@ class PlayThread extends Thread {
 		{
 			Long key = vecMIDI.get(i); 
 			MIDIMessage tmpMIDI = tmpHashMIDI.get(key); 
-			while(timePlayTimer()<key)
+			while(timePlayTimer()<key &&  !this.mStop_thread && !this.mPaused)
 			{
 				//espero
 			}
-			tmpTrack.getInstr().processMIDI(tmpMIDI);
-			i++;
-			if(this.mPaused)
+			if(!this.mStop_thread)
 			{
-				this.mTimePlaying=timePlayTimer();
-				while(this.mPaused)
+				if(this.mPaused)
 				{
-					//espero
+					this.mTimePlaying=timePlayTimer();
+					while(this.mPaused)
+					{
+						//espero
+					}
+					startPlayTimer(this.mTimePlaying);
 				}
-				startPlayTimer(this.mTimePlaying);
+				else
+				{
+					tmpTrack.getInstr().processMIDI(tmpMIDI);
+					i++;
+				}
 			}
 		}
 	}
