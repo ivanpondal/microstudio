@@ -72,7 +72,7 @@ public class MenuScene extends Scene implements IScrollDetectorListener, IOnScen
        backGround.setHeight(CAMERA_HEIGHT);
        this.attachChild(backGround);
        
-      Sprite  ballP = new Sprite((CAMERA_WIDTH/13)*12, CAMERA_WIDTH/13, this.mFaceTextureRegion);
+      Sprite  ballP = new Sprite((CAMERA_WIDTH/13)*12 , CAMERA_WIDTH/13 + 3, this.mFaceTextureRegion);
        ballP.setWidth(CAMERA_WIDTH/13); //h
        ballP.setHeight(CAMERA_HEIGHT/3); //w
        //ball.setRotation(-90);
