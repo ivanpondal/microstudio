@@ -24,6 +24,8 @@ public class Track extends Entity{
 	private TextureRegion mFaceTextureRegion5;
 	private Texture mTexture6;
 	private TextureRegion mFaceTextureRegion6;
+	private Texture mTexture7;
+	private TextureRegion mFaceTextureRegion7;
 	
 	public Track (int w, int h){
 		
@@ -50,6 +52,16 @@ public class Track extends Entity{
 		this.mTexture6 = new BitmapTextureAtlas(256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 		this.mFaceTextureRegion6 = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture6, MainActivity.getInstance().getApplicationContext(), "gfx/Track/confTrack.png", 0, 0);
 		MainActivity.getInstance().getEngine().getTextureManager().loadTexture(this.mTexture6);
+		
+		this.mTexture7 = new BitmapTextureAtlas(256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+		this.mFaceTextureRegion7 = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture7, MainActivity.getInstance().getApplicationContext(), "gfx/Track/labelTrack.png", 0, 0);
+		MainActivity.getInstance().getEngine().getTextureManager().loadTexture(this.mTexture7);
+		
+		Sprite label = new Sprite(w/17 ,h/2 + h/4 - h/16, mFaceTextureRegion7);
+		label.setWidth(w/14);
+		label.setHeight(h/5);
+		//volume.setRotation(-90);
+	    this.attachChild(label);
 		
 		Sprite volume = new Sprite(w/17 ,h/2, mFaceTextureRegion1);
 		volume.setWidth(w/14);
