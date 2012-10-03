@@ -138,18 +138,19 @@ public class FreePlay extends Scene {
 	            public boolean onAreaTouched(final TouchEvent pAreaTouchEvent, final float pX, final float pY) {
 	            	switch(pAreaTouchEvent.getAction()) {
 					    case TouchEvent.ACTION_DOWN:                    
-					        this.setVisible(false);
+					        FreePlay.this.ToolbarAction(Byte.parseByte(this.getUserData().toString()), true);
 					        break;
 					    case TouchEvent.ACTION_UP:  
-					    	this.setVisible(true);
+					    	FreePlay.this.ToolbarAction(Byte.parseByte(this.getUserData().toString()), false);
 					        break;
 					    case TouchEvent.ACTION_MOVE:
-					    	this.setVisible(true);
+					    	FreePlay.this.ToolbarAction(Byte.parseByte(this.getUserData().toString()), false);
 					        break;
 					}
 					return true;
 	            }
 	        };
+	        sp_released.setUserData((i*2)+1);
 	        sp_released.setWidth(this.ButtonWidth);
 	        sp_released.setHeight(this.ButtonHeight);
 			
@@ -304,5 +305,81 @@ public class FreePlay extends Scene {
 		this.PianoY=CAMERA_HEIGHT-this.mTouchPiano.getKeyboardHeight();
 		this.mTouchPiano.setPosition(this.PianoX, this.PianoY);
 		this.attachChild(this.mTouchPiano);		
+	}
+	
+	public void ToolbarAction(byte selindex, boolean pressed)
+	{
+		switch(selindex)
+		{
+			//Menu
+			case 1:
+				if(pressed)
+				{
+					this.mToolBar.getChild(selindex).setVisible(false);
+				}
+				else
+				{
+					this.mToolBar.getChild(selindex).setVisible(true);
+				}
+				break;
+			//Play
+			case 3:
+				if(pressed)
+				{
+					this.mToolBar.getChild(selindex).setVisible(false);
+				}
+				else
+				{
+					this.mToolBar.getChild(selindex).setVisible(true);
+				}
+				break;
+			//Pause
+			case 5:
+				if(pressed)
+				{
+					this.mToolBar.getChild(selindex).setVisible(false);
+				}
+				else
+				{
+					this.mToolBar.getChild(selindex).setVisible(true);
+				}
+				break;
+			//Stop
+			case 7:
+				if(pressed)
+				{
+					this.mToolBar.getChild(selindex).setVisible(false);
+				}
+				else
+				{
+					this.mToolBar.getChild(selindex).setVisible(true);
+				}
+				break;
+			//Rec
+			case 9:
+				if(pressed)
+				{
+					if(this.mToolBar.getChild(selindex).getAlpha()==0.0f)
+					{
+						this.mToolBar.getChild(selindex).setAlpha(1.0f)
+					}
+					else
+					{
+						this.mToolBar.getChild(selindex).setAlpha(0.0f);
+					}
+				}
+				break;
+			//Back
+			case 11:
+				if(pressed)
+				{
+					this.mToolBar.getChild(selindex).setVisible(false);
+				}
+				else
+				{
+					this.mToolBar.getChild(selindex).setVisible(true);
+				}
+				break;
+		}
 	}
 }
