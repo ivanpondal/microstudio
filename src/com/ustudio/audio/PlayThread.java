@@ -9,10 +9,13 @@ import android.util.Log;
 
 import com.ustudio.midi.MIDIMessage;
 import com.ustudio.project.Project;
+import com.ustudio.project.Track;
 
 class PlayThread extends Thread {
 	private boolean mStop_thread;
 	private Project mProject;
+	private long mPlayTime;
+	
 	
 	public PlayThread(Project p)
 	{
@@ -26,10 +29,12 @@ class PlayThread extends Thread {
 	}
 	
 	public void run() {
-		Vector<Long> vecMIDI = new Vector(); 
+		Track tmpTrack;
+		Vector<Long> vecMIDI = new Vector<Long>(); 
 		Hashtable<Long,MIDIMessage> tmpHashMIDI;
 		
-		tmpHashMIDI=mProject.getTracks().get("Piano").getMIDInotes();
+		tmpTrack=mProject.getTracks().get("Piano");
+		tmpHashMIDI=tmpTrack.getMIDInotes();
 		
 		Enumeration<Long> enume = tmpHashMIDI.keys(); 
 		
@@ -39,13 +44,27 @@ class PlayThread extends Thread {
 		} 
 		
 		Collections.sort(vecMIDI); 
-		         
+		
+		startPlayTimer();
 		for(int i=0;i<vecMIDI.size();i++) 
 		{ 
 			Long key = vecMIDI.get(i); 
-			String value = tmpHashMIDI.get(key).toString(); 
-			Log.d("Piano","Key:"+key);
-			Log.d("Piano",value);
+			MIDIMessage tmpMIDI = tmpHashMIDI.get(key); 
+			while(timePlayTimer()<key)
+			{
+				//espero
+			}
+			tmpTrack.getInstr().processMIDI(tmpMIDI);
 		} 
+	}
+	
+	private long timePlayTimer()
+	{
+		return System.currentTimeMillis()-mPlayTime;
+	}
+	
+	private void startPlayTimer()
+	{
+		mPlayTime=System.currentTimeMillis();
 	}
 }

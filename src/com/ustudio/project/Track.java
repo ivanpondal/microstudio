@@ -60,7 +60,7 @@ public class Track {
 		return this.mName;
 	}
 	
-	public Instrument getInstr(Instrument i)
+	public Instrument getInstr()
 	{
 		return this.mInstr;
 	}
