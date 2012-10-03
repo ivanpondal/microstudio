@@ -13,7 +13,9 @@ import org.anddev.andengine.opengl.texture.region.TextureRegion;
 
 import android.util.Log;
 
+import com.ustudio.project.*;
 import com.ustudio.audio.Instrument;
+import com.ustudio.audio.Recording;
 import com.ustudio.main.MainActivity;
 import com.ustudio.piano.*;
 
@@ -27,6 +29,8 @@ public class FreePlay extends Scene {
 	private Piano mTouchPiano;
 	
 	private Instrument mInsPiano;
+	
+	private Project mProject;
 	
 	private Texture mTexture;
 	
@@ -67,6 +71,7 @@ public class FreePlay extends Scene {
 		CAMERA_WIDTH = w;
 		CAMERA_HEIGHT = h;
 		
+		createProject();
 		loadSizes();
 		loadGUITextures();
 		drawBG();
@@ -74,6 +79,14 @@ public class FreePlay extends Scene {
 		drawMiniPiano();
 		drawSteps();
 		drawPiano();
+	}
+	
+	private void createProject()
+	{
+		Track tmpTrack;
+		this.mInsPiano=new Instrument("Piano",(byte)1,400,(byte)60,(byte)73);
+		tmpTrack=new Track(this.mInsPiano.getName(),this.mInsPiano);
+		this.mProject=new Project("New Project",tmpTrack);
 	}
 	
 	private void loadSizes()
@@ -92,7 +105,7 @@ public class FreePlay extends Scene {
 	private void loadGUITextures()
 	{
 		BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/Piano/");
-		this.mTexture = new BitmapTextureAtlas(2048, 1024, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+		this.mTexture = new BitmapTextureAtlas(2048, 1024, TextureOptions.BILINEAR);
 		
 		this.mTransparent = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "Background/2048x1024.png", 0, 0);
 		this.mBackground = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "Background/bg.png", 0, 0);
@@ -300,8 +313,8 @@ public class FreePlay extends Scene {
 	
 	private void drawPiano()
 	{
-		this.mInsPiano=new Instrument("Piano",(byte)1,400,(byte)60,(byte)73);
 		this.mTouchPiano = new Piano(this, CAMERA_WIDTH, CAMERA_HEIGHT, this.mInsPiano);
+		this.mTouchPiano.setActiveTrack(this.mProject.getTracks().get("Piano track"));
 		this.PianoY=CAMERA_HEIGHT-this.mTouchPiano.getKeyboardHeight();
 		this.mTouchPiano.setPosition(this.PianoX, this.PianoY);
 		this.attachChild(this.mTouchPiano);		
@@ -361,11 +374,13 @@ public class FreePlay extends Scene {
 				{
 					if(this.mToolBar.getChild(selindex).getAlpha()==0.0f)
 					{
-						this.mToolBar.getChild(selindex).setAlpha(1.0f)
+						this.mToolBar.getChild(selindex).setAlpha(1.0f);
+						Recording.stopRecTimer();
 					}
 					else
 					{
 						this.mToolBar.getChild(selindex).setAlpha(0.0f);
+						Recording.startRecTimer();
 					}
 				}
 				break;

@@ -20,6 +20,7 @@ public class Track {
 		this.mMute=false;
 		this.mSolo=false;
 		this.mIsRec=false;
+		this.mMIDInotes=new Hashtable<Long,MIDIMessage>();
 	}
 	
 	//SET

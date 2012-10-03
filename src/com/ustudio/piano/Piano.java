@@ -15,8 +15,10 @@ import android.util.Log;
 
 import java.util.Hashtable;
 
+import com.ustudio.project.Track;
 import com.ustudio.main.MainActivity;
 import com.ustudio.audio.Instrument;
+import com.ustudio.audio.Recording;
 import com.ustudio.midi.MIDIMessage;
 
 public class Piano extends Entity {
@@ -53,6 +55,8 @@ public class Piano extends Entity {
 	private Hashtable<Integer,Key> TouchIDs;
 	
 	private Instrument mInstrument;
+	
+	private Track mActiveTrack;
 	
 	public Piano(Scene pScene, int w, int h, Instrument Instr) {
 		Key tmptonekeys[];
@@ -319,6 +323,7 @@ public class Piano extends Entity {
 	public void processKeys()
 	{
 		MIDIMessage tmpMIDI;
+
 		for (int i=0;i<49;i++)
 		{
 			if(this.getToneKeys()[i].getPressed())
@@ -327,6 +332,10 @@ public class Piano extends Entity {
 				{
 					this.getTones().getChild(i).setVisible(false);
 					tmpMIDI=new MIDIMessage((byte)0x90,(byte)0x00,this.getToneKeys()[i].getMIDI(),(byte)0x7F);
+					if(Recording.getIsRecording())
+					{
+						Recording.saveMIDI(this.mActiveTrack, tmpMIDI);
+					}
 					this.getInstrument().processMIDI(tmpMIDI);
 				}
 			}
@@ -336,6 +345,10 @@ public class Piano extends Entity {
 				{
 					this.getTones().getChild(i).setVisible(true);
 					tmpMIDI=new MIDIMessage((byte)0x80,(byte)0x00,this.getToneKeys()[i].getMIDI(),(byte)0x7F);
+					if(Recording.getIsRecording())
+					{
+						Recording.saveMIDI(this.mActiveTrack, tmpMIDI);
+					}
 					this.getInstrument().processMIDI(tmpMIDI);
 				}
 			}
@@ -349,6 +362,10 @@ public class Piano extends Entity {
 				{
 					this.getST().getChild(i).setVisible(false);
 					tmpMIDI=new MIDIMessage((byte)0x90,(byte)0x00,this.getSemitoneKeys()[i].getMIDI(),(byte)0x7F);
+					if(Recording.getIsRecording())
+					{
+						Recording.saveMIDI(this.mActiveTrack, tmpMIDI);
+					}
 					this.getInstrument().processMIDI(tmpMIDI);
 				}
 			}
@@ -358,6 +375,10 @@ public class Piano extends Entity {
 				{
 					this.getST().getChild(i).setVisible(true);
 					tmpMIDI=new MIDIMessage((byte)0x80,(byte)0x00,this.getSemitoneKeys()[i].getMIDI(),(byte)0x7F);
+					if(Recording.getIsRecording())
+					{
+						Recording.saveMIDI(this.mActiveTrack, tmpMIDI);
+					}
 					this.getInstrument().processMIDI(tmpMIDI);
 				}
 			}
@@ -456,6 +477,11 @@ public class Piano extends Entity {
 		this.mInstrument=i;
 	}
 	
+	public void setActiveTrack(Track t)
+	{
+		this.mActiveTrack=t;
+	}
+	
 	//GET}
 	
 	public float getTonesWidth()
@@ -542,5 +568,10 @@ public class Piano extends Entity {
 	public Instrument getInstrument()
 	{
 		return this.mInstrument;
+	}
+	
+	public Track getActiveTrack()
+	{
+		return this.mActiveTrack;
 	}
 }
