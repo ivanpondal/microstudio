@@ -15,7 +15,7 @@ import android.util.Log;
 
 import com.ustudio.project.*;
 import com.ustudio.audio.Instrument;
-import com.ustudio.audio.Recording;
+import com.ustudio.audio.Record;
 import com.ustudio.main.MainActivity;
 import com.ustudio.piano.*;
 
@@ -375,12 +375,12 @@ public class FreePlay extends Scene {
 					if(this.mToolBar.getChild(selindex).getAlpha()==0.0f)
 					{
 						this.mToolBar.getChild(selindex).setAlpha(1.0f);
-						Recording.stopRecTimer();
+						Record.stopRecTimer();
 					}
 					else
 					{
 						this.mToolBar.getChild(selindex).setAlpha(0.0f);
-						Recording.startRecTimer();
+						Record.startRecTimer();
 					}
 				}
 				break;

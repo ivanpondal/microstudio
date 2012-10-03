@@ -3,7 +3,7 @@ package com.ustudio.audio;
 import com.ustudio.project.Track;
 import com.ustudio.midi.MIDIMessage;
 
-public class Recording {
+public class Record {
 	private static boolean mIsRecording;
 	private static long mRecTimer;
 	

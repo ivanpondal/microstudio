@@ -18,7 +18,7 @@ import java.util.Hashtable;
 import com.ustudio.project.Track;
 import com.ustudio.main.MainActivity;
 import com.ustudio.audio.Instrument;
-import com.ustudio.audio.Recording;
+import com.ustudio.audio.Record;
 import com.ustudio.midi.MIDIMessage;
 
 public class Piano extends Entity {
@@ -332,9 +332,9 @@ public class Piano extends Entity {
 				{
 					this.getTones().getChild(i).setVisible(false);
 					tmpMIDI=new MIDIMessage((byte)0x90,(byte)0x00,this.getToneKeys()[i].getMIDI(),(byte)0x7F);
-					if(Recording.getIsRecording())
+					if(Record.getIsRecording())
 					{
-						Recording.saveMIDI(this.mActiveTrack, tmpMIDI);
+						Record.saveMIDI(this.mActiveTrack, tmpMIDI);
 					}
 					this.getInstrument().processMIDI(tmpMIDI);
 				}
@@ -345,9 +345,9 @@ public class Piano extends Entity {
 				{
 					this.getTones().getChild(i).setVisible(true);
 					tmpMIDI=new MIDIMessage((byte)0x80,(byte)0x00,this.getToneKeys()[i].getMIDI(),(byte)0x7F);
-					if(Recording.getIsRecording())
+					if(Record.getIsRecording())
 					{
-						Recording.saveMIDI(this.mActiveTrack, tmpMIDI);
+						Record.saveMIDI(this.mActiveTrack, tmpMIDI);
 					}
 					this.getInstrument().processMIDI(tmpMIDI);
 				}
@@ -362,9 +362,9 @@ public class Piano extends Entity {
 				{
 					this.getST().getChild(i).setVisible(false);
 					tmpMIDI=new MIDIMessage((byte)0x90,(byte)0x00,this.getSemitoneKeys()[i].getMIDI(),(byte)0x7F);
-					if(Recording.getIsRecording())
+					if(Record.getIsRecording())
 					{
-						Recording.saveMIDI(this.mActiveTrack, tmpMIDI);
+						Record.saveMIDI(this.mActiveTrack, tmpMIDI);
 					}
 					this.getInstrument().processMIDI(tmpMIDI);
 				}
@@ -375,9 +375,9 @@ public class Piano extends Entity {
 				{
 					this.getST().getChild(i).setVisible(true);
 					tmpMIDI=new MIDIMessage((byte)0x80,(byte)0x00,this.getSemitoneKeys()[i].getMIDI(),(byte)0x7F);
-					if(Recording.getIsRecording())
+					if(Record.getIsRecording())
 					{
-						Recording.saveMIDI(this.mActiveTrack, tmpMIDI);
+						Record.saveMIDI(this.mActiveTrack, tmpMIDI);
 					}
 					this.getInstrument().processMIDI(tmpMIDI);
 				}
