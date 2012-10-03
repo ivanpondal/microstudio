@@ -17,6 +17,18 @@ public class Player {
 		return false;
 	}
 	
+	public static boolean isPaused()
+	{
+		if(isPlaying())
+		{
+			if(mPlayer.isPaused())
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	//PUBLIC
 	public static void PlayProject(Project p)
 	{
@@ -26,6 +38,33 @@ public class Player {
 			mPlayer.start();
 		}
 	}	
+	
+	public static void Pause()
+	{
+		if(isPlaying())
+		{
+			if(!isPaused())
+			{
+				mPlayer.pausethread();
+				while(!mPlayer.isPaused())
+				{
+					//wait;
+				}
+			}
+		}
+	}
+	
+	public static void UnPause()
+	{
+		if(isPaused())
+		{
+			mPlayer.unpausethread();
+			while(mPlayer.isPaused())
+			{
+				//wait;
+			}
+		}
+	}
 	
 	public static void Stop()
 	{

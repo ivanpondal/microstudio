@@ -341,7 +341,23 @@ public class FreePlay extends Scene {
 				if(pressed)
 				{
 					this.mToolBar.getChild(selindex).setVisible(false);
-					Player.PlayProject(this.mProject);
+					if(Record.getIsRecording())
+					{
+						Record.startRecTimer();
+					}
+					if(Player.isPaused())
+					{
+						this.mToolBar.getChild(5).setAlpha(1.0f);
+						Player.UnPause();
+					}
+					else
+					{
+						if(this.mToolBar.getChild(5).getAlpha()==0.0f)
+						{
+							this.mToolBar.getChild(5).setAlpha(1.0f);
+						}
+						Player.PlayProject(this.mProject);
+					}
 				}
 				else
 				{
@@ -352,11 +368,21 @@ public class FreePlay extends Scene {
 			case 5:
 				if(pressed)
 				{
-					this.mToolBar.getChild(selindex).setVisible(false);
-				}
-				else
-				{
-					this.mToolBar.getChild(selindex).setVisible(true);
+					if(this.mToolBar.getChild(selindex).getAlpha()==0.0f)
+					{
+						this.mToolBar.getChild(selindex).setAlpha(1.0f);
+						Player.UnPause();
+					}
+					else
+					{
+						this.mToolBar.getChild(selindex).setAlpha(0.0f);
+						Player.Pause();
+						if(Record.getIsRecording())
+						{
+							this.mToolBar.getChild(9).setAlpha(1.0f);
+							Record.stopRecTimer();
+						}
+					}
 				}
 				break;
 			//Stop
@@ -364,6 +390,21 @@ public class FreePlay extends Scene {
 				if(pressed)
 				{
 					this.mToolBar.getChild(selindex).setVisible(false);
+					if(Record.getIsRecording())
+					{
+						this.mToolBar.getChild(9).setAlpha(1.0f);
+						Record.stopRecTimer();
+					}
+					if(!Player.isPaused())
+					{
+						Player.Stop();
+					}
+					else
+					{
+						this.mToolBar.getChild(5).setAlpha(1.0f);
+						Player.UnPause();
+						Player.Stop();
+					}
 				}
 				else
 				{
@@ -382,7 +423,7 @@ public class FreePlay extends Scene {
 					else
 					{
 						this.mToolBar.getChild(selindex).setAlpha(0.0f);
-						Record.startRecTimer();
+						Record.setIsRecording(true);
 					}
 				}
 				break;

@@ -13,19 +13,37 @@ import com.ustudio.project.Track;
 
 class PlayThread extends Thread {
 	private boolean mStop_thread;
+	private boolean mPaused;
 	private Project mProject;
 	private long mPlayTime;
+	private long mTimePlaying;
 	
 	
 	public PlayThread(Project p)
 	{
 		this.mProject=p;
 		this.mStop_thread=false;
+		this.mPaused=false;
 	}
 	
 	public void stopthread()
 	{
 		this.mStop_thread=true;
+	}
+	
+	public void pausethread()
+	{
+		this.mPaused=true;
+	}
+	
+	public void unpausethread()
+	{
+		this.mPaused=false;
+	}
+	
+	public boolean isPaused()
+	{
+		return this.mPaused;
 	}
 	
 	public void run() {
@@ -45,9 +63,10 @@ class PlayThread extends Thread {
 		
 		Collections.sort(vecMIDI); 
 		
-		startPlayTimer();
-		for(int i=0;i<vecMIDI.size();i++) 
-		{ 
+		startPlayTimer(0);
+		int i=0;
+		while(i<vecMIDI.size() && !this.mStop_thread)
+		{
 			Long key = vecMIDI.get(i); 
 			MIDIMessage tmpMIDI = tmpHashMIDI.get(key); 
 			while(timePlayTimer()<key)
@@ -55,7 +74,17 @@ class PlayThread extends Thread {
 				//espero
 			}
 			tmpTrack.getInstr().processMIDI(tmpMIDI);
-		} 
+			i++;
+			if(this.mPaused)
+			{
+				this.mTimePlaying=timePlayTimer();
+				while(this.mPaused)
+				{
+					//espero
+				}
+				startPlayTimer(this.mTimePlaying);
+			}
+		}
 	}
 	
 	private long timePlayTimer()
@@ -63,8 +92,8 @@ class PlayThread extends Thread {
 		return System.currentTimeMillis()-mPlayTime;
 	}
 	
-	private void startPlayTimer()
+	private void startPlayTimer(long offset)
 	{
-		mPlayTime=System.currentTimeMillis();
+		mPlayTime=System.currentTimeMillis()-offset;
 	}
 }
