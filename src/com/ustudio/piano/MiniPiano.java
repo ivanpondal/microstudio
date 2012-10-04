@@ -113,7 +113,7 @@ public class MiniPiano extends Entity {
 	
 	private void loadGUITextures()
 	{
-		BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/Piano/Background/");
+		BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/Backgrounds/");
 		this.mBGTexture = new BitmapTextureAtlas(1024, 128, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 		this.mBG = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mBGTexture, MainActivity.getInstance().getApplicationContext(), "minipiano_bg.png", 0, 0);
 		MainActivity.getInstance().getEngine().getTextureManager().loadTexture(this.mBGTexture);

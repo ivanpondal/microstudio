@@ -17,6 +17,8 @@ public class MenuScene extends Scene {
 	
 	private Texture	mTexture;
 	private TextureRegion mBackground;
+	private TextureRegion mButtonNewN;
+	private TextureRegion mButtonNewP;
 	
 	public MenuScene(int w, int h) {
 		CAMERA_WIDTH = w;
@@ -30,8 +32,9 @@ public class MenuScene extends Scene {
 	private void loadGUITextures()
 	{
 		BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/Backgrounds/");
-		this.mTexture = new BitmapTextureAtlas(2048, 1024, TextureOptions.BILINEAR);
+		this.mTexture = new BitmapTextureAtlas(1024, 2048, TextureOptions.BILINEAR);
 		
+		this.mBackground = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "menu_bg.png", 0, 0);
 		this.mBackground = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "menu_bg.png", 0, 0);
 		
 		MainActivity.getInstance().getEngine().getTextureManager().loadTexture(this.mTexture);
