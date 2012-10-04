@@ -5,7 +5,7 @@ import org.anddev.andengine.entity.scene.Scene;
 
 import com.ustudio.main.MainActivity;
 import com.ustudio.scenes.FreePlay;
-import com.ustudio.scenes.MenuScene;
+import com.ustudio.scenes.MenuScene2;
 import com.ustudio.scenes.PutoScene;
 import com.ustudio.scenes.RecordScene;
 
@@ -15,7 +15,7 @@ public class SceneManager {
 	public Scene scene;
 	
 	public void setMenuScene(int w, int h) {
-		this.scene = new MenuScene(w, h);
+		this.scene = new MenuScene2(w, h);
 		MainActivity.getInstance().getEngine().setScene(this.scene);
 	}
 	
