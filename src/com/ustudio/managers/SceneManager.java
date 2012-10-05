@@ -1,7 +1,6 @@
 package com.ustudio.managers;
 
 
-import org.anddev.andengine.engine.options.EngineOptions.ScreenOrientation;
 import org.anddev.andengine.entity.scene.Scene;
 
 import android.content.pm.ActivityInfo;
