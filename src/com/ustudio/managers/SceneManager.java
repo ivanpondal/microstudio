@@ -19,7 +19,10 @@ public class SceneManager {
 	
 	public void setMenuScene(int w, int h) {
 		this.scene = new MenuScene(w, h);
-		MainActivity.getInstance().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		if(MainActivity.getInstance().getRequestedOrientation()!=ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+		{
+			MainActivity.getInstance().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		}
 		MainActivity.getInstance().getEngine().setScene(this.scene);
 	}
 	
@@ -30,7 +33,10 @@ public class SceneManager {
 	
 	public void setFreePlay(int w, int h) {
 		this.scene = new FreePlay(w, h);
-		MainActivity.getInstance().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+		if(MainActivity.getInstance().getRequestedOrientation()!=ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
+		{
+			MainActivity.getInstance().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+		}
 		MainActivity.getInstance().getEngine().setScene(this.scene);
 	}
 	
