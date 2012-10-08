@@ -47,11 +47,12 @@ public class Piano extends Entity {
 	private float heightSemitone;
 	private float widthSpaceST;
 	private float TorST;
-	private float KeyboardY;
 	private float widthKeyboard;
 	private float heightKeyboard;
 	
-	private byte midioffset;
+	private byte midiOffset;
+	private byte tonesVisible;
+	
 	private Hashtable<Integer,Key> TouchIDs;
 	
 	private Instrument mInstrument;
@@ -203,6 +204,11 @@ public class Piano extends Entity {
 	}
 	
 	//PUBLICAS
+	public void moveViewer(byte selTone)
+	{
+		
+	}
+	
 	public boolean isTone(float TouchX,float TouchY)
 	{
 		int posNegra = (int)((TouchX+this.widthSpaceST)/this.widthSemitone);
@@ -417,11 +423,6 @@ public class Piano extends Entity {
 		this.TorST=h;
 	}
 	
-	public void setKeyboardY(float y)
-	{
-		this.KeyboardY=y;
-	}
-	
 	public void setKeyboardWidth(float w)
 	{
 		this.widthKeyboard=w;
@@ -454,7 +455,7 @@ public class Piano extends Entity {
 	
 	public void setMIDIOffset(byte o)
 	{
-		this.midioffset=o;
+		this.midiOffset=o;
 	}
 	
 	public void setToneKeys(Key t[])
@@ -547,7 +548,7 @@ public class Piano extends Entity {
 	
 	public byte getMIDIOffset()
 	{
-		return this.midioffset;
+		return this.midiOffset;
 	}
 	
 	public Key[] getToneKeys()
