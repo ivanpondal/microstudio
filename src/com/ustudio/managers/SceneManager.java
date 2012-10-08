@@ -17,11 +17,11 @@ public class SceneManager {
 	public Scene scene;
 	
 	public void setMenuScene(int w, int h) {
-		this.scene = new MenuScene(w, h);
 		if(MainActivity.getInstance().getRequestedOrientation()!=ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
 		{
 			MainActivity.getInstance().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		}
+		this.scene = new MenuScene(w, h);
 		MainActivity.getInstance().getEngine().setScene(this.scene);
 	}
 	
@@ -31,11 +31,11 @@ public class SceneManager {
 	}
 	
 	public void setFreePlay(int w, int h) {
-		this.scene = new FreePlay(w, h);
 		if(MainActivity.getInstance().getRequestedOrientation()!=ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
 		{
 			MainActivity.getInstance().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 		}
+		this.scene = new FreePlay(w, h);
 		MainActivity.getInstance().getEngine().setScene(this.scene);
 	}
 	

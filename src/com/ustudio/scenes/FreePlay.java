@@ -97,7 +97,7 @@ public class FreePlay extends Scene {
 		this.ButtonHeight=CAMERA_HEIGHT/6.9f;
 		this.ToolbarY=CAMERA_HEIGHT/24;
 		this.ToolbarX=(CAMERA_WIDTH-this.ButtonWidth*6)/2;
-		this.PianoX=(CAMERA_WIDTH-CAMERA_WIDTH/8)*-3;//hago que empieze desde el middle C
+		this.PianoX=0;
 		this.MiniPianoY=CAMERA_HEIGHT/4.4f;
 		this.StepWidth=CAMERA_WIDTH/50;
 		this.StepHeight=CAMERA_HEIGHT/15;
@@ -316,11 +316,17 @@ public class FreePlay extends Scene {
 	
 	private void drawPiano()
 	{
-		this.mTouchPiano = new Piano(this, CAMERA_WIDTH, CAMERA_HEIGHT, this.mInsPiano);
+		byte visibleTone;
+		byte midiOffset;
+		midiOffset=24;
+		visibleTone=PianoMath.MIDI2SpriteIndex((byte)60, true, midiOffset);
+		
+		this.mTouchPiano = new Piano(this, CAMERA_WIDTH, CAMERA_HEIGHT,(byte)8, midiOffset, this.mInsPiano);
 		this.mTouchPiano.setActiveTrack(this.mProject.getTracks().get("Piano"));
 		this.PianoY=CAMERA_HEIGHT-this.mTouchPiano.getKeyboardHeight();
 		this.mTouchPiano.setPosition(this.PianoX, this.PianoY);
-		this.attachChild(this.mTouchPiano);		
+		this.mTouchPiano.moveViewer(visibleTone);
+		this.attachChild(this.mTouchPiano);	
 	}
 	
 	public void ToolbarAction(byte selindex, boolean pressed)
