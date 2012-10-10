@@ -79,9 +79,9 @@ public class FreePlay extends Scene {
 		loadGUITextures();
 		drawBG();
 		drawToolBar();
+		drawPiano();
 		drawMiniPiano();
 		drawSteps();
-		drawPiano();
 	}
 	
 	private void createProject()
@@ -311,7 +311,7 @@ public class FreePlay extends Scene {
 	
 	private void drawMiniPiano()
 	{		
-		this.mMiniPiano = new MiniPiano(this, CAMERA_WIDTH, CAMERA_HEIGHT, this.mActiveTrack);
+		this.mMiniPiano = new MiniPiano(this, CAMERA_WIDTH, CAMERA_HEIGHT, this.mActiveTrack, this.mTouchPiano);
 		this.MiniPianoX=(CAMERA_WIDTH-this.mMiniPiano.getKeyboardWidth())/2;
 		this.mMiniPiano.setPosition(this.MiniPianoX, this.MiniPianoY);
 		this.mMiniPiano.moveViewer(this.mActiveTrack.getFirstTone());

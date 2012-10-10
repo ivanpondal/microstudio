@@ -56,9 +56,12 @@ public class MiniPiano extends Entity {
 	private float widthBG;
 	private float heightBG;
 	
+	private Track mActiveTrack;
+	private Piano mPiano;
+	
 	private byte tonesVisible;
 	
-	public MiniPiano(Scene pScene, int w, int h, Track t) {
+	public MiniPiano(Scene pScene, int w, int h, Track t, Piano p) {
 		Key tmptonekeys[];
 		Key tmpsemitonekeys[];
 		
@@ -83,17 +86,20 @@ public class MiniPiano extends Entity {
 		this.setToneKeys(tmptonekeys);
 		this.setSemitoneKeys(tmpsemitonekeys);
 		this.setTonesVisible(t.getTonesVisible());
+		this.setActiveTrack(t);
+		this.setPiano(p);
 	
 		Rectangle touchControl = new Rectangle(0,0,this.getKeyboardWidth(), this.getKeyboardHeight()){
 			public boolean onAreaTouched(final TouchEvent pAreaTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
 				switch(pAreaTouchEvent.getAction()) 
 				{
                     case TouchEvent.ACTION_DOWN:
-                    	Log.d("Piano","X:"+pTouchAreaLocalX+" Y:"+pTouchAreaLocalY);
+                    	MiniPiano.this.moveViewer(MiniPiano.this.getSelTone(pTouchAreaLocalX));
                     	break;
                     case TouchEvent.ACTION_UP: 
                         break;
                     case TouchEvent.ACTION_MOVE:  
+                    	MiniPiano.this.moveViewer(MiniPiano.this.getSelTone(pTouchAreaLocalX));
                     	break;	
 				}
                 return true;
@@ -221,6 +227,14 @@ public class MiniPiano extends Entity {
 	
 	//PUBLICAS
 	
+	public byte getSelTone(float TouchX)
+	{
+		byte selTone;
+		selTone=(byte)((TouchX/this.getTonesWidth())-(this.getTonesVisible()/2));
+		return selTone;
+	}
+	
+	
 	public void moveViewer(byte selTone)
 	{
 		float posX;
@@ -228,7 +242,13 @@ public class MiniPiano extends Entity {
 		{
 			selTone=(byte)(49-this.tonesVisible);
 		}
+		else if(selTone<0)
+		{
+			selTone=0;
+		} 
 		posX=this.getTonesWidth()*selTone;
+		this.getActiveTrack().setFirstTone(selTone);
+		this.getPiano().moveViewer(selTone);
 		this.getViewer().setPosition(posX,this.getViewer().getY());
 	}
 	
@@ -324,6 +344,16 @@ public class MiniPiano extends Entity {
 		this.tonesVisible=t;
 	}
 	
+	public void setActiveTrack(Track t)
+	{
+		this.mActiveTrack=t;
+	}
+	
+	public void setPiano(Piano p)
+	{
+		this.mPiano=p;
+	}
+	
 	//GET}
 	
 	public float getTonesWidth()
@@ -416,4 +446,13 @@ public class MiniPiano extends Entity {
 		return this.tonesVisible;
 	}
 	
+	public Track getActiveTrack()
+	{
+		return this.mActiveTrack;
+	}
+	
+	public Piano getPiano()
+	{
+		return this.mPiano;
+	}
 }
