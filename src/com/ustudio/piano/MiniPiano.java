@@ -84,6 +84,25 @@ public class MiniPiano extends Entity {
 		this.setSemitoneKeys(tmpsemitonekeys);
 		this.setTonesVisible(t.getTonesVisible());
 	
+		Rectangle touchControl = new Rectangle(0,0,this.getKeyboardWidth(), this.getKeyboardHeight()){
+			public boolean onAreaTouched(final TouchEvent pAreaTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
+				switch(pAreaTouchEvent.getAction()) 
+				{
+                    case TouchEvent.ACTION_DOWN:
+                    	Log.d("Piano","X:"+pTouchAreaLocalX+" Y:"+pTouchAreaLocalY);
+                    	break;
+                    case TouchEvent.ACTION_UP: 
+                        break;
+                    case TouchEvent.ACTION_MOVE:  
+                    	break;	
+				}
+                return true;
+            }
+		};
+		
+		this.attachChild(touchControl);
+		pScene.registerTouchArea(touchControl);
+		
 		loadGUITextures();
 		
 		drawBG();

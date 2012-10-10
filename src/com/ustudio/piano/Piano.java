@@ -2,6 +2,7 @@ package com.ustudio.piano;
 
 
 import org.anddev.andengine.entity.Entity;
+import org.anddev.andengine.entity.primitive.Rectangle;
 import org.anddev.andengine.entity.scene.Scene;
 import org.anddev.andengine.entity.sprite.Sprite;
 import org.anddev.andengine.input.touch.TouchEvent;
@@ -106,7 +107,7 @@ public class Piano extends Entity {
 		
 		MainActivity.getInstance().getEngine().getTextureManager().loadTexture(this.mTexture);
 		
-		Sprite touchControl = new Sprite(0,0,this.mFTR_STN){
+		Rectangle touchControl = new Rectangle(0,0,this.getKeyboardWidth(), this.getKeyboardHeight()){
 			public boolean onAreaTouched(final TouchEvent pAreaTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
 				int PointerID,SelKey;
 				byte SpriteIndex;
@@ -136,8 +137,7 @@ public class Piano extends Entity {
                 return true;
             }
 		};
-		touchControl.setHeight(this.getKeyboardHeight());
-		touchControl.setWidth(this.getKeyboardWidth());
+
 		this.attachChild(touchControl);
 		pScene.registerTouchArea(touchControl);
 		
