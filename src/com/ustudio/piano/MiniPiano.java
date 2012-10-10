@@ -96,8 +96,6 @@ public class MiniPiano extends Entity {
                     case TouchEvent.ACTION_DOWN:
                     	MiniPiano.this.moveViewer(MiniPiano.this.getSelTone(pTouchAreaLocalX));
                     	break;
-                    case TouchEvent.ACTION_UP: 
-                        break;
                     case TouchEvent.ACTION_MOVE:  
                     	MiniPiano.this.moveViewer(MiniPiano.this.getSelTone(pTouchAreaLocalX));
                     	break;	

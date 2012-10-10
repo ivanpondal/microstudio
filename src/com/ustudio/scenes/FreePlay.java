@@ -208,17 +208,17 @@ public class FreePlay extends Scene {
 		rotationX=this.StepWidth/2;
 		rotationY=this.StepHeight/2;
 		
+		//Single step forward
 		stepFW_sprite[0] = new Sprite(0,0,this.mSingleStep){
 			public boolean onAreaTouched(final TouchEvent pAreaTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
+				byte selTone;
 				switch(pAreaTouchEvent.getAction()) 
 				{
                     case TouchEvent.ACTION_DOWN:
-                    	Log.d("Piano","SingleFW");
+                    	selTone=FreePlay.this.getActiveTrack().getFirstTone();
+                    	selTone++;
+                    	FreePlay.this.getMiniPiano().moveViewer(selTone);
                     	break;
-                    case TouchEvent.ACTION_UP: 
-                        break;
-                    case TouchEvent.ACTION_MOVE:    
-                    	break;	
 				}
                 return true;
             }
@@ -227,17 +227,17 @@ public class FreePlay extends Scene {
 		stepFW_sprite[0].setHeight(this.StepHeight);
 		stepFW_sprite[0].setAlpha(0.5f);
 		
+		//Single step backward
 		stepBW_sprite[0] = new Sprite(0,0,this.mSingleStep){
 			public boolean onAreaTouched(final TouchEvent pAreaTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
+				byte selTone;
 				switch(pAreaTouchEvent.getAction()) 
 				{
                     case TouchEvent.ACTION_DOWN:
-                    	Log.d("Piano","SingleBW");
+                    	selTone=FreePlay.this.getActiveTrack().getFirstTone();
+                    	selTone--;
+                    	FreePlay.this.getMiniPiano().moveViewer(selTone);
                     	break;
-                    case TouchEvent.ACTION_UP: 
-                        break;
-                    case TouchEvent.ACTION_MOVE:    
-                    	break;	
 				}
                 return true;
             }
@@ -248,17 +248,17 @@ public class FreePlay extends Scene {
 		stepBW_sprite[0].setRotationCenter(rotationX,rotationY);
 		stepBW_sprite[0].setRotation(180);
 		
+		//Whole step forward
 		stepFW_sprite[1] = new Sprite(0,0,this.mWholeStep){
 			public boolean onAreaTouched(final TouchEvent pAreaTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
+				byte selTone;
 				switch(pAreaTouchEvent.getAction()) 
 				{
                     case TouchEvent.ACTION_DOWN:
-                    	Log.d("Piano","WholeFW");
+                    	selTone=FreePlay.this.getActiveTrack().getFirstTone();
+                    	selTone+=FreePlay.this.getActiveTrack().getTonesVisible();
+                    	FreePlay.this.getMiniPiano().moveViewer(selTone);
                     	break;
-                    case TouchEvent.ACTION_UP: 
-                        break;
-                    case TouchEvent.ACTION_MOVE:    
-                    	break;	
 				}
                 return true;
             }
@@ -267,17 +267,17 @@ public class FreePlay extends Scene {
 		stepFW_sprite[1].setHeight(this.StepHeight);
 		stepFW_sprite[1].setAlpha(0.5f);
 		
+		//Whole step backward
 		stepBW_sprite[1] = new Sprite(0,0,this.mWholeStep){
 			public boolean onAreaTouched(final TouchEvent pAreaTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
+				byte selTone;
 				switch(pAreaTouchEvent.getAction()) 
 				{
                     case TouchEvent.ACTION_DOWN:
-                    	Log.d("Piano","WholeBW");
+                    	selTone=FreePlay.this.getActiveTrack().getFirstTone();
+                    	selTone-=FreePlay.this.getActiveTrack().getTonesVisible();
+                    	FreePlay.this.getMiniPiano().moveViewer(selTone);
                     	break;
-                    case TouchEvent.ACTION_UP: 
-                        break;
-                    case TouchEvent.ACTION_MOVE:    
-                    	break;	
 				}
                 return true;
             }
@@ -447,5 +447,39 @@ public class FreePlay extends Scene {
 				}
 				break;
 		}
+	}
+
+	//SET
+	
+	public void setActiveTrack(Track t)
+	{
+		this.mActiveTrack=t;
+	}
+	
+	public void setPiano(Piano p)
+	{
+		this.mTouchPiano=p;
+	}
+	
+	public void setMiniPiano(MiniPiano p)
+	{
+		this.mMiniPiano=p;
+	}
+
+	//GET
+	
+	public Track getActiveTrack()
+	{
+		return this.mActiveTrack;
+	}
+
+	public Piano getPiano()
+	{
+		return this.mTouchPiano;
+	}
+	
+	public MiniPiano getMiniPiano()
+	{
+		return this.mMiniPiano;
 	}
 }
