@@ -18,6 +18,7 @@ import java.util.Hashtable;
 import com.ustudio.main.MainActivity;
 import com.ustudio.audio.Instrument;
 import com.ustudio.midi.MIDIMessage;
+import com.ustudio.project.IniConstants;
 
 public class MiniPiano extends Entity {
 	
@@ -51,8 +52,6 @@ public class MiniPiano extends Entity {
 	private float heightKeyboard;
 	private float widthBG;
 	private float heightBG;
-	
-	private byte midioffset;
 
 	
 	public MiniPiano(Scene pScene, int w, int h) {
@@ -69,12 +68,12 @@ public class MiniPiano extends Entity {
 		tmpsemitonekeys=new Key[35];
 		for (byte i=0;i<49;i++)
 		{
-			tmptonekeys[i]=new Key(false,true,i,PianoMath.SpriteIndex2MIDI(i, true, this.getMIDIOffset()));
+			tmptonekeys[i]=new Key(false,true,i,PianoMath.SpriteIndex2MIDI(i, true, IniConstants.MIDIOffset));
 		}
 		
 		for (byte i=0;i<35;i++)
 		{
-			tmpsemitonekeys[i]=new Key(false,false,i,PianoMath.SpriteIndex2MIDI(i, false, this.getMIDIOffset()));
+			tmpsemitonekeys[i]=new Key(false,false,i,PianoMath.SpriteIndex2MIDI(i, false, IniConstants.MIDIOffset));
 		}
 		
 		this.setToneKeys(tmptonekeys);
@@ -106,7 +105,6 @@ public class MiniPiano extends Entity {
 		this.setSTHeight(this.getTonesHeight()/1.75f);
 		this.setSpaceST(this.getSTWidth()/2);
 		this.setTorST(this.getSTHeight());
-		this.setMIDIOffset((byte)24);
 		this.setBGWidth(this.getKeyboardWidth()*1.02f);
 		this.setBGHeight(this.getKeyboardHeight()*1.2f);
 	}
@@ -247,11 +245,6 @@ public class MiniPiano extends Entity {
 		this.semitonesp=st;
 	}
 	
-	public void setMIDIOffset(byte o)
-	{
-		this.midioffset=o;
-	}
-	
 	public void setBGWidth(float w)
 	{
 		this.widthBG=w;
@@ -332,11 +325,6 @@ public class MiniPiano extends Entity {
 	public Entity getSTP()
 	{
 		return this.semitonesp;
-	}
-	
-	public byte getMIDIOffset()
-	{
-		return this.midioffset;
 	}
 	
 	public float getBGWidth()

@@ -15,6 +15,7 @@ import android.util.Log;
 
 import java.util.Hashtable;
 
+import com.ustudio.project.IniConstants;
 import com.ustudio.project.Track;
 import com.ustudio.main.MainActivity;
 import com.ustudio.audio.Instrument;
@@ -50,7 +51,6 @@ public class Piano extends Entity {
 	private float widthKeyboard;
 	private float heightKeyboard;
 	
-	private byte midiOffset;
 	private byte tonesVisible;
 	
 	private Hashtable<Integer,Key> TouchIDs;
@@ -78,19 +78,18 @@ public class Piano extends Entity {
 		this.setSTHeight(this.getTonesHeight()/1.75f);
 		this.setSpaceST(this.getSTWidth()/2);
 		this.setTorST(this.getSTHeight());
-		this.setMIDIOffset(m);
 		this.setInstrument(Instr);
 		
 		tmptonekeys=new Key[49];
 		tmpsemitonekeys=new Key[35];
 		for (byte i=0;i<49;i++)
 		{
-			tmptonekeys[i]=new Key(false,true,i,PianoMath.SpriteIndex2MIDI(i, true, this.getMIDIOffset()));
+			tmptonekeys[i]=new Key(false,true,i,PianoMath.SpriteIndex2MIDI(i, true, IniConstants.MIDIOffset));
 		}
 		
 		for (byte i=0;i<35;i++)
 		{
-			tmpsemitonekeys[i]=new Key(false,false,i,PianoMath.SpriteIndex2MIDI(i, false, this.getMIDIOffset()));
+			tmpsemitonekeys[i]=new Key(false,false,i,PianoMath.SpriteIndex2MIDI(i, false, IniConstants.MIDIOffset));
 		}
 		
 		this.setToneKeys(tmptonekeys);
@@ -459,11 +458,6 @@ public class Piano extends Entity {
 		this.semitonesp=st;
 	}
 	
-	public void setMIDIOffset(byte o)
-	{
-		this.midiOffset=o;
-	}
-	
 	public void setToneKeys(Key t[])
 	{
 		this.tonekeys=t;
@@ -555,11 +549,6 @@ public class Piano extends Entity {
 	public Entity getSTP()
 	{
 		return this.semitonesp;
-	}
-	
-	public byte getMIDIOffset()
-	{
-		return this.midiOffset;
 	}
 	
 	public Key[] getToneKeys()

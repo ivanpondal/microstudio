@@ -11,6 +11,10 @@ public class Track {
 	private boolean mMute;
 	private boolean mSolo;
 	private boolean mIsRec;
+	
+	private byte mTonesVisible;
+	private byte mFirstTone;
+	
 	private Hashtable<Long,MIDIMessage> mMIDInotes;
 	
 	public Track(String n, Instrument i)
@@ -20,6 +24,8 @@ public class Track {
 		this.mMute=false;
 		this.mSolo=false;
 		this.mIsRec=false;
+		this.mTonesVisible=IniConstants.VisibleTones;
+		this.mFirstTone=IniConstants.FirstTone;
 		this.mMIDInotes=new Hashtable<Long,MIDIMessage>();
 	}
 	

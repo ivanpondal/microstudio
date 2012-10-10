@@ -1,5 +1,7 @@
 package com.ustudio.piano;
 
+import com.ustudio.project.IniConstants;
+
 public class PianoMath {
 
 	public static byte SelKey2SpriteIndex(int SelKey,boolean isTone){
@@ -38,7 +40,7 @@ public class PianoMath {
 		return SpriteIndex;
 	}
 	
-	public static byte SelKey2MIDI(int SelKey,boolean isTone,byte midioffset){
+	public static byte SelKey2MIDI(int SelKey,boolean isTone){
 		byte octave;
 		byte noteindex;
 		byte midinote;
@@ -96,17 +98,17 @@ public class PianoMath {
 					break;
 			}
 		}
-		midinote=(byte)(octave*12+modifier+midioffset);
+		midinote=(byte)(octave*12+modifier+IniConstants.MIDIOffset);
 		return midinote;
 	}
 	
-	public static byte SpriteIndex2MIDI(int SpriteIndex,boolean isTone,byte midioffset)
+	public static byte SpriteIndex2MIDI(int SpriteIndex,boolean isTone)
 	{
 		byte octave;
 		byte noteindex;
 		byte modifier=0;
 		byte midi=0;
-		midi+=midioffset;
+		midi+=IniConstants.MIDIOffset;
 		if(isTone)
 		{
 			octave=(byte)(SpriteIndex/7);
@@ -164,13 +166,13 @@ public class PianoMath {
 		return midi;
 	}
 	
-	public static byte MIDI2SpriteIndex(byte midi,boolean isTone, byte midioffset)
+	public static byte MIDI2SpriteIndex(byte midi,boolean isTone)
 	{
 		byte octave;
 		byte noteindex;
 		byte modifier=0;
 		byte spriteindex;
-		midi-=midioffset;
+		midi-=IniConstants.MIDIOffset;
 		octave=(byte)(midi/12);
 		noteindex=(byte)(midi-octave*12);
 		if(isTone)
@@ -226,10 +228,10 @@ public class PianoMath {
 		return spriteindex;
 	}
 	
-	public static boolean isMIDITone(byte midi, byte midioffset){
+	public static boolean isMIDITone(byte midi){
 		byte octave;
 		byte noteindex;
-		midi-=midioffset;
+		midi-=IniConstants.MIDIOffset;
 		octave=(byte)(midi/12);
 		noteindex=(byte)(midi-octave*12);
 		if((noteindex==1)||(noteindex==3)||(noteindex==6)||(noteindex==8)||(noteindex==10))

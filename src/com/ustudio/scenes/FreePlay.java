@@ -317,11 +317,10 @@ public class FreePlay extends Scene {
 	private void drawPiano()
 	{
 		byte visibleTone;
-		byte midiOffset;
-		midiOffset=24;
-		visibleTone=PianoMath.MIDI2SpriteIndex((byte)60, true, midiOffset);
 		
-		this.mTouchPiano = new Piano(this, CAMERA_WIDTH, CAMERA_HEIGHT,(byte)8, midiOffset, this.mInsPiano);
+		visibleTone=PianoMath.MIDI2SpriteIndex((byte)60, true, IniConstants.MIDIOffset);
+		
+		this.mTouchPiano = new Piano(this, CAMERA_WIDTH, CAMERA_HEIGHT,(byte)8, IniConstants.MIDIOffset, this.mInsPiano);
 		this.mTouchPiano.setActiveTrack(this.mProject.getTracks().get("Piano"));
 		this.PianoY=CAMERA_HEIGHT-this.mTouchPiano.getKeyboardHeight();
 		this.mTouchPiano.setPosition(this.PianoX, this.PianoY);
