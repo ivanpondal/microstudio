@@ -52,8 +52,6 @@ public class Piano extends Entity {
 	private float widthKeyboard;
 	private float heightKeyboard;
 	
-	private byte tonesVisible;
-	
 	private Hashtable<Integer,Key> TouchIDs;
 	
 	private Instrument mInstrument;
@@ -72,8 +70,7 @@ public class Piano extends Entity {
 		scene = pScene;
 		this.setKeyboardHeight(CAMERA_HEIGHT/1.6f);
 		this.setKeyboardWidth(CAMERA_WIDTH*7);
-		this.setTonesVisible(t.getTonesVisible());
-		this.setTonesWidth(CAMERA_WIDTH/8);
+		this.setTonesWidth(CAMERA_WIDTH/(float)t.getTonesVisible());
 		this.setTonesHeight(this.getKeyboardHeight());
 		this.setSTWidth(this.getTonesWidth()/2);
 		this.setSTHeight(this.getTonesHeight()/1.75f);
@@ -206,9 +203,9 @@ public class Piano extends Entity {
 	public void moveViewer(byte selTone)
 	{
 		float posX;
-		if((49-selTone)<this.tonesVisible)
+		if((49-selTone)<this.mActiveTrack.getTonesVisible())
 		{
-			selTone=(byte)(49-this.tonesVisible);
+			selTone=(byte)(49-this.mActiveTrack.getTonesVisible());
 		}
 		posX=this.widthTone*-selTone;
 		this.setPosition(posX,this.getY());
@@ -483,11 +480,6 @@ public class Piano extends Entity {
 		this.mActiveTrack=t;
 	}
 	
-	public void setTonesVisible(byte t)
-	{
-		this.tonesVisible=t;
-	}
-	
 	//GET}
 	
 	public float getTonesWidth()
@@ -576,9 +568,5 @@ public class Piano extends Entity {
 		return this.mActiveTrack;
 	}
 	
-	public byte getTonesVisible()
-	{
-		return this.tonesVisible;
-	}
 }
 

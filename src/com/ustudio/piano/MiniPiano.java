@@ -254,6 +254,7 @@ public class MiniPiano extends Entity {
 	
 	public void setTonesWidth(float w)
 	{
+		
 		this.widthTone=w;
 	}
 	

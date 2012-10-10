@@ -152,17 +152,23 @@ public class Instrument {
 	
 	public void playMIDI(byte note,byte velocity)
 	{
-		if(dat_notes[note].getEnabled())
+		if(dat_notes[note]!=null)
 		{
-			dat_notes[note].playNote(velocity, val_left_vol, val_right_vol);
+			if(dat_notes[note].getEnabled())
+			{
+				dat_notes[note].playNote(velocity, val_left_vol, val_right_vol);
+			}
 		}
 	}
 	
 	public void stopMIDI(byte note)
 	{
-		if(dat_notes[note].getEnabled())
+		if(dat_notes[note]!=null)
 		{
-			dat_notes[note].stopNote(val_decay);
+			if(dat_notes[note].getEnabled())
+			{
+				dat_notes[note].stopNote(val_decay);
+			}
 		}
 	}
 	
