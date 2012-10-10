@@ -60,6 +60,16 @@ public class Track {
 		this.mMIDInotes=m;
 	}
 	
+	public void setTonesVisible(byte t)
+	{
+		this.mTonesVisible=t;
+	}
+
+	public void setFirstTone(byte f)
+	{
+		this.mFirstTone=f;
+	}
+	
 	//GET
 	public String getName()
 	{
@@ -89,5 +99,15 @@ public class Track {
 	public Hashtable<Long,MIDIMessage> getMIDInotes()
 	{
 		return this.mMIDInotes;
+	}
+	
+	public byte getTonesVisible()
+	{
+		return this.mTonesVisible;
+	}
+	
+	public byte getFirstTone()
+	{
+		return this.mFirstTone;
 	}
 }

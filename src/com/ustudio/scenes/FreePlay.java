@@ -33,6 +33,8 @@ public class FreePlay extends Scene {
 	
 	private Project mProject;
 	
+	private Track mActiveTrack;
+	
 	private Texture mTexture;
 	
 	private TextureRegion mBackground;
@@ -88,6 +90,7 @@ public class FreePlay extends Scene {
 		this.mInsPiano=new Instrument("Piano",(byte)1,400,(byte)60,(byte)73);
 		tmpTrack=new Track(this.mInsPiano.getName(),this.mInsPiano);
 		this.mProject=new Project("New Project",tmpTrack);
+		this.mActiveTrack=this.mProject.getTracks().get("Piano");
 	}
 	
 	private void loadSizes()
@@ -308,23 +311,21 @@ public class FreePlay extends Scene {
 	
 	private void drawMiniPiano()
 	{		
-		this.mMiniPiano = new MiniPiano(this, CAMERA_WIDTH, CAMERA_HEIGHT);
+		this.mMiniPiano = new MiniPiano(this, CAMERA_WIDTH, CAMERA_HEIGHT, this.mActiveTrack);
 		this.MiniPianoX=(CAMERA_WIDTH-this.mMiniPiano.getKeyboardWidth())/2;
 		this.mMiniPiano.setPosition(this.MiniPianoX, this.MiniPianoY);
+		this.mMiniPiano.moveViewer(this.mActiveTrack.getFirstTone());
 		this.attachChild(this.mMiniPiano);	
 	}
 	
 	private void drawPiano()
 	{
-		byte visibleTone;
 		
-		visibleTone=PianoMath.MIDI2SpriteIndex((byte)60, true, IniConstants.MIDIOffset);
-		
-		this.mTouchPiano = new Piano(this, CAMERA_WIDTH, CAMERA_HEIGHT,(byte)8, IniConstants.MIDIOffset, this.mInsPiano);
-		this.mTouchPiano.setActiveTrack(this.mProject.getTracks().get("Piano"));
+		this.mTouchPiano = new Piano(this, CAMERA_WIDTH, CAMERA_HEIGHT, this.mActiveTrack);
+		this.mTouchPiano.setActiveTrack(this.mActiveTrack);
 		this.PianoY=CAMERA_HEIGHT-this.mTouchPiano.getKeyboardHeight();
 		this.mTouchPiano.setPosition(this.PianoX, this.PianoY);
-		this.mTouchPiano.moveViewer(visibleTone);
+		this.mTouchPiano.moveViewer(this.mActiveTrack.getFirstTone());
 		this.attachChild(this.mTouchPiano);	
 	}
 	

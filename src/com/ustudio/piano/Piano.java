@@ -59,7 +59,7 @@ public class Piano extends Entity {
 	
 	private Track mActiveTrack;
 	
-	public Piano(Scene pScene, int w, int h, byte v, byte m, Instrument Instr) {
+	public Piano(Scene pScene, int w, int h, Track t) {
 		Key tmptonekeys[];
 		Key tmpsemitonekeys[];
 		Hashtable<Integer,Key> tmpTouchIDs;
@@ -71,25 +71,25 @@ public class Piano extends Entity {
 		scene = pScene;
 		this.setKeyboardHeight(CAMERA_HEIGHT/1.6f);
 		this.setKeyboardWidth(CAMERA_WIDTH*7);
-		this.setTonesVisible(v);
+		this.setTonesVisible(t.getTonesVisible());
 		this.setTonesWidth(CAMERA_WIDTH/8);
 		this.setTonesHeight(this.getKeyboardHeight());
 		this.setSTWidth(this.getTonesWidth()/2);
 		this.setSTHeight(this.getTonesHeight()/1.75f);
 		this.setSpaceST(this.getSTWidth()/2);
 		this.setTorST(this.getSTHeight());
-		this.setInstrument(Instr);
+		this.setInstrument(t.getInstr());
 		
 		tmptonekeys=new Key[49];
 		tmpsemitonekeys=new Key[35];
 		for (byte i=0;i<49;i++)
 		{
-			tmptonekeys[i]=new Key(false,true,i,PianoMath.SpriteIndex2MIDI(i, true, IniConstants.MIDIOffset));
+			tmptonekeys[i]=new Key(false,true,i,PianoMath.SpriteIndex2MIDI(i, true));
 		}
 		
 		for (byte i=0;i<35;i++)
 		{
-			tmpsemitonekeys[i]=new Key(false,false,i,PianoMath.SpriteIndex2MIDI(i, false, IniConstants.MIDIOffset));
+			tmpsemitonekeys[i]=new Key(false,false,i,PianoMath.SpriteIndex2MIDI(i, false));
 		}
 		
 		this.setToneKeys(tmptonekeys);

@@ -2,6 +2,7 @@ package com.ustudio.piano;
 
 
 import org.anddev.andengine.entity.Entity;
+import org.anddev.andengine.entity.primitive.Rectangle;
 import org.anddev.andengine.entity.scene.Scene;
 import org.anddev.andengine.entity.sprite.Sprite;
 import org.anddev.andengine.input.touch.TouchEvent;
@@ -19,6 +20,7 @@ import com.ustudio.main.MainActivity;
 import com.ustudio.audio.Instrument;
 import com.ustudio.midi.MIDIMessage;
 import com.ustudio.project.IniConstants;
+import com.ustudio.project.Track;
 
 public class MiniPiano extends Entity {
 	
@@ -33,6 +35,7 @@ public class MiniPiano extends Entity {
 	private Entity tonesp;
 	private Entity semitones;
 	private Entity semitonesp;
+	private Entity viewer;
 	
 	private Texture mTexture;
 	private Texture mBGTexture;
@@ -52,9 +55,10 @@ public class MiniPiano extends Entity {
 	private float heightKeyboard;
 	private float widthBG;
 	private float heightBG;
-
 	
-	public MiniPiano(Scene pScene, int w, int h) {
+	private byte tonesVisible;
+	
+	public MiniPiano(Scene pScene, int w, int h, Track t) {
 		Key tmptonekeys[];
 		Key tmpsemitonekeys[];
 		
@@ -68,27 +72,30 @@ public class MiniPiano extends Entity {
 		tmpsemitonekeys=new Key[35];
 		for (byte i=0;i<49;i++)
 		{
-			tmptonekeys[i]=new Key(false,true,i,PianoMath.SpriteIndex2MIDI(i, true, IniConstants.MIDIOffset));
+			tmptonekeys[i]=new Key(false,true,i,PianoMath.SpriteIndex2MIDI(i, true));
 		}
 		
 		for (byte i=0;i<35;i++)
 		{
-			tmpsemitonekeys[i]=new Key(false,false,i,PianoMath.SpriteIndex2MIDI(i, false, IniConstants.MIDIOffset));
+			tmpsemitonekeys[i]=new Key(false,false,i,PianoMath.SpriteIndex2MIDI(i, false));
 		}
 		
 		this.setToneKeys(tmptonekeys);
 		this.setSemitoneKeys(tmpsemitonekeys);
+		this.setTonesVisible(t.getTonesVisible());
 	
 		loadGUITextures();
 		
 		drawBG();
 		drawTones();
 		drawST();
+		drawViewer();
 
 		this.attachChild(this.getTonesP()); 
 		this.attachChild(this.getTones());
 		this.attachChild(this.getSTP());
 		this.attachChild(this.getST());
+		this.attachChild(this.getViewer());
 		this.sortChildren();
 	}
 
@@ -182,7 +189,30 @@ public class MiniPiano extends Entity {
 		this.setSTP(tmp_semitonesp);
 	}
 	
+	private void drawViewer()
+	{
+		Rectangle recviewer;
+		
+		recviewer=new Rectangle(0,0,this.getTonesWidth()*this.getTonesVisible(),this.getKeyboardHeight());
+		recviewer.setColor(0, 0, 0);
+		recviewer.setAlpha(0.5f);
+		
+		this.setViewer(recviewer);
+	}
+	
 	//PUBLICAS
+	
+	public void moveViewer(byte selTone)
+	{
+		float posX;
+		if((49-selTone)<this.tonesVisible)
+		{
+			selTone=(byte)(49-this.tonesVisible);
+		}
+		posX=this.getTonesWidth()*selTone;
+		this.getViewer().setPosition(posX,this.getViewer().getY());
+	}
+	
 	// SET
 	
 	public void setTonesWidth(float w)
@@ -263,6 +293,16 @@ public class MiniPiano extends Entity {
 	public void setSemitoneKeys(Key st[])
 	{
 		this.semitonekeys=st;
+	}
+	
+	public void setViewer(Entity v)
+	{
+		this.viewer=v;
+	}
+	
+	public void setTonesVisible(byte t)
+	{
+		this.tonesVisible=t;
 	}
 	
 	//GET}
@@ -347,5 +387,14 @@ public class MiniPiano extends Entity {
 		return this.semitonekeys;
 	}
 	
+	public Entity getViewer()
+	{
+		return this.viewer;
+	}	
+	
+	public byte getTonesVisible()
+	{
+		return this.tonesVisible;
+	}
 	
 }
