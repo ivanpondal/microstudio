@@ -67,7 +67,7 @@ public class MainActivity extends BaseGameActivity {
 		// TODO Auto-generated method stub
 		this.mEngine.registerUpdateHandler(new FPSLogger());
 		
-		this.mSceneManager.setFreePlay(CAMERA_WIDTH,CAMERA_HEIGHT);
+		this.mSceneManager.setRecordScene(CAMERA_WIDTH,CAMERA_HEIGHT);
 		
         return this.mSceneManager.getCurrentScene();
 	}

@@ -81,6 +81,7 @@ public class MenuScene extends Scene {
 				        break;
 				    case TouchEvent.ACTION_UP:  
 				    	this.setVisible(true);
+				    	
 				        break;
 				    case TouchEvent.ACTION_MOVE:
 				    	this.setVisible(true);
