@@ -40,10 +40,10 @@ public class SceneManager {
 	}
 	
 	public void setRecordScene(int w, int h) {
-		if(MainActivity.getInstance().getRequestedOrientation()!=ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
-		{
-			MainActivity.getInstance().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-		}
+		//if(MainActivity.getInstance().getRequestedOrientation()!=ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+		//{
+		//	MainActivity.getInstance().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		//}
 		this.scene = new RecordScene(w, h);
 		MainActivity.getInstance().getEngine().setScene(this.scene);
 	}

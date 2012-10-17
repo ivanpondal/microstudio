@@ -1,6 +1,5 @@
 package com.ustudio.scenes;
 
-
 import org.anddev.andengine.entity.scene.Scene;
 import org.anddev.andengine.entity.sprite.Sprite;
 import org.anddev.andengine.input.touch.TouchEvent;
@@ -18,6 +17,7 @@ public class RecordScene extends Scene {
 	static int CAMERA_HEIGHT;
 
 	private Texture	mTexture;
+	private Texture	mTexture2;
 
 	private TextureRegion mBackground;
 	private TextureRegion mTransparent;
@@ -53,26 +53,30 @@ public class RecordScene extends Scene {
 	}
 	private void loadGUITextures()
 	{
-		this.mTexture = new BitmapTextureAtlas(1024, 4096, TextureOptions.BILINEAR);
+		this.mTexture = new BitmapTextureAtlas(1024, 2048, TextureOptions.BILINEAR);
+		this.mTexture2 = new BitmapTextureAtlas(1024, 2048, TextureOptions.BILINEAR);
 		
 		BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/Backgrounds/");
 		
 		this.mTransparent = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "1024x2048.png", 0, 0);
 		this.mBackground = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "tracks_bg.png", 0, 0);
 		
+		MainActivity.getInstance().getEngine().getTextureManager().loadTexture(this.mTexture);
+		
 		BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/Buttons/");
 
-		this.mButtonMenuR = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "menu_relesed.png", 0, 1600);
-		this.mButtonMenuP = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "menu_pressed.png", 0, 1745);
-		this.mButtonPlayR = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "play_relesed.png", 0, 1890);
-		this.mButtonPlayP = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "play_pressed.png", 0, 2035);
-		this.mButtonPauseR = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "pause_relesed.png", 0, 2180);
-		this.mButtonPauseP = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "pause_pressed.png", 0, 2325);
-		this.mButtonStopR = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "stop_relesed.png", 0, 2470);
-		this.mButtonStopP = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "stop_pressed.png", 0, 2615);
+		this.mButtonMenuR = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture2, MainActivity.getInstance().getApplicationContext(), "menu_relesed.png", 0, 0);
+		this.mButtonMenuP = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture2, MainActivity.getInstance().getApplicationContext(), "menu_pressed.png", 0, 145);
+		this.mButtonPlayR = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture2, MainActivity.getInstance().getApplicationContext(), "play_relesed.png", 0, 290);
+		this.mButtonPlayP = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture2, MainActivity.getInstance().getApplicationContext(), "play_pressed.png", 0, 435);
+		this.mButtonPauseR = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture2, MainActivity.getInstance().getApplicationContext(), "pause_relesed.png", 0, 580);
+		this.mButtonPauseP = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture2, MainActivity.getInstance().getApplicationContext(), "pause_pressed.png", 0, 725);
+		this.mButtonStopR = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture2, MainActivity.getInstance().getApplicationContext(), "stop_relesed.png", 0, 870);
+		this.mButtonStopP = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture2, MainActivity.getInstance().getApplicationContext(), "stop_pressed.png", 0, 1015);
 		
-		MainActivity.getInstance().getEngine().getTextureManager().loadTexture(this.mTexture);
+		MainActivity.getInstance().getEngine().getTextureManager().loadTexture(this.mTexture2);
 	}
+	
 	private void drawBG()
 	{
 		Sprite bg_sprite = new Sprite(0,0,this.mBackground);
@@ -80,6 +84,7 @@ public class RecordScene extends Scene {
 		bg_sprite.setHeight(CAMERA_HEIGHT);
 		this.attachChild(bg_sprite);
 	}
+
 	private void drawMenuButtons()
 	{
 		Sprite menup_sprite = new Sprite(0,0,this.mButtonMenuP);
