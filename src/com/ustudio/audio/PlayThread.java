@@ -8,6 +8,7 @@ import java.util.Vector;
 import android.util.Log;
 
 import com.ustudio.midi.MIDIMessage;
+import com.ustudio.piano.Piano;
 import com.ustudio.project.Project;
 import com.ustudio.project.Track;
 
@@ -15,6 +16,7 @@ class PlayThread extends Thread {
 	private boolean mStop_thread;
 	private boolean mPaused;
 	private Project mProject;
+	private Piano mTouchPiano;
 	private long mPlayTime;
 	private long mTimePlaying;
 	
@@ -22,6 +24,14 @@ class PlayThread extends Thread {
 	public PlayThread(Project p)
 	{
 		this.mProject=p;
+		this.mStop_thread=false;
+		this.mPaused=false;
+	}
+	
+	public PlayThread(Project p, Piano pi)
+	{
+		this.mProject=p;
+		this.mTouchPiano=pi;
 		this.mStop_thread=false;
 		this.mPaused=false;
 	}
@@ -86,7 +96,14 @@ class PlayThread extends Thread {
 				}
 				else
 				{
-					tmpTrack.getInstr().processMIDI(tmpMIDI);
+					if(this.mTouchPiano!=null)
+					{
+						tmpTrack.getInstr().processMIDI(tmpMIDI,this.mTouchPiano);
+					}
+					else
+					{
+						tmpTrack.getInstr().processMIDI(tmpMIDI);
+					}
 					i++;
 				}
 			}

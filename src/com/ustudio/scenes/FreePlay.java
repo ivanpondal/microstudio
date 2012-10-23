@@ -316,17 +316,16 @@ public class FreePlay extends Scene {
 		this.mMiniPiano.setPosition(this.MiniPianoX, this.MiniPianoY);
 		this.mMiniPiano.moveViewer(this.mActiveTrack.getFirstTone());
 		this.attachChild(this.mMiniPiano);	
+		this.mTouchPiano.setMiniPiano(this.mMiniPiano);
 	}
 	
 	private void drawPiano()
 	{
-		
 		this.mTouchPiano = new Piano(this, CAMERA_WIDTH, CAMERA_HEIGHT, this.mActiveTrack);
-		this.mTouchPiano.setActiveTrack(this.mActiveTrack);
 		this.PianoY=CAMERA_HEIGHT-this.mTouchPiano.getKeyboardHeight();
 		this.mTouchPiano.setPosition(this.PianoX, this.PianoY);
 		this.mTouchPiano.moveViewer(this.mActiveTrack.getFirstTone());
-		this.attachChild(this.mTouchPiano);	
+		this.attachChild(this.mTouchPiano);
 	}
 	
 	public void ToolbarAction(byte selindex, boolean pressed)
@@ -364,7 +363,7 @@ public class FreePlay extends Scene {
 						{
 							this.mToolBar.getChild(5).setAlpha(1.0f);
 						}
-						Player.PlayProject(this.mProject);
+						Player.PlayProject(this.mProject, this.mTouchPiano);
 					}
 				}
 				else
