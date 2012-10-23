@@ -10,6 +10,7 @@ import android.util.Log;
 
 import com.ustudio.main.MainActivity;
 import com.ustudio.midi.MIDIMessage;
+import com.ustudio.piano.Piano;
 
 public class Instrument {
 	private Note[] dat_notes;
@@ -142,10 +143,25 @@ public class Instrument {
 		switch(msg.getFunction())
 		{
 			case (byte)0x80://note off	
-				stopMIDI(msg.getParam1());		
+				stopMIDI(msg.getParam1());	
 				break;
 			case (byte)0x90://note on
-				playMIDI(msg.getParam1(),msg.getParam2());			
+				playMIDI(msg.getParam1(),msg.getParam2());	
+				break;
+		}
+	}
+	
+	public void processMIDI(MIDIMessage msg, Piano p)
+	{
+		switch(msg.getFunction())
+		{
+			case (byte)0x80://note off	
+				stopMIDI(msg.getParam1());	
+				p.showAction(msg.getParam1(), false);
+				break;
+			case (byte)0x90://note on
+				playMIDI(msg.getParam1(),msg.getParam2());	
+				p.showAction(msg.getParam1(), true);
 				break;
 		}
 	}

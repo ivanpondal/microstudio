@@ -60,7 +60,7 @@ public class Piano extends Entity {
 	
 	private MiniPiano mMiniPiano;
 	
-	public Piano(Scene pScene, int w, int h, Track t, MiniPiano p) {
+	public Piano(Scene pScene, int w, int h, Track t) {
 		Key tmptonekeys[];
 		Key tmpsemitonekeys[];
 		Hashtable<Integer,Key> tmpTouchIDs;
@@ -80,8 +80,7 @@ public class Piano extends Entity {
 		this.setTorST(this.getSTHeight());
 		this.setInstrument(t.getInstr());
 		this.setActiveTrack(t);
-		this.setMiniPiano(p);
-		
+
 		tmptonekeys=new Key[49];
 		tmpsemitonekeys=new Key[35];
 		for (byte i=0;i<49;i++)
@@ -403,13 +402,37 @@ public class Piano extends Entity {
 	
 	public void showAction(byte midi,boolean press)
 	{
-		if (press)
+		boolean isTone;
+		byte SpriteIndex;
+		
+		isTone=PianoMath.isMIDITone(midi);
+		SpriteIndex=PianoMath.MIDI2SpriteIndex(midi, isTone);
+		
+		if(press)
 		{
-			
+			if(isTone)
+			{
+				this.getTones().getChild(SpriteIndex).setVisible(false);
+				this.getMiniPiano().getTones().getChild(SpriteIndex).setVisible(false);
+			}
+			else
+			{
+				this.getST().getChild(SpriteIndex).setVisible(false);
+				this.getMiniPiano().getST().getChild(SpriteIndex).setVisible(false);
+			}
 		}
 		else
 		{
-			
+			if(isTone)
+			{
+				this.getTones().getChild(SpriteIndex).setVisible(true);
+				this.getMiniPiano().getTones().getChild(SpriteIndex).setVisible(true);
+			}
+			else
+			{
+				this.getST().getChild(SpriteIndex).setVisible(true);
+				this.getMiniPiano().getST().getChild(SpriteIndex).setVisible(true);
+			}
 		}
 	}
 	

@@ -1,5 +1,6 @@
 package com.ustudio.audio;
 
+import com.ustudio.piano.Piano;
 import com.ustudio.project.Project;;
 
 public class Player {
@@ -38,6 +39,15 @@ public class Player {
 			mPlayer.start();
 		}
 	}	
+	
+	public static void PlayProject(Project p, Piano pi)
+	{
+		if(!isPlaying())
+		{
+			mPlayer=new PlayThread(p,pi);
+			mPlayer.start();
+		}
+	}
 	
 	public static void Pause()
 	{
