@@ -12,91 +12,64 @@ import com.ustudio.main.MainActivity;
 
 public class Track extends Entity{
 	
-	private Texture mTexture1;
-	private TextureRegion mFaceTextureRegion1;
-	private Texture mTexture2;
-	private TextureRegion mFaceTextureRegion2;
-	private Texture mTexture3;
-	private TextureRegion mFaceTextureRegion3;
-	private Texture mTexture4;
-	private TextureRegion mFaceTextureRegion4;
-	private Texture mTexture5;
-	private TextureRegion mFaceTextureRegion5;
-	private Texture mTexture6;
-	private TextureRegion mFaceTextureRegion6;
-	private Texture mTexture7;
-	private TextureRegion mFaceTextureRegion7;
+	static int CAMERA_WIDTH;
+	static int CAMERA_HEIGHT;
+
+	private Texture	mTexture;
+	
+	private TextureRegion mKnob;
+	private TextureRegion mMuteRelased;
+	private TextureRegion mMutePressed;
+	private TextureRegion mSoloRelased;
+	private TextureRegion mSoloPressed;
+	
+	private float knobHeight;
+	private float knobWidth;
+	private float knobY;
+	private float knobX;
+	
+	private float muteHeight;
+	private float muteWidth;
+	private float muteY;
+	private float muteX;
+	
+	private float soloHeight;
+	private float soloWidth;
+	private float soloY;
+	private float soloX;
 	
 	public Track (int w, int h){
+
+	}
+	private void loadGUITextures(){
+		this.mTexture = new BitmapTextureAtlas(2048, 2048, TextureOptions.BILINEAR);
+		BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/Buttons/");
+		this.mKnob = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "knob.png", 0, 0);
+		this.mMuteRelased = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "mute_relased.png", 0, 115);
+		this.mMutePressed = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "mute_pressed.png", 0, 162);
+		this.mSoloRelased = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "solo_relased.png", 53, 115);
+		this.mSoloPressed = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "solo_pressed.png", 53, 162);
 		
-		this.mTexture1 = new BitmapTextureAtlas(512, 512, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
-		this.mFaceTextureRegion1 = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture1, MainActivity.getInstance().getApplicationContext(), "gfx/Track/volumeTrack.png", 0, 0);
-		MainActivity.getInstance().getEngine().getTextureManager().loadTexture(this.mTexture1);
+		MainActivity.getInstance().getEngine().getTextureManager().loadTexture(this.mTexture);
+	}
+	private void drawButtons(){
 		
-		this.mTexture2 = new BitmapTextureAtlas(256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
-		this.mFaceTextureRegion2 = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture2, MainActivity.getInstance().getApplicationContext(), "gfx/Track/muteTrack.png", 0, 0);
-		MainActivity.getInstance().getEngine().getTextureManager().loadTexture(this.mTexture2);
+	}
+	private void loadSizes(){
+		this.knobHeight=CAMERA_HEIGHT/14.15f;
+		this.knobWidth=CAMERA_WIDTH/5.78f;
+		this.knobY=CAMERA_HEIGHT-(this.knobHeight+(CAMERA_HEIGHT/14.67f));
+		this.knobX=CAMERA_WIDTH-(this.knobWidth+(CAMERA_WIDTH/3.01f));
 		
-		this.mTexture3 = new BitmapTextureAtlas(256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
-		this.mFaceTextureRegion3 = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture3, MainActivity.getInstance().getApplicationContext(), "gfx/Track/soloTrack.png", 0, 0);
-		MainActivity.getInstance().getEngine().getTextureManager().loadTexture(this.mTexture3);
+		this.muteHeight=CAMERA_HEIGHT/34.78f;
+		this.muteWidth=CAMERA_WIDTH/18.46f;
+		this.muteY=CAMERA_HEIGHT-(this.muteHeight+(CAMERA_HEIGHT/14.95f));
+		this.muteX=CAMERA_WIDTH-(this.muteWidth+(CAMERA_WIDTH/1.8045f));
 		
-		this.mTexture4 = new BitmapTextureAtlas(1024, 1024, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
-		this.mFaceTextureRegion4 = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture4, MainActivity.getInstance().getApplicationContext(), "gfx/Track/separatorTrack.png", 0, 0);
-		MainActivity.getInstance().getEngine().getTextureManager().loadTexture(this.mTexture4);
+		this.soloHeight=CAMERA_HEIGHT/34.78f;
+		this.soloWidth=CAMERA_WIDTH/18.46f;
+		this.soloY=CAMERA_HEIGHT-(this.soloHeight+(CAMERA_HEIGHT/8.69f));
+		this.soloX=CAMERA_WIDTH-(this.soloWidth+(CAMERA_WIDTH/1.8045f));
 		
-		this.mTexture5 = new BitmapTextureAtlas(256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
-		this.mFaceTextureRegion5 = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture5, MainActivity.getInstance().getApplicationContext(), "gfx/Track/pianoTrack.png", 0, 0);
-		MainActivity.getInstance().getEngine().getTextureManager().loadTexture(this.mTexture5);
-		
-		this.mTexture6 = new BitmapTextureAtlas(256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
-		this.mFaceTextureRegion6 = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture6, MainActivity.getInstance().getApplicationContext(), "gfx/Track/confTrack.png", 0, 0);
-		MainActivity.getInstance().getEngine().getTextureManager().loadTexture(this.mTexture6);
-		
-		this.mTexture7 = new BitmapTextureAtlas(256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
-		this.mFaceTextureRegion7 = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture7, MainActivity.getInstance().getApplicationContext(), "gfx/Track/labelTrack.png", 0, 0);
-		MainActivity.getInstance().getEngine().getTextureManager().loadTexture(this.mTexture7);
-		
-		Sprite label = new Sprite(w/17 ,h/2 + h/4 - h/16, mFaceTextureRegion7);
-		label.setWidth(w/14);
-		label.setHeight(h/5);
-		//volume.setRotation(-90);
-	    this.attachChild(label);
-		
-		Sprite volume = new Sprite(w/17 ,h/2, mFaceTextureRegion1);
-		volume.setWidth(w/14);
-		volume.setHeight(h/5);
-		//volume.setRotation(-90);
-	    this.attachChild(volume);
-	    
-	    Sprite mute = new Sprite(w/20, h/2 - h/8, mFaceTextureRegion2);
-	    mute.setWidth(w/28f);
-	    mute.setHeight(h/13);
-	    //mute.setRotation(-90);
-	    this.attachChild(mute);
-	    
-	    Sprite solo = new Sprite(w/10 , h/2 - h/8, mFaceTextureRegion3);
-	    solo.setWidth(w/28f);
-	    solo.setHeight(h/13);
-	    //mute.setRotation(-90);
-	    this.attachChild(solo);
-	    
-	    Sprite separator = new Sprite(w/6 ,  h/8 - h/32, mFaceTextureRegion4);
-	    separator.setWidth(w/100f);
-	    separator.setHeight(h*0.8f);
-	    //mute.setRotation(-90);
-	    this.attachChild(separator);
-	    
-	    Sprite piano = new Sprite(w/13 , h/8 + h/8 , mFaceTextureRegion5);
-	    piano.setWidth(w/25f);
-	    piano.setHeight(h/13);
-	    //mute.setRotation(-90);
-	    this.attachChild(piano);
-	    
-	    Sprite conf = new Sprite(w/13 , h/8  , mFaceTextureRegion6);
-	    conf.setWidth(w/25f);
-	    conf.setHeight(h/13);
-	    //mute.setRotation(-90);
-	    this.attachChild(conf);
 	}
 }
