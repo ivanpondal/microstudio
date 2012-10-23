@@ -321,8 +321,7 @@ public class FreePlay extends Scene {
 	private void drawPiano()
 	{
 		
-		this.mTouchPiano = new Piano(this, CAMERA_WIDTH, CAMERA_HEIGHT, this.mActiveTrack);
-		this.mTouchPiano.setActiveTrack(this.mActiveTrack);
+		this.mTouchPiano = new Piano(this, CAMERA_WIDTH, CAMERA_HEIGHT, this.mActiveTrack, this.mMiniPiano);
 		this.PianoY=CAMERA_HEIGHT-this.mTouchPiano.getKeyboardHeight();
 		this.mTouchPiano.setPosition(this.PianoX, this.PianoY);
 		this.mTouchPiano.moveViewer(this.mActiveTrack.getFirstTone());

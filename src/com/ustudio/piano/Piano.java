@@ -58,7 +58,9 @@ public class Piano extends Entity {
 	
 	private Track mActiveTrack;
 	
-	public Piano(Scene pScene, int w, int h, Track t) {
+	private MiniPiano mMiniPiano;
+	
+	public Piano(Scene pScene, int w, int h, Track t, MiniPiano p) {
 		Key tmptonekeys[];
 		Key tmpsemitonekeys[];
 		Hashtable<Integer,Key> tmpTouchIDs;
@@ -77,6 +79,8 @@ public class Piano extends Entity {
 		this.setSpaceST(this.getSTWidth()/2);
 		this.setTorST(this.getSTHeight());
 		this.setInstrument(t.getInstr());
+		this.setActiveTrack(t);
+		this.setMiniPiano(p);
 		
 		tmptonekeys=new Key[49];
 		tmpsemitonekeys=new Key[35];
@@ -339,6 +343,7 @@ public class Piano extends Entity {
 				if(this.getTones().getChild(i).isVisible())
 				{
 					this.getTones().getChild(i).setVisible(false);
+					this.getMiniPiano().getTones().getChild(i).setVisible(false);
 					tmpMIDI=new MIDIMessage((byte)0x90,(byte)0x00,this.getToneKeys()[i].getMIDI(),(byte)0x7F);
 					if(Record.getIsRecording())
 					{
@@ -352,6 +357,7 @@ public class Piano extends Entity {
 				if(!this.getTones().getChild(i).isVisible())
 				{
 					this.getTones().getChild(i).setVisible(true);
+					this.getMiniPiano().getTones().getChild(i).setVisible(true);
 					tmpMIDI=new MIDIMessage((byte)0x80,(byte)0x00,this.getToneKeys()[i].getMIDI(),(byte)0x7F);
 					if(Record.getIsRecording())
 					{
@@ -369,6 +375,7 @@ public class Piano extends Entity {
 				if(this.getST().getChild(i).isVisible())
 				{
 					this.getST().getChild(i).setVisible(false);
+					this.getMiniPiano().getST().getChild(i).setVisible(false);
 					tmpMIDI=new MIDIMessage((byte)0x90,(byte)0x00,this.getSemitoneKeys()[i].getMIDI(),(byte)0x7F);
 					if(Record.getIsRecording())
 					{
@@ -382,6 +389,7 @@ public class Piano extends Entity {
 				if(!this.getST().getChild(i).isVisible())
 				{
 					this.getST().getChild(i).setVisible(true);
+					this.getMiniPiano().getST().getChild(i).setVisible(true);
 					tmpMIDI=new MIDIMessage((byte)0x80,(byte)0x00,this.getSemitoneKeys()[i].getMIDI(),(byte)0x7F);
 					if(Record.getIsRecording())
 					{
@@ -390,6 +398,18 @@ public class Piano extends Entity {
 					this.getInstrument().processMIDI(tmpMIDI);
 				}
 			}
+		}
+	}
+	
+	public void showAction(byte midi,boolean press)
+	{
+		if (press)
+		{
+			
+		}
+		else
+		{
+			
 		}
 	}
 	
@@ -480,6 +500,11 @@ public class Piano extends Entity {
 		this.mActiveTrack=t;
 	}
 	
+	public void setMiniPiano(MiniPiano p)
+	{
+		this.mMiniPiano=p;
+	}
+	
 	//GET}
 	
 	public float getTonesWidth()
@@ -568,5 +593,9 @@ public class Piano extends Entity {
 		return this.mActiveTrack;
 	}
 	
+	public MiniPiano getMiniPiano()
+	{
+		return this.mMiniPiano;
+	}
 }
 
