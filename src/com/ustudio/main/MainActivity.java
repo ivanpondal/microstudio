@@ -14,6 +14,8 @@ import org.anddev.andengine.ui.activity.BaseGameActivity;
 
 import com.ustudio.managers.SceneManager;
 
+import dalvik.system.VMRuntime;
+
 public class MainActivity extends BaseGameActivity {
 	
 	static int CAMERA_WIDTH;
@@ -43,7 +45,6 @@ public class MainActivity extends BaseGameActivity {
 		this.mCamera.setBoundsEnabled(true);
 		this.mSceneManager = new SceneManager();
 		final Engine mEngine = new Engine(new EngineOptions(true,ScreenOrientation.LANDSCAPE , new RatioResolutionPolicy(CAMERA_HEIGHT,CAMERA_WIDTH ), mCamera).setNeedsSound(true));
-		
 		try {
 			if (MultiTouch.isSupported(this)) {
 				mEngine.setTouchController(new MultiTouchController());
