@@ -8,7 +8,7 @@ import android.content.pm.ActivityInfo;
 import com.ustudio.main.MainActivity;
 import com.ustudio.scenes.FreePlay;
 import com.ustudio.scenes.MenuScene;
-import com.ustudio.scenes.PutoScene;
+import com.ustudio.scenes.EditorScene;
 import com.ustudio.scenes.RecordScene;
 
 public class SceneManager {
@@ -25,8 +25,8 @@ public class SceneManager {
 		MainActivity.getInstance().getEngine().setScene(this.scene);
 	}
 	
-	public void setPutoScene(int w, int h) {
-		this.scene = new PutoScene(w, h);
+	public void setEditorScene(int w, int h) {
+		this.scene = new EditorScene(w, h);
 		MainActivity.getInstance().getEngine().setScene(this.scene);
 	}
 	

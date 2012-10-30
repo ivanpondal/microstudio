@@ -6,17 +6,14 @@ import org.anddev.andengine.entity.scene.background.ColorBackground;
 
 import com.ustudio.editor.Editor;
 
-public class PutoScene extends Scene {
+public class EditorScene extends Scene {
 
 	static int CAMERA_WIDTH ;
 	static int CAMERA_HEIGHT ;
 
-
 	private Editor mEditor;
 	
-	
-	
-	public PutoScene(int w, int h) {
+	public EditorScene(int w, int h) {
 		
 		
 		this.mEditor = new Editor(0, 0, this);
