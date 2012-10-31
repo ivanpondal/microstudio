@@ -22,7 +22,7 @@ public class LoadingScreen {
 		this.mTotal = t;
 		this.mLoaded = 0;
 
-		this.mLoader=new Loader(CAMERA_WIDTH, CAMERA_HEIGHT);
+		this.mLoader=new Loader(CAMERA_WIDTH, CAMERA_HEIGHT,s);
 		this.mPosX=(CAMERA_WIDTH/2)-this.mLoader.getWidth()/2;
 		this.mPosY=(CAMERA_HEIGHT/2)-this.mLoader.getHeight()/2;
 		this.mLoader.setPosition(this.mPosX, this.mPosY);

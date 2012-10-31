@@ -56,7 +56,7 @@ public class RecordScene extends Scene {
 	
 	private void tmpLoader()
 	{
-		this.mLoadingScreen=new LoadingScreen(this,CAMERA_WIDTH,CAMERA_HEIGHT,"Cargando",10);
+		this.mLoadingScreen=new LoadingScreen(this,CAMERA_WIDTH,CAMERA_HEIGHT,"Loading",10);
 	}
 	
 	private void loadGUITextures()
