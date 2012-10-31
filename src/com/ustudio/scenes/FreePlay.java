@@ -17,6 +17,7 @@ import com.ustudio.project.*;
 import com.ustudio.audio.Instrument;
 import com.ustudio.audio.Player;
 import com.ustudio.audio.Record;
+import com.ustudio.loading.LoadingScreen;
 import com.ustudio.main.MainActivity;
 import com.ustudio.piano.*;
 
@@ -87,7 +88,7 @@ public class FreePlay extends Scene {
 	private void createProject()
 	{
 		Track tmpTrack;
-		this.mInsPiano=new Instrument("Piano",(byte)1,400,(byte)60,(byte)73);
+		this.mInsPiano=new Instrument("Piano",(byte)1,400,(byte)60,(byte)60);
 		tmpTrack=new Track(this.mInsPiano.getName(),this.mInsPiano);
 		this.mProject=new Project("New Project",tmpTrack);
 		this.mActiveTrack=this.mProject.getTracks().get("Piano");

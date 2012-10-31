@@ -44,7 +44,7 @@ public class MainActivity extends BaseGameActivity {
 		this.mCamera.setBounds(0, CAMERA_WIDTH, -250, 700);
 		this.mCamera.setBoundsEnabled(true);
 		this.mSceneManager = new SceneManager();
-		final Engine mEngine = new Engine(new EngineOptions(true,ScreenOrientation.LANDSCAPE , new RatioResolutionPolicy(CAMERA_HEIGHT,CAMERA_WIDTH ), mCamera).setNeedsSound(true));
+		final Engine mEngine = new Engine(new EngineOptions(true,ScreenOrientation.PORTRAIT , new RatioResolutionPolicy(CAMERA_HEIGHT,CAMERA_WIDTH ), mCamera).setNeedsSound(true));
 		try {
 			if (MultiTouch.isSupported(this)) {
 				mEngine.setTouchController(new MultiTouchController());
@@ -68,7 +68,7 @@ public class MainActivity extends BaseGameActivity {
 		// TODO Auto-generated method stub
 		this.mEngine.registerUpdateHandler(new FPSLogger());
 		
-		this.mSceneManager.setFreePlay(CAMERA_WIDTH,CAMERA_HEIGHT);
+		this.mSceneManager.setRecordScene(CAMERA_WIDTH,CAMERA_HEIGHT);
 		
         return this.mSceneManager.getCurrentScene();
 	}

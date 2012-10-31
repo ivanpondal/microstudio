@@ -68,7 +68,6 @@ public class Piano extends Entity {
 		CAMERA_WIDTH = w;
 		CAMERA_HEIGHT = h;
 		
-		
 		scene = pScene;
 		this.setKeyboardHeight(CAMERA_HEIGHT/1.6f);
 		this.setKeyboardWidth(CAMERA_WIDTH*7);

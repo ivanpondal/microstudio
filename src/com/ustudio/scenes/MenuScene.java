@@ -9,6 +9,7 @@ import org.anddev.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.anddev.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegionFactory;
 import org.anddev.andengine.opengl.texture.region.TextureRegion;
 
+import com.ustudio.loading.LoadingScreen;
 import com.ustudio.main.MainActivity;
 
 public class MenuScene extends Scene {

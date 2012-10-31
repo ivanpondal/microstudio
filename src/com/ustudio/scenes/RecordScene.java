@@ -9,6 +9,7 @@ import org.anddev.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.anddev.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegionFactory;
 import org.anddev.andengine.opengl.texture.region.TextureRegion;
 
+import com.ustudio.loading.LoadingScreen;
 import com.ustudio.main.MainActivity;
 
 public class RecordScene extends Scene {
@@ -18,6 +19,8 @@ public class RecordScene extends Scene {
 
 	private Texture	mTexture;
 
+	private LoadingScreen mLoadingScreen;
+	
 	private TextureRegion mBackground;
 	private TextureRegion mTransparent;
 	private TextureRegion mButtonMenuR;
@@ -48,8 +51,14 @@ public class RecordScene extends Scene {
 		loadGUITextures();
 		drawBG();
 		drawMenuButtons();
-        
+		tmpLoader();
 	}
+	
+	private void tmpLoader()
+	{
+		this.mLoadingScreen=new LoadingScreen(this,CAMERA_WIDTH,CAMERA_HEIGHT,"Cargando",10);
+	}
+	
 	private void loadGUITextures()
 	{
 		this.mTexture = new BitmapTextureAtlas(2048, 2048, TextureOptions.BILINEAR);
