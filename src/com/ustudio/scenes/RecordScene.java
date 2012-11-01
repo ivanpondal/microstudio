@@ -40,6 +40,7 @@ public class RecordScene extends Scene {
 	private float btnPauseX;
 	private float btnStopX;
 
+	private boolean mLoading;
 
 	
 	public RecordScene(int w ,int h) {
@@ -56,7 +57,8 @@ public class RecordScene extends Scene {
 	
 	private void tmpLoader()
 	{
-		this.mLoadingScreen=new LoadingScreen(this,CAMERA_WIDTH,CAMERA_HEIGHT,"Loading",10);
+		this.mLoading=true;
+		this.mLoadingScreen=new LoadingScreen(this,CAMERA_WIDTH,CAMERA_HEIGHT,"Loading sample 1 of 100...",10);
 	}
 	
 	private void loadGUITextures()
@@ -103,14 +105,12 @@ public class RecordScene extends Scene {
 		Sprite menur_sprite = new Sprite(0,0,this.mButtonMenuR)
 		{
             public boolean onAreaTouched(final TouchEvent pAreaTouchEvent, final float pX, final float pY) {
+            	if(!RecordScene.this.getLoading())
             	switch(pAreaTouchEvent.getAction()) {
 				    case TouchEvent.ACTION_DOWN:   
 				    	this.setVisible(false);
 				        break;
 				    case TouchEvent.ACTION_UP:  
-				    	this.setVisible(true);
-				        break;
-				    case TouchEvent.ACTION_MOVE:
 				    	this.setVisible(true);
 				        break;
 				}
@@ -140,14 +140,12 @@ public class RecordScene extends Scene {
 		Sprite playr_sprite = new Sprite(0,0,this.mButtonPlayR)
 		{
             public boolean onAreaTouched(final TouchEvent pAreaTouchEvent, final float pX, final float pY) {
+            	if(!RecordScene.this.getLoading())
             	switch(pAreaTouchEvent.getAction()) {
 				    case TouchEvent.ACTION_DOWN:   
 				    	this.setVisible(false);
 				        break;
 				    case TouchEvent.ACTION_UP:  
-				    	this.setVisible(true);
-				        break;
-				    case TouchEvent.ACTION_MOVE:
 				    	this.setVisible(true);
 				        break;
 				}
@@ -177,14 +175,12 @@ public class RecordScene extends Scene {
 		Sprite pauser_sprite = new Sprite(0,0,this.mButtonPauseR)
 		{
             public boolean onAreaTouched(final TouchEvent pAreaTouchEvent, final float pX, final float pY) {
+            	if(!RecordScene.this.getLoading())
             	switch(pAreaTouchEvent.getAction()) {
 				    case TouchEvent.ACTION_DOWN:   
 				    	this.setVisible(false);
 				        break;
 				    case TouchEvent.ACTION_UP:  
-				    	this.setVisible(true);
-				        break;
-				    case TouchEvent.ACTION_MOVE:
 				    	this.setVisible(true);
 				        break;
 				}
@@ -214,14 +210,12 @@ public class RecordScene extends Scene {
 		Sprite stopr_sprite = new Sprite(0,0,this.mButtonStopR)
 		{
             public boolean onAreaTouched(final TouchEvent pAreaTouchEvent, final float pX, final float pY) {
+            	if(!RecordScene.this.getLoading())
             	switch(pAreaTouchEvent.getAction()) {
 				    case TouchEvent.ACTION_DOWN:   
 				    	this.setVisible(false);
 				        break;
 				    case TouchEvent.ACTION_UP:  
-				    	this.setVisible(true);
-				        break;
-				    case TouchEvent.ACTION_MOVE:
 				    	this.setVisible(true);
 				        break;
 				}
@@ -238,6 +232,8 @@ public class RecordScene extends Scene {
 		
 		this.registerTouchArea(stopr_sprite);
 		
+		this.setTouchAreaBindingEnabled(true);
+		
 		
 	}
 	
@@ -252,6 +248,18 @@ public class RecordScene extends Scene {
 		this.btnPauseX=CAMERA_WIDTH-(this.btnMenuButtonsWidth+(CAMERA_WIDTH/3.55f));
 		this.btnStopX=CAMERA_WIDTH-(this.btnMenuButtonsWidth+(CAMERA_WIDTH/16.55f));
 	}	
+	
+	//SET
+	public void setLoading(boolean l)
+	{
+		this.mLoading=l;
+	}
+	
+	//GET
+	public boolean getLoading()
+	{
+		return this.mLoading;
+	}
 	
 }
 

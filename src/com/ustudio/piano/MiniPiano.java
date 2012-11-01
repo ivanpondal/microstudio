@@ -105,7 +105,7 @@ public class MiniPiano extends Entity {
 		};
 		
 		this.attachChild(touchControl);
-		pScene.registerTouchArea(touchControl);
+		scene.registerTouchArea(touchControl);
 		
 		loadGUITextures();
 		

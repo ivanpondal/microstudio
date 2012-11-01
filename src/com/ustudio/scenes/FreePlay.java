@@ -163,9 +163,6 @@ public class FreePlay extends Scene {
 					    case TouchEvent.ACTION_UP:  
 					    	FreePlay.this.ToolbarAction(Byte.parseByte(this.getUserData().toString()), false);
 					        break;
-					    case TouchEvent.ACTION_MOVE:
-					    	FreePlay.this.ToolbarAction(Byte.parseByte(this.getUserData().toString()), false);
-					        break;
 					}
 					return true;
 	            }
@@ -177,6 +174,7 @@ public class FreePlay extends Scene {
 			this.mToolBar.attachChild(sp_released);
 			
 			this.registerTouchArea(sp_released);
+			this.setTouchAreaBindingEnabled(true);
 		}
 		
 		this.mToolBar.setPosition(this.ToolbarX,this.ToolbarY);
