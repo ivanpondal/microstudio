@@ -22,9 +22,14 @@ public class Loader extends Entity{
 	
 	private float mWidth;
 	private float mHeight;
+	private float mPBWidth;
+	private float mPBHeight;
 	private float mFontSize;
 	
+	private Rectangle mProgress;
+	
 	private ChangeableText mText;
+	private ChangeableText mPercent;
 	
 	private Texture mFontTexture;
 	
@@ -38,6 +43,7 @@ public class Loader extends Entity{
 		loadSizes();
 		loadTextures();
 		drawForm();
+		drawProgressBar();
 		drawText(t);
 	}
 	
@@ -45,7 +51,9 @@ public class Loader extends Entity{
 	{
 		this.mWidth=CAMERA_WIDTH*0.85f;
 		this.mHeight=CAMERA_HEIGHT*0.19f;
-		this.mFontSize=CAMERA_HEIGHT/23f;
+		this.mPBWidth=this.mWidth*0.85f;
+		this.mPBHeight=this.mHeight*0.4f;
+		this.mFontSize=CAMERA_HEIGHT/27.5f;
 	}
 	
 	private void loadTextures()
@@ -54,9 +62,9 @@ public class Loader extends Entity{
 		
 		Log.d("Piano","height: "+CAMERA_HEIGHT);
 		
-		this.mFontTexture = new BitmapTextureAtlas(256, 256,TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+		this.mFontTexture = new BitmapTextureAtlas(256, 256,TextureOptions.BILINEAR);
 
-		this.mFont = FontFactory.createFromAsset((BitmapTextureAtlas) this.mFontTexture,MainActivity.getInstance().getApplicationContext(), "cambria.ttf", this.mFontSize, true,Color.BLACK);
+		this.mFont = FontFactory.createFromAsset((BitmapTextureAtlas) this.mFontTexture,MainActivity.getInstance().getApplicationContext(), "cambria.ttf", this.mFontSize, true,Color.WHITE);
 		
 		MainActivity.getInstance().getEngine().getTextureManager().loadTexture(this.mFontTexture);
 		MainActivity.getInstance().getEngine().getFontManager().loadFont(this.mFont);
@@ -76,9 +84,40 @@ public class Loader extends Entity{
 		this.attachChild(tmpForm);
 	}
 	
+	private void drawProgressBar()
+	{
+		float barX,barY;
+		float perX,perY;
+		
+		this.mPercent = new ChangeableText(0, 0, this.mFont,"0%");
+		
+		Rectangle tmpBG=new Rectangle(0,0,this.mPBWidth,this.mPBHeight);
+		
+		this.mProgress=new Rectangle(0,0,this.mPBWidth*0.4f,this.mPBHeight);
+		
+		barX=this.mWidth/2-(this.mPBWidth/2);
+		barY=this.mPBHeight*1.25f;
+		
+		perX=barX+(this.mPBWidth-this.mPercent.getWidth())/2;
+		perY=barY+(this.mPBHeight-this.mPercent.getHeight())/2;
+		
+		tmpBG.setColor(0, 0, 0);
+		tmpBG.setPosition(barX, barY);
+		
+		this.mProgress.setAlpha(0.5f);
+		this.mProgress.setPosition(barX, barY);
+		
+		this.mPercent.setPosition(perX, perY);
+		
+		this.attachChild(tmpBG);
+		this.attachChild(this.mProgress);
+		this.attachChild(this.mPercent);
+	}
+	
 	private void drawText(String s)
 	{		
 		this.mText = new ChangeableText(0, 0, this.mFont,s);
+		this.mText.setColor(0, 0, 0);
 		this.mText.setPosition(this.mWidth/2-(this.mText.getWidth()/2), this.mText.getHeight()/2);
 
 		this.attachChild(this.mText);
@@ -100,6 +139,15 @@ public class Loader extends Entity{
 		this.mText=t;
 	}
 	
+	public void setPorgress(Rectangle p)
+	{
+		this.mProgress=p;
+	}
+	
+	public void setPercent(ChangeableText p)
+	{
+		this.mPercent=p;
+	}
 	
 	//GET
 	public float getWidth()
@@ -115,5 +163,15 @@ public class Loader extends Entity{
 	public ChangeableText getText()
 	{
 		return this.mText;
+	}
+	
+	public Rectangle getPorgress()
+	{
+		return this.mProgress;
+	}
+	
+	public ChangeableText getPercent()
+	{
+		return this.mPercent;
 	}
 }
