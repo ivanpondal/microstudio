@@ -26,6 +26,7 @@ public class LoadingScreen {
 		this.mPosX=(CAMERA_WIDTH/2)-this.mLoader.getWidth()/2;
 		this.mPosY=(CAMERA_HEIGHT/2)-this.mLoader.getHeight()/2;
 		this.mLoader.setPosition(this.mPosX, this.mPosY);
+		
 		scene.attachChild(this.mLoader);
 	}
 	

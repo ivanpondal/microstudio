@@ -37,14 +37,13 @@ public class MainActivity extends BaseGameActivity {
 	public Engine onLoadEngine() {
 		// TODO Auto-generated method stub
 		
-		CAMERA_WIDTH = this.getWindowManager().getDefaultDisplay().getHeight();
-		CAMERA_HEIGHT = this.getWindowManager().getDefaultDisplay().getWidth();
+		CAMERA_WIDTH = this.getWindowManager().getDefaultDisplay().getWidth();
+		CAMERA_HEIGHT = this.getWindowManager().getDefaultDisplay().getHeight();
 		MainActivity.setInstance(this);
 		this.mCamera = new ZoomCamera(0, 0, CAMERA_WIDTH, CAMERA_HEIGHT);
-		this.mCamera.setBounds(0, CAMERA_WIDTH, -250, 700);
-		this.mCamera.setBoundsEnabled(true);
+
 		this.mSceneManager = new SceneManager();
-		final Engine mEngine = new Engine(new EngineOptions(true,ScreenOrientation.PORTRAIT , new RatioResolutionPolicy(CAMERA_HEIGHT,CAMERA_WIDTH ), mCamera).setNeedsSound(true));
+		final Engine mEngine = new Engine(new EngineOptions(true,ScreenOrientation.PORTRAIT , new RatioResolutionPolicy(CAMERA_WIDTH,CAMERA_HEIGHT ), mCamera).setNeedsSound(true));
 		try {
 			if (MultiTouch.isSupported(this)) {
 				mEngine.setTouchController(new MultiTouchController());

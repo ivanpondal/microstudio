@@ -72,7 +72,7 @@ public class TrackV extends Entity{
 	private void loadGUITextures(){
 		this.mTexture = new BitmapTextureAtlas(2048, 2048, TextureOptions.BILINEAR);
 		BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/Buttons/");
-		this.mKnob = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "knob.png", 0, 0);
+		this.mKnob = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "knob-rotate.png", 0, 0);
 		this.mMuteRelased = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "mute_relased.png", 0, 115);
 		this.mMutePressed = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "mute_pressed.png", 0, 162);
 		this.mSoloRelased = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "solo_relased.png", 0, 208);
@@ -86,7 +86,21 @@ public class TrackV extends Entity{
 		MainActivity.getInstance().getEngine().getTextureManager().loadTexture(this.mTexture);
 	}
 	private void drawButtons(){
-		Sprite knob_sprite = new Sprite(0,0,this.mKnob);
+		Sprite knob_sprite = new Sprite(0,0,this.mKnob){
+            public boolean onAreaTouched(final TouchEvent pAreaTouchEvent, final float pX, final float pY) {
+            	switch(pAreaTouchEvent.getAction()) {
+				    case TouchEvent.ACTION_DOWN:  
+				    	this.setRotation(pX*10);
+				        break;
+				    case TouchEvent.ACTION_UP:  
+				        break;
+				    case TouchEvent.ACTION_MOVE:
+				    	this.setRotation(pX*10);
+				        break;
+				}
+				return true;
+            }
+        };
 		knob_sprite.setWidth(this.knobWidth);
 		knob_sprite.setHeight(this.knobHeight);
 		
@@ -248,7 +262,7 @@ public class TrackV extends Entity{
 	}
 	private void loadSizes(){
 		this.knobHeight=CAMERA_HEIGHT/14.15f;
-		this.knobWidth=CAMERA_WIDTH/5.78f;
+		this.knobWidth=CAMERA_HEIGHT/14.15f;
 		this.knobY=((CAMERA_HEIGHT/14.67f));
 		this.knobX=((CAMERA_WIDTH/3.01f));
 		
