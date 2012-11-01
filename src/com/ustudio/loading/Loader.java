@@ -11,6 +11,8 @@ import org.anddev.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 
 
 import android.graphics.Color;
+import android.util.DisplayMetrics;
+import android.util.Log;
 
 import com.ustudio.main.MainActivity;
 
@@ -20,6 +22,7 @@ public class Loader extends Entity{
 	
 	private float mWidth;
 	private float mHeight;
+	private float mFontSize;
 	
 	private ChangeableText mText;
 	
@@ -42,15 +45,18 @@ public class Loader extends Entity{
 	{
 		this.mWidth=CAMERA_WIDTH*0.85f;
 		this.mHeight=CAMERA_HEIGHT*0.19f;
+		this.mFontSize=CAMERA_HEIGHT/23f;
 	}
 	
 	private void loadTextures()
 	{
 		FontFactory.setAssetBasePath("fonts/");
 		
+		Log.d("Piano","height: "+CAMERA_HEIGHT);
+		
 		this.mFontTexture = new BitmapTextureAtlas(256, 256,TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 
-		this.mFont = FontFactory.createFromAsset((BitmapTextureAtlas) this.mFontTexture,MainActivity.getInstance().getApplicationContext(), "cambria.ttf", 16, true,Color.BLACK);
+		this.mFont = FontFactory.createFromAsset((BitmapTextureAtlas) this.mFontTexture,MainActivity.getInstance().getApplicationContext(), "cambria.ttf", this.mFontSize, true,Color.BLACK);
 		
 		MainActivity.getInstance().getEngine().getTextureManager().loadTexture(this.mFontTexture);
 		MainActivity.getInstance().getEngine().getFontManager().loadFont(this.mFont);
