@@ -9,8 +9,11 @@ import org.anddev.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.anddev.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegionFactory;
 import org.anddev.andengine.opengl.texture.region.TextureRegion;
 
+import com.ustudio.audio.Instrument;
 import com.ustudio.loading.LoadingScreen;
 import com.ustudio.main.MainActivity;
+import com.ustudio.project.Project;
+import com.ustudio.project.Track;
 
 public class RecordScene extends Scene {
 
@@ -52,13 +55,15 @@ public class RecordScene extends Scene {
 		loadGUITextures();
 		drawBG();
 		drawMenuButtons();
-		tmpLoader();
 	}
 	
-	private void tmpLoader()
+	private void createProject()
 	{
+		Instrument mInsPiano;
 		this.mLoading=true;
-		this.mLoadingScreen=new LoadingScreen(this,CAMERA_WIDTH,CAMERA_HEIGHT,"Loading sample 1 of 100...",10);
+		this.mLoadingScreen=new LoadingScreen(this,CAMERA_WIDTH,CAMERA_HEIGHT);
+		mInsPiano=new Instrument("Piano",(byte)1,400,(byte)60,(byte)73);
+		mInsPiano.setNotes(this.mLoadingScreen, "Loading sample $loaded of $total...");
 	}
 	
 	private void loadGUITextures()
@@ -112,6 +117,7 @@ public class RecordScene extends Scene {
 				        break;
 				    case TouchEvent.ACTION_UP:  
 				    	this.setVisible(true);
+				    	createProject();
 				        break;
 				}
 				return true;

@@ -8,6 +8,7 @@ import android.content.res.AssetManager;
 import android.os.Debug;
 import android.util.Log;
 
+import com.ustudio.loading.LoadingScreen;
 import com.ustudio.main.MainActivity;
 import com.ustudio.midi.MIDIMessage;
 import com.ustudio.piano.Piano;
@@ -28,7 +29,6 @@ public class Instrument {
 		setSamples(s);
 		setFirstMIDI(f);
 		setLastMIDI(l);
-		setNotes();
 		setDecay(d);
 		setVolumeLeft(1.0f);
 		setVolumeRight(1.0f);
@@ -39,8 +39,11 @@ public class Instrument {
 		this.str_name=n;
 	}
 	
-	public void setNotes()
+	public void setNotes(LoadingScreen loadscreen,String loadtext)
 	{
+		loadscreen.setText(loadtext);
+		loadscreen.setTotal((this.val_last_midi+1)-this.val_first_midi);
+		loadscreen.setLoaded(0);
 		AssetManager SamplesDir = MainActivity.getInstance().getAssets();
 		String[] list=null;
 		String name=this.str_name.toLowerCase();
@@ -58,6 +61,7 @@ public class Instrument {
 		for(byte i=this.val_first_midi;i<(this.val_last_midi+1);i++)//using -129 because it overflows as 128 to -128
 		{
 			this.dat_notes[i]=new Note(i,this.val_samples,list);
+			loadscreen.setLoaded(loadscreen.getLoaded()+1);
 		}
 
 	 }

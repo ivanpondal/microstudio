@@ -13,21 +13,29 @@ public class LoadingScreen {
 	private float mPosX;
 	private float mPosY;
 	
-	public LoadingScreen(Scene pScene, int w, int h, String s, int t)
+	public LoadingScreen(Scene pScene, int w, int h)
 	{
 		CAMERA_WIDTH = w;
 		CAMERA_HEIGHT = h;
 		scene = pScene;
-		this.mText = s;
-		this.mTotal = t;
-		this.mLoaded = 0;
 
-		this.mLoader=new Loader(CAMERA_WIDTH, CAMERA_HEIGHT,s);
+		this.mLoader=new Loader(CAMERA_WIDTH, CAMERA_HEIGHT);
 		this.mPosX=(CAMERA_WIDTH/2)-this.mLoader.getWidth()/2;
 		this.mPosY=(CAMERA_HEIGHT/2)-this.mLoader.getHeight()/2;
 		this.mLoader.setPosition(this.mPosX, this.mPosY);
 		
 		scene.attachChild(this.mLoader);
+	}
+	
+	//PUBLIC
+	
+	public void refreshText()
+	{
+		String result;
+		result=this.mText;
+		result=result.replaceAll("^\'$loaded", String.valueOf(this.mLoaded+1));
+		result=result.replaceAll("^\'$total", String.valueOf(this.mTotal));
+		this.mLoader.getText().setText(result);
 	}
 	
 	//SET
@@ -44,6 +52,10 @@ public class LoadingScreen {
 	public void setLoaded(int l)
 	{
 		this.mLoaded = l;
+		if(this.mLoaded<this.mTotal)
+			this.refreshText();
+		this.mLoader.getPercent().setText(((this.mLoaded*100)/this.mTotal)+"%");
+		this.mLoader.getProgress().setWidth((this.mLoaded*this.mLoader.getPBWidth())/this.mTotal);
 	}
 	
 	public void setLoader(Loader l)

@@ -35,7 +35,7 @@ public class Loader extends Entity{
 	
 	private Font mFont;
 	
-	public Loader(int w, int h, String t) {
+	public Loader(int w, int h) {
 		
 		CAMERA_WIDTH = w;
 		CAMERA_HEIGHT = h;
@@ -44,7 +44,7 @@ public class Loader extends Entity{
 		loadTextures();
 		drawForm();
 		drawProgressBar();
-		drawText(t);
+		drawText();
 	}
 	
 	private void loadSizes()
@@ -89,11 +89,11 @@ public class Loader extends Entity{
 		float barX,barY;
 		float perX,perY;
 		
-		this.mPercent = new ChangeableText(0, 0, this.mFont,"0%");
+		this.mPercent = new ChangeableText(0, 0, this.mFont,"             ");
 		
 		Rectangle tmpBG=new Rectangle(0,0,this.mPBWidth,this.mPBHeight);
 		
-		this.mProgress=new Rectangle(0,0,this.mPBWidth*0.4f,this.mPBHeight);
+		this.mProgress=new Rectangle(0,0,0,this.mPBHeight);
 		
 		barX=this.mWidth/2-(this.mPBWidth/2);
 		barY=this.mPBHeight*1.25f;
@@ -114,9 +114,9 @@ public class Loader extends Entity{
 		this.attachChild(this.mPercent);
 	}
 	
-	private void drawText(String s)
+	private void drawText()
 	{		
-		this.mText = new ChangeableText(0, 0, this.mFont,s);
+		this.mText = new ChangeableText(0, 0, this.mFont,"                                                            ");
 		this.mText.setColor(0, 0, 0);
 		this.mText.setPosition(this.mWidth/2-(this.mText.getWidth()/2), this.mText.getHeight()/2);
 
@@ -139,7 +139,7 @@ public class Loader extends Entity{
 		this.mText=t;
 	}
 	
-	public void setPorgress(Rectangle p)
+	public void setProgress(Rectangle p)
 	{
 		this.mProgress=p;
 	}
@@ -150,6 +150,11 @@ public class Loader extends Entity{
 	}
 	
 	//GET
+	public float getPBWidth()
+	{
+		return this.mPBWidth;
+	}
+	
 	public float getWidth()
 	{
 		return this.mWidth;
@@ -165,7 +170,7 @@ public class Loader extends Entity{
 		return this.mText;
 	}
 	
-	public Rectangle getPorgress()
+	public Rectangle getProgress()
 	{
 		return this.mProgress;
 	}
