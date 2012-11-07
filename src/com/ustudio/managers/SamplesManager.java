@@ -9,6 +9,7 @@ import android.content.res.AssetManager;
 import android.os.AsyncTask;
 
 import com.ustudio.audio.Note;
+import com.ustudio.loading.LoadSamplesTask;
 import com.ustudio.loading.LoadingScreen;
 import com.ustudio.main.MainActivity;
 
@@ -48,7 +49,7 @@ public class SamplesManager {
 		AssetManager SamplesDir = MainActivity.getInstance().getAssets();
 		String[] list=null;
 		String name=str_name.toLowerCase();
-        LoadSamplesTask loadTask;
+
 		try {
 			list=SamplesDir.list("sfx/"+name);
 		} catch (IOException e) {
@@ -56,15 +57,9 @@ public class SamplesManager {
 			e.printStackTrace();
 		}
 		
-		tmp_notes=new Note[128];
-		
 	    SoundFactory.setAssetBasePath("sfx/"+name+"/");
 	    
-	    loadTask= new LoadSamplesTask().execute(void, url2, url3);
-	        
-
-		
-		this.mSamples.put(name, tmp_notes);
+	    new LoadSamplesTask().execute(first_midi,last_midi,samples,list,loadscreen,name);
 	 }
 	
 	public void setSamples(Hashtable<String,Note[]> s)
