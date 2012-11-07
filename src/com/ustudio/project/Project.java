@@ -6,6 +6,10 @@ public class Project {
 	private String mName;
 	private Hashtable<String,Track> mTracks;
 	
+	public Project()
+	{
+	}
+	
 	public Project(String n)
 	{
 		this.mName=n;

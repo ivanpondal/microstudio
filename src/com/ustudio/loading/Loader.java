@@ -89,7 +89,7 @@ public class Loader extends Entity{
 		float barX,barY;
 		float perX,perY;
 		
-		this.mPercent = new ChangeableText(0, 0, this.mFont,"             ");
+		this.mPercent = new ChangeableText(0, 0, this.mFont,"",4);
 		
 		Rectangle tmpBG=new Rectangle(0,0,this.mPBWidth,this.mPBHeight);
 		
@@ -115,8 +115,8 @@ public class Loader extends Entity{
 	}
 	
 	private void drawText()
-	{		
-		this.mText = new ChangeableText(0, 0, this.mFont,"                                                            ");
+	{	
+		this.mText = new ChangeableText(0, 0, this.mFont,"",40);
 		this.mText.setColor(0, 0, 0);
 		this.mText.setPosition(this.mWidth/2-(this.mText.getWidth()/2), this.mText.getHeight()/2);
 

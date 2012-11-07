@@ -20,16 +20,13 @@ public class Instrument {
 	private float val_right_vol;
 	private byte val_samples;
 	private long val_decay;
-	private byte val_first_midi;
-	private byte val_last_midi;
 	
-	public Instrument(String n, byte s, long d, byte f, byte l)
+	public Instrument(String n, byte s, long d, Note[] nt)
 	{
 		setName(n);
 		setSamples(s);
-		setFirstMIDI(f);
-		setLastMIDI(l);
 		setDecay(d);
+		setNotes(nt);
 		setVolumeLeft(1.0f);
 		setVolumeRight(1.0f);
 	}
@@ -39,32 +36,10 @@ public class Instrument {
 		this.str_name=n;
 	}
 	
-	public void setNotes(LoadingScreen loadscreen,String loadtext)
+	public void setNotes(Note[] n)
 	{
-		loadscreen.setText(loadtext);
-		loadscreen.setTotal((this.val_last_midi+1)-this.val_first_midi);
-		loadscreen.setLoaded(0);
-		AssetManager SamplesDir = MainActivity.getInstance().getAssets();
-		String[] list=null;
-		String name=this.str_name.toLowerCase();
-        
-		try {
-			list=SamplesDir.list("sfx/"+name);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		this.dat_notes=new Note[128];
-		
-	    SoundFactory.setAssetBasePath("sfx/"+name+"/");
-		for(byte i=this.val_first_midi;i<(this.val_last_midi+1);i++)//using -129 because it overflows as 128 to -128
-		{
-			this.dat_notes[i]=new Note(i,this.val_samples,list);
-			loadscreen.setLoaded(loadscreen.getLoaded()+1);
-		}
-
-	 }
+		this.dat_notes=n;
+	}
 	
 	public void setVolumeLeft(float l)
 	{
@@ -90,16 +65,6 @@ public class Instrument {
 	public void setDecay(long d)
 	{
 		this.val_decay=d;
-	}
-	
-	public void setFirstMIDI(byte f)
-	{
-		this.val_first_midi=f;
-	}
-	
-	public void setLastMIDI(byte l)
-	{
-		this.val_last_midi=l;
 	}
 	
 	public String getName()
@@ -130,16 +95,6 @@ public class Instrument {
 	public long getDecay()
 	{
 		return this.val_decay;
-	}
-	
-	public byte getFirstMIDI()
-	{
-		return this.val_first_midi;
-	}
-	
-	public byte getLastMIDI()
-	{
-		return this.val_last_midi;
 	}
 	
 	public void processMIDI(MIDIMessage msg)

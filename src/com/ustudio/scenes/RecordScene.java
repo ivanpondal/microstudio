@@ -12,6 +12,7 @@ import org.anddev.andengine.opengl.texture.region.TextureRegion;
 import com.ustudio.audio.Instrument;
 import com.ustudio.loading.LoadingScreen;
 import com.ustudio.main.MainActivity;
+import com.ustudio.managers.SamplesManager;
 import com.ustudio.project.Project;
 import com.ustudio.project.Track;
 
@@ -60,10 +61,17 @@ public class RecordScene extends Scene {
 	private void createProject()
 	{
 		Instrument mInsPiano;
+		SamplesManager tmpSamplesManager;
+		
 		this.mLoading=true;
 		this.mLoadingScreen=new LoadingScreen(this,CAMERA_WIDTH,CAMERA_HEIGHT);
-		mInsPiano=new Instrument("Piano",(byte)1,400,(byte)60,(byte)73);
-		mInsPiano.setNotes(this.mLoadingScreen, "Loading sample $loaded of $total...");
+		
+		tmpSamplesManager=MainActivity.getInstance().getSamplesManager();
+		tmpSamplesManager.loadSamples("piano", (byte)60,(byte)73, (byte)1, this.mLoadingScreen, "Carga");
+		
+		mInsPiano=new Instrument("Piano",(byte)1,400,tmpSamplesManager.getSamples().get("piano"));
+		
+		MainActivity.getInstance().setSamplesManager(tmpSamplesManager);
 	}
 	
 	private void loadGUITextures()

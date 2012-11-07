@@ -12,7 +12,9 @@ import org.anddev.andengine.extension.input.touch.controller.MultiTouchControlle
 import org.anddev.andengine.extension.input.touch.exception.MultiTouchException;
 import org.anddev.andengine.ui.activity.BaseGameActivity;
 
+import com.ustudio.managers.SamplesManager;
 import com.ustudio.managers.SceneManager;
+import com.ustudio.project.Project;
 
 import dalvik.system.VMRuntime;
 
@@ -23,6 +25,8 @@ public class MainActivity extends BaseGameActivity {
 	
 	private ZoomCamera mCamera;
 	private SceneManager mSceneManager;
+	private Project mProject;
+	private SamplesManager mSamplesManager;
 	
 	private static MainActivity mInstance;
 
@@ -43,6 +47,9 @@ public class MainActivity extends BaseGameActivity {
 		this.mCamera = new ZoomCamera(0, 0, CAMERA_WIDTH, CAMERA_HEIGHT);
 
 		this.mSceneManager = new SceneManager();
+		this.mProject = new Project();
+		this.mSamplesManager = new SamplesManager();
+		
 		final Engine mEngine = new Engine(new EngineOptions(true,ScreenOrientation.PORTRAIT , new RatioResolutionPolicy(CAMERA_WIDTH,CAMERA_HEIGHT ), mCamera).setNeedsSound(true));
 		try {
 			if (MultiTouch.isSupported(this)) {
@@ -72,13 +79,28 @@ public class MainActivity extends BaseGameActivity {
         return this.mSceneManager.getCurrentScene();
 	}
     /** Called when the activity is first created. */
-
+	 
+	//SET	
+	public void setSamplesManager(SamplesManager s)
+	{
+		this.mSamplesManager=s;
+	}
+	
+	//GET
 	public ZoomCamera getCamera() {
 		return this.mCamera;
 	}
     
 	public SceneManager getSceneManager() {
 		return this.mSceneManager;
+	}
+	
+	public Project getProject() {
+		return this.mProject;
+	}
+	
+	public SamplesManager getSamplesManager() {
+		return this.mSamplesManager;
 	}
 	
 	public static MainActivity getInstance() {
@@ -88,6 +110,5 @@ public class MainActivity extends BaseGameActivity {
 	public static void setInstance(MainActivity mInstance) {
 		MainActivity.mInstance = mInstance;
 	}
- 
-	
+
 }

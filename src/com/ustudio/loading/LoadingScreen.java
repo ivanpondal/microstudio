@@ -29,6 +29,14 @@ public class LoadingScreen {
 	
 	//PUBLIC
 	
+	public void updateProgress()
+	{
+		if(this.mLoaded<this.mTotal)
+			this.refreshText();
+		this.mLoader.getPercent().setText(((this.mLoaded*100)/this.mTotal)+"%");
+		this.mLoader.getProgress().setWidth((this.mLoaded*this.mLoader.getPBWidth())/this.mTotal);
+	}
+	
 	public void refreshText()
 	{
 		String result;
@@ -52,10 +60,6 @@ public class LoadingScreen {
 	public void setLoaded(int l)
 	{
 		this.mLoaded = l;
-		if(this.mLoaded<this.mTotal)
-			this.refreshText();
-		this.mLoader.getPercent().setText(((this.mLoaded*100)/this.mTotal)+"%");
-		this.mLoader.getProgress().setWidth((this.mLoaded*this.mLoader.getPBWidth())/this.mTotal);
 	}
 	
 	public void setLoader(Loader l)
