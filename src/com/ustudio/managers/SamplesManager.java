@@ -43,6 +43,7 @@ public class SamplesManager {
 		loadscreen.setText(loadtext);
 		loadscreen.setTotal((last_midi+1)-first_midi);
 		loadscreen.setLoaded(0);
+		loadscreen.refreshText();
 		AssetManager SamplesDir = MainActivity.getInstance().getAssets();
 		String[] list=null;
 		String name=str_name.toLowerCase();

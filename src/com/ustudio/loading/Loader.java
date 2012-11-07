@@ -8,7 +8,7 @@ import org.anddev.andengine.opengl.font.FontFactory;
 import org.anddev.andengine.opengl.texture.Texture;
 import org.anddev.andengine.opengl.texture.TextureOptions;
 import org.anddev.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
-
+import org.anddev.andengine.util.HorizontalAlign;
 
 import android.graphics.Color;
 import android.util.DisplayMetrics;
@@ -24,6 +24,8 @@ public class Loader extends Entity{
 	private float mHeight;
 	private float mPBWidth;
 	private float mPBHeight;
+	private float mPB_x;
+	private float mPB_y;
 	private float mFontSize;
 	
 	private Rectangle mProgress;
@@ -55,6 +57,8 @@ public class Loader extends Entity{
 		this.mPBHeight=this.mHeight*0.4f;
 		this.mFontSize=CAMERA_HEIGHT/27.5f;
 	}
+	
+	//PRIVATE
 	
 	private void loadTextures()
 	{
@@ -89,23 +93,23 @@ public class Loader extends Entity{
 		float barX,barY;
 		float perX,perY;
 		
-		this.mPercent = new ChangeableText(0, 0, this.mFont,"",4);
+		this.mPercent = new ChangeableText(0, 0, this.mFont,"x",HorizontalAlign.CENTER,4);
 		
 		Rectangle tmpBG=new Rectangle(0,0,this.mPBWidth,this.mPBHeight);
 		
 		this.mProgress=new Rectangle(0,0,0,this.mPBHeight);
 		
-		barX=this.mWidth/2-(this.mPBWidth/2);
-		barY=this.mPBHeight*1.25f;
+		this.mPB_x=this.mWidth/2-(this.mPBWidth/2);
+		this.mPB_y=this.mPBHeight*1.25f;
 		
-		perX=barX+(this.mPBWidth-this.mPercent.getWidth())/2;
-		perY=barY+(this.mPBHeight-this.mPercent.getHeight())/2;
+		perX=this.mPB_x+(this.mPBWidth-this.mPercent.getWidth())/2;
+		perY=this.mPB_y+(this.mPBHeight-this.mPercent.getHeight())/2;
 		
 		tmpBG.setColor(0, 0, 0);
-		tmpBG.setPosition(barX, barY);
+		tmpBG.setPosition(this.mPB_x, this.mPB_y);
 		
 		this.mProgress.setAlpha(0.5f);
-		this.mProgress.setPosition(barX, barY);
+		this.mProgress.setPosition(this.mPB_x, this.mPB_y);
 		
 		this.mPercent.setPosition(perX, perY);
 		
@@ -116,12 +120,25 @@ public class Loader extends Entity{
 	
 	private void drawText()
 	{	
-		this.mText = new ChangeableText(0, 0, this.mFont,"",40);
+		this.mText = new ChangeableText(0, 0, this.mFont,"x",HorizontalAlign.CENTER,40);
 		this.mText.setColor(0, 0, 0);
 		this.mText.setPosition(this.mWidth/2-(this.mText.getWidth()/2), this.mText.getHeight()/2);
 
 		this.attachChild(this.mText);
 	}	
+	
+	//PUBLIC
+	public void updateText(String s)
+	{
+		this.mText.setText(s);
+		this.mText.setPosition(this.mWidth/2-(this.mText.getWidth()/2), this.mText.getY());
+	}
+	
+	public void updatePercent(String s)
+	{
+		this.mPercent.setText(s);
+		this.mPercent.setPosition(this.mPB_x+(this.mPBWidth-this.mPercent.getWidth())/2, this.mPercent.getY());
+	}
 	
 	//SET
 	public void setWidth(float w)

@@ -60,16 +60,14 @@ public class RecordScene extends Scene {
 	
 	private void createProject()
 	{
-		Instrument mInsPiano;
 		SamplesManager tmpSamplesManager;
+		String tmpLoadmsg="Loading sample #loaded of #total...";
 		
 		this.mLoading=true;
 		this.mLoadingScreen=new LoadingScreen(this,CAMERA_WIDTH,CAMERA_HEIGHT);
 		
 		tmpSamplesManager=MainActivity.getInstance().getSamplesManager();
-		tmpSamplesManager.loadSamples("piano", (byte)60,(byte)73, (byte)1, this.mLoadingScreen, "Carga");
-		
-		mInsPiano=new Instrument("Piano",(byte)1,400,tmpSamplesManager.getSamples().get("piano"));
+		tmpSamplesManager.loadSamples("piano", (byte)60,(byte)73, (byte)1, this.mLoadingScreen, tmpLoadmsg);
 		
 		MainActivity.getInstance().setSamplesManager(tmpSamplesManager);
 	}

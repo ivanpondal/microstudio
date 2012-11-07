@@ -33,7 +33,7 @@ public class LoadingScreen {
 	{
 		if(this.mLoaded<this.mTotal)
 			this.refreshText();
-		this.mLoader.getPercent().setText(((this.mLoaded*100)/this.mTotal)+"%");
+		this.mLoader.updatePercent(((this.mLoaded*100)/this.mTotal)+"%");
 		this.mLoader.getProgress().setWidth((this.mLoaded*this.mLoader.getPBWidth())/this.mTotal);
 	}
 	
@@ -41,9 +41,9 @@ public class LoadingScreen {
 	{
 		String result;
 		result=this.mText;
-		result=result.replaceAll("^\'$loaded", String.valueOf(this.mLoaded+1));
-		result=result.replaceAll("^\'$total", String.valueOf(this.mTotal));
-		this.mLoader.getText().setText(result);
+		result=result.replaceAll("#loaded", String.valueOf(this.mLoaded+1));
+		result=result.replaceAll("#total", String.valueOf(this.mTotal));
+		this.mLoader.updateText(result);
 	}
 	
 	//SET

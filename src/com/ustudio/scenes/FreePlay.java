@@ -88,7 +88,7 @@ public class FreePlay extends Scene {
 	private void createProject()
 	{
 		Track tmpTrack;
-		this.mInsPiano=new Instrument("Piano",(byte)1,400,(byte)60,(byte)60);
+		//this.mInsPiano=new Instrument("Piano",(byte)1,400,(byte)60,(byte)60);
 		tmpTrack=new Track(this.mInsPiano.getName(),this.mInsPiano);
 		this.mProject=new Project("New Project",tmpTrack);
 		this.mActiveTrack=this.mProject.getTracks().get("Piano");
