@@ -39,10 +39,11 @@ public class SamplesManager {
 		this.mSamples.remove(name);
 	}
 	
-	public void loadSamples(String str_name, byte first_midi, byte last_midi,byte samples, LoadingScreen loadscreen,String loadtext)
+	public void loadSamples(String str_name, byte first_midi, byte last_midi,byte samples, LoadingScreen loadscreen,String loadtext,String finishtext)
 	{
 		Note[] tmp_notes;
-		loadscreen.setText(loadtext);
+		loadscreen.setLoadText(loadtext);
+		loadscreen.setFinishText(finishtext);
 		loadscreen.setTotal((last_midi+1)-first_midi);
 		loadscreen.setLoaded(0);
 		loadscreen.refreshText();
