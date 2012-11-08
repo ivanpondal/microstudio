@@ -93,7 +93,7 @@ public class Loader extends Entity{
 		float barX,barY;
 		float perX,perY;
 		
-		this.mPercent = new ChangeableText(0, 0, this.mFont,"x",HorizontalAlign.CENTER,4);
+		this.mPercent = new ChangeableText(0, 0, this.mFont,"0%",HorizontalAlign.CENTER,4);
 		
 		Rectangle tmpBG=new Rectangle(0,0,this.mPBWidth,this.mPBHeight);
 		

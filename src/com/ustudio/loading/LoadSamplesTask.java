@@ -22,7 +22,7 @@ public class LoadSamplesTask extends AsyncTask<Object, LoadingScreen, Object[]> 
 		{
 			tmp_notes[i]=new Note(i,samples,list);
 			publishProgress(loadscreen);
-		}
+		}   	
     	Object[] resultado={name,tmp_notes};
     	return resultado;
     }

@@ -6,7 +6,8 @@ public class LoadingScreen {
 	static int CAMERA_WIDTH;
 	static int CAMERA_HEIGHT;
 	static Scene scene;
-	private String mText;
+	private String mLoadText;
+	private String mFinishText;
 	private int mTotal;
 	private int mLoaded;
 	private Loader mLoader;
@@ -31,8 +32,7 @@ public class LoadingScreen {
 	
 	public void updateProgress()
 	{
-		if(this.mLoaded<this.mTotal)
-			this.refreshText();
+		this.refreshText();
 		this.mLoader.updatePercent(((this.mLoaded*100)/this.mTotal)+"%");
 		this.mLoader.getProgress().setWidth((this.mLoaded*this.mLoader.getPBWidth())/this.mTotal);
 	}
@@ -40,16 +40,28 @@ public class LoadingScreen {
 	public void refreshText()
 	{
 		String result;
-		result=this.mText;
-		result=result.replaceAll("#loaded", String.valueOf(this.mLoaded+1));
-		result=result.replaceAll("#total", String.valueOf(this.mTotal));
+		if(this.mLoaded<this.mTotal)
+		{
+			result=this.mLoadText;
+			result=result.replaceAll("#loaded", String.valueOf(this.mLoaded+1));
+			result=result.replaceAll("#total", String.valueOf(this.mTotal));
+		}
+		else
+		{
+			result=this.mFinishText;
+		}
 		this.mLoader.updateText(result);
 	}
 	
 	//SET
-	public void setText(String s)
+	public void setLoadText(String s)
 	{
-		this.mText = s;
+		this.mLoadText = s;
+	}
+	
+	public void setFinishText(String s)
+	{
+		this.mFinishText = s;
 	}
 	
 	public void setTotal(int t)
@@ -68,9 +80,14 @@ public class LoadingScreen {
 	}
 	
 	//GET
-	public String getText()
+	public String getLoadText()
 	{
-		return this.mText;
+		return this.mLoadText;
+	}
+	
+	public String getFinishText()
+	{
+		return this.mFinishText;
 	}
 	
 	public int getTotal()
