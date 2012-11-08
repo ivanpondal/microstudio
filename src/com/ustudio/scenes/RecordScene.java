@@ -1,5 +1,6 @@
 package com.ustudio.scenes;
 
+import org.anddev.andengine.entity.Entity;
 import org.anddev.andengine.entity.scene.Scene;
 import org.anddev.andengine.entity.sprite.Sprite;
 import org.anddev.andengine.input.touch.TouchEvent;
@@ -27,23 +28,18 @@ public class RecordScene extends Scene {
 	
 	private TextureRegion mBackground;
 	private TextureRegion mTransparent;
-	private TextureRegion mButtonMenuR;
-	private TextureRegion mButtonMenuP;
-	private TextureRegion mButtonPlayR;
-	private TextureRegion mButtonPlayP;
-	private TextureRegion mButtonPauseR;
-	private TextureRegion mButtonPauseP;
-	private TextureRegion mButtonStopR;
-	private TextureRegion mButtonStopP;
+	
+	private TextureRegion[] mButton_N;
+	private TextureRegion[] mButton_P;
+	
+	private Entity mToolBar;
 	
 	private float btnMenuButtonsHeight;
 	private float btnMenuButtonsWidth;
-	private float btnMenuButtonsY;
-	private float btnMenuX;
-	private float btnPlayX;
-	private float btnPauseX;
-	private float btnStopX;
 
+	private float ToolbarY;
+	private float ToolbarX;
+	
 	private boolean mLoading;
 
 	
@@ -55,7 +51,7 @@ public class RecordScene extends Scene {
 		loadSizes();
 		loadGUITextures();
 		drawBG();
-		drawMenuButtons();
+		drawToolBar();
 	}
 	
 	private void createProject()
@@ -81,16 +77,16 @@ public class RecordScene extends Scene {
 		this.mTransparent = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "1024x2048.png", 0, 0);
 		this.mBackground = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "tracks_bg.png", 0, 0);
 				
+		this.mButton_N=new TextureRegion[6];
+		this.mButton_P=new TextureRegion[6];
+		
 		BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/Buttons/");
-
-		this.mButtonMenuR = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "menu_relesed.png", 960, 0);
-		this.mButtonMenuP = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "menu_pressed.png", 960, 145);
-		this.mButtonPlayR = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "play_relesed.png", 960, 290);
-		this.mButtonPlayP = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "play_pressed.png", 960, 435);
-		this.mButtonPauseR = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "pause_relesed.png", 960, 580);
-		this.mButtonPauseP = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "pause_pressed.png", 960, 725);
-		this.mButtonStopR = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "stop_relesed.png", 960, 870);
-		this.mButtonStopP = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "stop_pressed.png", 960, 1015);
+		
+		for(byte i=0;i<4;i++)
+		{
+			this.mButton_N[i] = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), i+"_m_released.png", 1024, i*147);
+			this.mButton_P[i] = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), i+"_m_pressed.png", 1235, i*147);
+		}
 		
 		MainActivity.getInstance().getEngine().getTextureManager().loadTexture(this.mTexture);
 	}
@@ -103,163 +99,102 @@ public class RecordScene extends Scene {
 		this.attachChild(bg_sprite);
 	}
 
-	private void drawMenuButtons()
+	private void drawToolBar()
 	{
-		Sprite menup_sprite = new Sprite(0,0,this.mButtonMenuP);
-		menup_sprite.setWidth(this.btnMenuButtonsWidth);
-		menup_sprite.setHeight(this.btnMenuButtonsHeight);
-		
-		menup_sprite.setPosition(this.btnMenuX,this.btnMenuButtonsY);
-		
-		this.attachChild(menup_sprite);
-		
-		Sprite menur_sprite = new Sprite(0,0,this.mButtonMenuR)
+
+		this.mToolBar=new Entity();
+		for(byte i=0;i<4;i++)
 		{
-            public boolean onAreaTouched(final TouchEvent pAreaTouchEvent, final float pX, final float pY) {
-            	if(!RecordScene.this.getLoading())
-            	switch(pAreaTouchEvent.getAction()) {
-				    case TouchEvent.ACTION_DOWN:   
-				    	this.setVisible(false);
-				        break;
-				    case TouchEvent.ACTION_UP:  
-				    	this.setVisible(true);
-				    	createProject();
-				        break;
-				}
-				return true;
-            }
-        };
-        
-        menur_sprite.setWidth(this.btnMenuButtonsWidth);
-        menur_sprite.setHeight(this.btnMenuButtonsHeight);
+			Sprite sp_pressed = new Sprite(i*this.btnMenuButtonsWidth,0,this.mButton_P[i]);
+			sp_pressed.setWidth(this.btnMenuButtonsWidth);
+			sp_pressed.setHeight(this.btnMenuButtonsHeight);
+			
+			this.mToolBar.attachChild(sp_pressed);
+			
+			Sprite sp_released = new Sprite(i*this.btnMenuButtonsWidth,0,this.mButton_N[i])
+			{
+	            public boolean onAreaTouched(final TouchEvent pAreaTouchEvent, final float pX, final float pY) {
+	            	switch(pAreaTouchEvent.getAction()) {
+					    case TouchEvent.ACTION_DOWN:                    
+					        RecordScene.this.ToolbarAction(Byte.parseByte(this.getUserData().toString()), true);
+					        break;
+					    case TouchEvent.ACTION_UP:  
+					    	RecordScene.this.ToolbarAction(Byte.parseByte(this.getUserData().toString()), false);
+					        break;
+					}
+					return true;
+	            }
+	        };
+	        sp_released.setUserData((i*2)+1);
+	        sp_released.setWidth(this.btnMenuButtonsWidth);
+	        sp_released.setHeight(this.btnMenuButtonsHeight);
+			
+			this.mToolBar.attachChild(sp_released);
+			
+			this.registerTouchArea(sp_released);
+			this.setTouchAreaBindingEnabled(true);
+		}
 		
-        menur_sprite.setPosition(this.btnMenuX,this.btnMenuButtonsY);
+		this.mToolBar.setPosition(this.ToolbarX,this.ToolbarY);
 		
-		this.attachChild(menur_sprite);
-		
-		this.registerTouchArea(menur_sprite);
-		
-		//-----------------------------------------------------------------------
-		
-		Sprite playp_sprite = new Sprite(0,0,this.mButtonPlayP);
-		playp_sprite.setWidth(this.btnMenuButtonsWidth);
-		playp_sprite.setHeight(this.btnMenuButtonsHeight);
-		
-		playp_sprite.setPosition(this.btnPlayX,this.btnMenuButtonsY);
-		
-		this.attachChild(playp_sprite);
-		
-		Sprite playr_sprite = new Sprite(0,0,this.mButtonPlayR)
-		{
-            public boolean onAreaTouched(final TouchEvent pAreaTouchEvent, final float pX, final float pY) {
-            	if(!RecordScene.this.getLoading())
-            	switch(pAreaTouchEvent.getAction()) {
-				    case TouchEvent.ACTION_DOWN:   
-				    	this.setVisible(false);
-				        break;
-				    case TouchEvent.ACTION_UP:  
-				    	this.setVisible(true);
-				        break;
-				}
-				return true;
-            }
-        };
-        
-        playr_sprite.setWidth(this.btnMenuButtonsWidth);
-        playr_sprite.setHeight(this.btnMenuButtonsHeight);
-		
-        playr_sprite.setPosition(this.btnPlayX,this.btnMenuButtonsY);
-		
-		this.attachChild(playr_sprite);
-		
-		this.registerTouchArea(playr_sprite);
-		
-		//-----------------------------------------------------------------------
-		
-		Sprite pausep_sprite = new Sprite(0,0,this.mButtonPauseP);
-		pausep_sprite.setWidth(this.btnMenuButtonsWidth);
-		pausep_sprite.setHeight(this.btnMenuButtonsHeight);
-		
-		pausep_sprite.setPosition(this.btnPauseX,this.btnMenuButtonsY);
-		
-		this.attachChild(pausep_sprite);
-		
-		Sprite pauser_sprite = new Sprite(0,0,this.mButtonPauseR)
-		{
-            public boolean onAreaTouched(final TouchEvent pAreaTouchEvent, final float pX, final float pY) {
-            	if(!RecordScene.this.getLoading())
-            	switch(pAreaTouchEvent.getAction()) {
-				    case TouchEvent.ACTION_DOWN:   
-				    	this.setVisible(false);
-				        break;
-				    case TouchEvent.ACTION_UP:  
-				    	this.setVisible(true);
-				        break;
-				}
-				return true;
-            }
-        };
-        
-        pauser_sprite.setWidth(this.btnMenuButtonsWidth);
-        pauser_sprite.setHeight(this.btnMenuButtonsHeight);
-		
-        pauser_sprite.setPosition(this.btnPauseX,this.btnMenuButtonsY);
-		
-		this.attachChild(pauser_sprite);
-		
-		this.registerTouchArea(pauser_sprite);
-		
-		//-----------------------------------------------------------------------
-		
-		Sprite stopp_sprite = new Sprite(0,0,this.mButtonStopP);
-		stopp_sprite.setWidth(this.btnMenuButtonsWidth);
-		stopp_sprite.setHeight(this.btnMenuButtonsHeight);
-		
-		stopp_sprite.setPosition(this.btnStopX,this.btnMenuButtonsY);
-		
-		this.attachChild(stopp_sprite);
-		
-		Sprite stopr_sprite = new Sprite(0,0,this.mButtonStopR)
-		{
-            public boolean onAreaTouched(final TouchEvent pAreaTouchEvent, final float pX, final float pY) {
-            	if(!RecordScene.this.getLoading())
-            	switch(pAreaTouchEvent.getAction()) {
-				    case TouchEvent.ACTION_DOWN:   
-				    	this.setVisible(false);
-				        break;
-				    case TouchEvent.ACTION_UP:  
-				    	this.setVisible(true);
-				        break;
-				}
-				return true;
-            }
-        };
-        
-        stopr_sprite.setWidth(this.btnMenuButtonsWidth);
-        stopr_sprite.setHeight(this.btnMenuButtonsHeight);
-		
-        stopr_sprite.setPosition(this.btnStopX,this.btnMenuButtonsY);
-		
-		this.attachChild(stopr_sprite);
-		
-		this.registerTouchArea(stopr_sprite);
-		
-		this.setTouchAreaBindingEnabled(true);
-		
-		
+		this.attachChild(this.mToolBar);
 	}
 	
 	private void loadSizes()
 	{
-		this.btnMenuButtonsHeight=CAMERA_HEIGHT/11.03f;
-		this.btnMenuButtonsWidth=CAMERA_WIDTH/4.7f;
-		this.btnMenuButtonsY=CAMERA_HEIGHT-(this.btnMenuButtonsHeight+(CAMERA_HEIGHT/64.0f));
-		
-		this.btnMenuX=CAMERA_WIDTH-(this.btnMenuButtonsWidth+(CAMERA_WIDTH/1.39f));
-		this.btnPlayX=CAMERA_WIDTH-(this.btnMenuButtonsWidth+(CAMERA_WIDTH/2.00f));
-		this.btnPauseX=CAMERA_WIDTH-(this.btnMenuButtonsWidth+(CAMERA_WIDTH/3.55f));
-		this.btnStopX=CAMERA_WIDTH-(this.btnMenuButtonsWidth+(CAMERA_WIDTH/16.55f));
+		this.btnMenuButtonsHeight=CAMERA_HEIGHT/10.88f;
+		this.btnMenuButtonsWidth=CAMERA_WIDTH/4.55f;
+		this.ToolbarY=CAMERA_HEIGHT-(CAMERA_HEIGHT/9.35f);
+		this.ToolbarX=CAMERA_WIDTH/2-((this.btnMenuButtonsWidth*4)/2);
 	}	
+	
+	//PUBLIC
+	public void ToolbarAction(byte selindex, boolean pressed)
+	{
+		switch(selindex)
+		{
+			case 0:
+				if(pressed)
+				{
+					this.mToolBar.getChild(selindex).setVisible(false);
+				}
+				else
+				{
+					this.mToolBar.getChild(selindex).setVisible(true);
+				}
+				break;
+			case 3:
+				if(pressed)
+				{
+					this.mToolBar.getChild(selindex).setVisible(false);
+				}
+				else
+				{
+					this.mToolBar.getChild(selindex).setVisible(true);
+				}
+				break;
+			case 5:
+				if(pressed)
+				{
+					this.mToolBar.getChild(selindex).setVisible(false);
+				}
+				else
+				{
+					this.mToolBar.getChild(selindex).setVisible(true);
+				}
+				break;
+			case 7:
+				if(pressed)
+				{
+					this.mToolBar.getChild(selindex).setVisible(false);
+				}
+				else
+				{
+					this.mToolBar.getChild(selindex).setVisible(true);
+				}
+				break;
+		}
+	}
 	
 	//SET
 	public void setLoading(boolean l)
