@@ -9,7 +9,6 @@ import android.content.res.AssetManager;
 import android.os.AsyncTask;
 
 import com.ustudio.audio.Note;
-import com.ustudio.loading.LoadSamplesTask;
 import com.ustudio.loading.LoadingScreen;
 import com.ustudio.main.MainActivity;
 
@@ -39,14 +38,10 @@ public class SamplesManager {
 		this.mSamples.remove(name);
 	}
 	
-	public void loadSamples(String str_name, byte first_midi, byte last_midi,byte samples, LoadingScreen loadscreen,String loadtext,String finishtext)
+	public void loadSamples(String str_name, byte first_midi, byte last_midi,byte samples, LoadingScreen loadscreen)
 	{
 		Note[] tmp_notes;
-		loadscreen.setLoadText(loadtext);
-		loadscreen.setFinishText(finishtext);
-		loadscreen.setTotal((last_midi+1)-first_midi);
-		loadscreen.setLoaded(0);
-		loadscreen.refreshText();
+		
 		AssetManager SamplesDir = MainActivity.getInstance().getAssets();
 		String[] list=null;
 		String name=str_name.toLowerCase();
@@ -60,7 +55,16 @@ public class SamplesManager {
 		
 	    SoundFactory.setAssetBasePath("sfx/"+name+"/");
 	    
-	    new LoadSamplesTask().execute(first_midi,last_midi,samples,list,loadscreen,name);
+		tmp_notes=new Note[128];
+		
+    	for(byte i=first_midi;i<(last_midi+1);i++)//using -129 because it overflows as 128 to -128
+		{
+			tmp_notes[i]=new Note(i,samples,list);
+			loadscreen.setLoaded((byte)(loadscreen.getLoaded()+1));
+			loadscreen.updateProgress();
+		}   	
+    	
+    	this.mSamples.put(name, tmp_notes);
 	 }
 	
 	public void setSamples(Hashtable<String,Note[]> s)

@@ -47,6 +47,8 @@ public class Loader extends Entity{
 		drawForm();
 		drawProgressBar();
 		drawText();
+		
+		this.setVisible(false);
 	}
 	
 	private void loadSizes()

@@ -52,6 +52,12 @@ public class RecordScene extends Scene {
 		loadGUITextures();
 		drawBG();
 		drawToolBar();
+		loadWindow();
+	}
+	
+	private void loadWindow()
+	{		
+		this.mLoadingScreen=new LoadingScreen(this,CAMERA_WIDTH,CAMERA_HEIGHT);
 	}
 	
 	private void createProject()
@@ -60,13 +66,13 @@ public class RecordScene extends Scene {
 		String tmpLoadMsg="Loading sample #loaded of #total...";
 		String tmpFinishMsg="Finished loading samples!";
 		
-		this.mLoading=true;
-		this.mLoadingScreen=new LoadingScreen(this,CAMERA_WIDTH,CAMERA_HEIGHT);
+		this.mLoadingScreen.setValues(tmpLoadMsg, tmpFinishMsg,(byte)0, (byte)14);
+		this.mLoadingScreen.setLoaderVisible(true);
 		
 		tmpSamplesManager=MainActivity.getInstance().getSamplesManager();
-		tmpSamplesManager.loadSamples("piano", (byte)60,(byte)73, (byte)1, this.mLoadingScreen, tmpLoadMsg, tmpFinishMsg);
-		
+		tmpSamplesManager.loadSamples("piano", (byte)60,(byte)73, (byte)1, this.mLoadingScreen);
 		MainActivity.getInstance().setSamplesManager(tmpSamplesManager);
+		this.mLoading=true;	
 	}
 	
 	private void loadGUITextures()
@@ -154,7 +160,7 @@ public class RecordScene extends Scene {
 	{
 		switch(selindex)
 		{
-			case 0:
+			case 1:
 				if(pressed)
 				{
 					this.mToolBar.getChild(selindex).setVisible(false);
@@ -162,6 +168,7 @@ public class RecordScene extends Scene {
 				else
 				{
 					this.mToolBar.getChild(selindex).setVisible(true);
+					createProject();
 				}
 				break;
 			case 3:

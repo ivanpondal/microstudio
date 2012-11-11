@@ -8,8 +8,8 @@ public class LoadingScreen {
 	static Scene scene;
 	private String mLoadText;
 	private String mFinishText;
-	private int mTotal;
-	private int mLoaded;
+	private byte mTotal;
+	private byte mLoaded;
 	private Loader mLoader;
 	private float mPosX;
 	private float mPosY;
@@ -24,11 +24,20 @@ public class LoadingScreen {
 		this.mPosX=(CAMERA_WIDTH/2)-this.mLoader.getWidth()/2;
 		this.mPosY=(CAMERA_HEIGHT/2)-this.mLoader.getHeight()/2;
 		this.mLoader.setPosition(this.mPosX, this.mPosY);
-		
+
 		scene.attachChild(this.mLoader);
 	}
 	
 	//PUBLIC
+	public void setValues(String ls, String fs, byte l, byte t)
+	{
+		this.mLoadText=ls;
+		this.mFinishText=fs;
+		this.mTotal=t;
+		this.mLoaded=l;
+		this.updateProgress();
+	}
+	
 	
 	public void updateProgress()
 	{
@@ -52,6 +61,11 @@ public class LoadingScreen {
 		}
 		this.mLoader.updateText(result);
 	}
+
+	public void setLoaderVisible(boolean v)
+	{
+		this.mLoader.setVisible(v);
+	}
 	
 	//SET
 	public void setLoadText(String s)
@@ -64,12 +78,12 @@ public class LoadingScreen {
 		this.mFinishText = s;
 	}
 	
-	public void setTotal(int t)
+	public void setTotal(byte t)
 	{
 		this.mTotal = t;
 	}
 	
-	public void setLoaded(int l)
+	public void setLoaded(byte l)
 	{
 		this.mLoaded = l;
 	}
@@ -90,12 +104,12 @@ public class LoadingScreen {
 		return this.mFinishText;
 	}
 	
-	public int getTotal()
+	public byte getTotal()
 	{
 		return this.mTotal;
 	}
 	
-	public int getLoaded()
+	public byte getLoaded()
 	{
 		return this.mLoaded;
 	}
