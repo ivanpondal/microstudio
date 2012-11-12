@@ -5,6 +5,7 @@ import java.util.Hashtable;
 public class Project {
 	private String mName;
 	private Hashtable<String,Track> mTracks;
+	private String mActiveTrack;
 	
 	public Project()
 	{
@@ -23,6 +24,14 @@ public class Project {
 		this.mTracks.put(t.getName(), t);
 	}
 	
+	public Track findActiveTrack()
+	{
+		Track tmpTrack;
+		tmpTrack=this.mTracks.get(this.mActiveTrack);
+		return tmpTrack;
+	}
+	
+	//SET
 	public void setName(String n)
 	{
 		this.mName=n;
@@ -33,6 +42,12 @@ public class Project {
 		this.mTracks=t;
 	}
 	
+	public void setActiveTrack(String a)
+	{
+		this.mActiveTrack=a;
+	}
+	
+	//GET
 	public String getName()
 	{
 		return this.mName;
@@ -43,4 +58,8 @@ public class Project {
 		return this.mTracks;
 	}
 	
+	public String getActiveTrack()
+	{
+		return this.mActiveTrack;
+	}
 }

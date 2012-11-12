@@ -66,8 +66,6 @@ public class Loader extends Entity{
 	{
 		FontFactory.setAssetBasePath("fonts/");
 		
-		Log.d("Piano","height: "+CAMERA_HEIGHT);
-		
 		this.mFontTexture = new BitmapTextureAtlas(256, 256,TextureOptions.BILINEAR);
 
 		this.mFont = FontFactory.createFromAsset((BitmapTextureAtlas) this.mFontTexture,MainActivity.getInstance().getApplicationContext(), "cambria.ttf", this.mFontSize, true,Color.WHITE);

@@ -21,6 +21,15 @@ public class Instrument {
 	private byte val_samples;
 	private long val_decay;
 	
+	public Instrument(String n, byte s, long d)
+	{
+		setName(n);
+		setSamples(s);
+		setDecay(d);
+		setVolumeLeft(1.0f);
+		setVolumeRight(1.0f);
+	}
+	
 	public Instrument(String n, byte s, long d, Note[] nt)
 	{
 		setName(n);

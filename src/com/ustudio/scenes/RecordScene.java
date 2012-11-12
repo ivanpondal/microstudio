@@ -10,10 +10,15 @@ import org.anddev.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.anddev.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegionFactory;
 import org.anddev.andengine.opengl.texture.region.TextureRegion;
 
+import android.content.pm.ActivityInfo;
+import android.util.Log;
+
 import com.ustudio.audio.Instrument;
 import com.ustudio.loading.LoadingScreen;
 import com.ustudio.main.MainActivity;
 import com.ustudio.managers.SamplesManager;
+import com.ustudio.managers.SceneManager;
+import com.ustudio.project.IniConstants;
 import com.ustudio.project.Project;
 import com.ustudio.project.Track;
 
@@ -48,11 +53,25 @@ public class RecordScene extends Scene {
 		CAMERA_WIDTH = w;
 		CAMERA_HEIGHT = h;
 
+		createProject();
 		loadSizes();
 		loadGUITextures();
 		drawBG();
 		drawToolBar();
 		loadWindow();
+	}
+
+	private void createProject()
+	{
+		Project tmpProject;
+		Track tmpTrack;
+		Instrument tmpPiano;
+		
+		tmpPiano=new Instrument("Piano",(byte)1,1500);
+		tmpTrack=new Track("Piano 1",tmpPiano);
+		tmpProject=new Project("Test",tmpTrack);
+		tmpProject.setActiveTrack("Piano 1");
+		MainActivity.getInstance().setProject(tmpProject);
 	}
 	
 	private void loadWindow()
@@ -60,19 +79,29 @@ public class RecordScene extends Scene {
 		this.mLoadingScreen=new LoadingScreen(this,CAMERA_WIDTH,CAMERA_HEIGHT);
 	}
 	
-	private void createProject()
+	private void loadPiano()
 	{
+		
+		this.mLoading=true;	
 		SamplesManager tmpSamplesManager;
+		MainActivity tmpMainActivity;
+		tmpMainActivity=MainActivity.getInstance();
 		String tmpLoadMsg="Loading sample #loaded of #total...";
 		String tmpFinishMsg="Finished loading samples!";
 		
-		this.mLoadingScreen.setValues(tmpLoadMsg, tmpFinishMsg,(byte)0, (byte)14);
+		this.mLoadingScreen.setValues(tmpLoadMsg, tmpFinishMsg,(byte)0,(byte)((IniConstants.PianoLastMIDI-IniConstants.PianoFirstMIDI)+1));
 		this.mLoadingScreen.setLoaderVisible(true);
 		
 		tmpSamplesManager=MainActivity.getInstance().getSamplesManager();
-		tmpSamplesManager.loadSamples("piano", (byte)60,(byte)73, (byte)1, this.mLoadingScreen);
-		MainActivity.getInstance().setSamplesManager(tmpSamplesManager);
-		this.mLoading=true;	
+		tmpSamplesManager.loadSamples("piano", IniConstants.PianoFirstMIDI,IniConstants.PianoLastMIDI, (byte)1, this.mLoadingScreen);
+		tmpMainActivity.getProject().getTracks().get("Piano 1").getInstr().setNotes(tmpSamplesManager.getSamples().get("piano"));
+		tmpMainActivity.setSamplesManager(tmpSamplesManager);
+		tmpMainActivity.getProject().setActiveTrack("Piano 1");
+		
+		this.mLoading=false;	
+		this.mLoadingScreen.setLoaderVisible(false);
+		
+		MainActivity.getInstance().getSceneManager().setFreePlay(CAMERA_WIDTH, CAMERA_HEIGHT);
 	}
 	
 	private void loadGUITextures()
@@ -168,7 +197,7 @@ public class RecordScene extends Scene {
 				else
 				{
 					this.mToolBar.getChild(selindex).setVisible(true);
-					createProject();
+					loadPiano();
 				}
 				break;
 			case 3:

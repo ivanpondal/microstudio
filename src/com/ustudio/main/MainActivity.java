@@ -12,9 +12,11 @@ import org.anddev.andengine.extension.input.touch.controller.MultiTouchControlle
 import org.anddev.andengine.extension.input.touch.exception.MultiTouchException;
 import org.anddev.andengine.ui.activity.BaseGameActivity;
 
+import com.ustudio.audio.Instrument;
 import com.ustudio.managers.SamplesManager;
 import com.ustudio.managers.SceneManager;
 import com.ustudio.project.Project;
+import com.ustudio.project.Track;
 
 import dalvik.system.VMRuntime;
 
@@ -73,7 +75,7 @@ public class MainActivity extends BaseGameActivity {
 	public Scene onLoadScene() {
 		// TODO Auto-generated method stub
 		this.mEngine.registerUpdateHandler(new FPSLogger());
-		
+
 		this.mSceneManager.setRecordScene(CAMERA_WIDTH,CAMERA_HEIGHT);
 		
         return this.mSceneManager.getCurrentScene();
@@ -86,6 +88,11 @@ public class MainActivity extends BaseGameActivity {
 		this.mSamplesManager=s;
 	}
 	
+	
+	public void setProject(Project p) {
+		this.mProject = p;
+	}
+
 	//GET
 	public ZoomCamera getCamera() {
 		return this.mCamera;
@@ -98,6 +105,7 @@ public class MainActivity extends BaseGameActivity {
 	public Project getProject() {
 		return this.mProject;
 	}
+	
 	
 	public SamplesManager getSamplesManager() {
 		return this.mSamplesManager;

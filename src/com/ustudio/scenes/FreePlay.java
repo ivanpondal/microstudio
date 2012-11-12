@@ -11,6 +11,7 @@ import org.anddev.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.anddev.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegionFactory;
 import org.anddev.andengine.opengl.texture.region.TextureRegion;
 
+import android.content.pm.ActivityInfo;
 import android.util.Log;
 
 import com.ustudio.project.*;
@@ -29,10 +30,6 @@ public class FreePlay extends Scene {
 	private MiniPiano mMiniPiano;
 	
 	private Piano mTouchPiano;
-	
-	private Instrument mInsPiano;
-	
-	private Project mProject;
 	
 	private Track mActiveTrack;
 	
@@ -54,6 +51,7 @@ public class FreePlay extends Scene {
 	private float ButtonWidth;
 	private float ButtonHeight;
 	private float BGHeight;
+	private float BGY;
 	private float ToolbarY;
 	private float ToolbarX;
 	private float PianoY;
@@ -74,8 +72,8 @@ public class FreePlay extends Scene {
 	public FreePlay(int w, int h) {
 		CAMERA_WIDTH = w;
 		CAMERA_HEIGHT = h;
-		
-		createProject();
+	
+		loadActiveTrack();
 		loadSizes();
 		loadGUITextures();
 		drawBG();
@@ -84,35 +82,33 @@ public class FreePlay extends Scene {
 		drawMiniPiano();
 		drawSteps();
 	}
-	
-	private void createProject()
+
+	private void loadActiveTrack()
 	{
-		Track tmpTrack;
-		//this.mInsPiano=new Instrument("Piano",(byte)1,400,(byte)60,(byte)60);
-		tmpTrack=new Track(this.mInsPiano.getName(),this.mInsPiano);
-		this.mProject=new Project("New Project",tmpTrack);
-		this.mActiveTrack=this.mProject.getTracks().get("Piano");
+		Project tmpProject;
+		tmpProject=MainActivity.getInstance().getProject();
+		this.mActiveTrack=tmpProject.findActiveTrack();
 	}
 	
 	private void loadSizes()
 	{
-		this.BGHeight=CAMERA_HEIGHT/2.5f;
-		this.ButtonWidth=CAMERA_WIDTH/7.6f;
-		this.ButtonHeight=CAMERA_HEIGHT/6.9f;
-		this.ToolbarY=CAMERA_HEIGHT/24;
-		this.ToolbarX=(CAMERA_WIDTH-this.ButtonWidth*6)/2;
+		this.BGHeight=CAMERA_WIDTH/2.5f;
+		this.BGY=CAMERA_WIDTH-this.BGHeight;
+		this.ButtonWidth=CAMERA_HEIGHT/7.6f;
+		this.ButtonHeight=CAMERA_WIDTH/6.9f;
+		this.ToolbarY=CAMERA_WIDTH-this.ButtonHeight-(CAMERA_WIDTH/24);
+		this.ToolbarX=(CAMERA_HEIGHT-this.ButtonWidth*6)/2;
 		this.PianoX=0;
-		this.MiniPianoY=CAMERA_HEIGHT/4.4f;
-		this.StepWidth=CAMERA_WIDTH/50;
-		this.StepHeight=CAMERA_HEIGHT/15;
+		this.StepWidth=CAMERA_HEIGHT/50;
+		this.StepHeight=CAMERA_WIDTH/15;
 	}
 	
 	private void loadGUITextures()
 	{
 		BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/Backgrounds/");
-		this.mTexture = new BitmapTextureAtlas(2048, 1024, TextureOptions.BILINEAR);
+		this.mTexture = new BitmapTextureAtlas(1024, 2048, TextureOptions.BILINEAR);
 		
-		this.mTransparent = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "2048x1024.png", 0, 0);
+		this.mTransparent = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "1024x2048.png", 0, 0);
 		this.mBackground = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "freeplay_bg.png", 0, 0);
 		
 		this.mButton_N=new TextureRegion[6];
@@ -122,12 +118,12 @@ public class FreePlay extends Scene {
 		
 		for(byte i=0;i<6;i++)
 		{
-			this.mButton_N[i] = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), i+"_released.png", 1600, i*139);
-			this.mButton_P[i] = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), +i+"_pressed.png", 1811, i*139);
+			this.mButton_N[i] = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), i+"_released.png",i*139,1600);
+			this.mButton_P[i] = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), +i+"_pressed.png",i*139,1811);
 		}
 		
-		this.mSingleStep = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "single_step.png", 1600, 835);
-		this.mWholeStep = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "whole_step.png",1632, 835);
+		this.mSingleStep = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "single_step.png", 835,1600);
+		this.mWholeStep = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "whole_step.png", 835, 1632);
 		
 		MainActivity.getInstance().getEngine().getTextureManager().loadTexture(this.mTexture);
 	}
@@ -135,9 +131,9 @@ public class FreePlay extends Scene {
 	private void drawBG()
 	{
 		
-		Sprite bg_sprite = new Sprite(0,0,this.mBackground);
-		bg_sprite.setWidth(CAMERA_WIDTH);
-		bg_sprite.setHeight(this.BGHeight);
+		Sprite bg_sprite = new Sprite(this.BGY,0,this.mBackground);
+		bg_sprite.setWidth(this.BGHeight);
+		bg_sprite.setHeight(CAMERA_HEIGHT);
 		this.attachChild(bg_sprite);
 	}
 	
@@ -147,13 +143,13 @@ public class FreePlay extends Scene {
 		this.mToolBar=new Entity();
 		for(byte i=0;i<6;i++)
 		{
-			Sprite sp_pressed = new Sprite(i*this.ButtonWidth,0,this.mButton_P[i]);
-			sp_pressed.setWidth(this.ButtonWidth);
-			sp_pressed.setHeight(this.ButtonHeight);
+			Sprite sp_pressed = new Sprite(0,i*this.ButtonWidth,this.mButton_P[i]);
+			sp_pressed.setWidth(this.ButtonHeight);
+			sp_pressed.setHeight(this.ButtonWidth);
 			
 			this.mToolBar.attachChild(sp_pressed);
 			
-			Sprite sp_released = new Sprite(i*this.ButtonWidth,0,this.mButton_N[i])
+			Sprite sp_released = new Sprite(0,i*this.ButtonWidth,this.mButton_N[i])
 			{
 	            public boolean onAreaTouched(final TouchEvent pAreaTouchEvent, final float pX, final float pY) {
 	            	switch(pAreaTouchEvent.getAction()) {
@@ -168,8 +164,8 @@ public class FreePlay extends Scene {
 	            }
 	        };
 	        sp_released.setUserData((i*2)+1);
-	        sp_released.setWidth(this.ButtonWidth);
-	        sp_released.setHeight(this.ButtonHeight);
+	        sp_released.setWidth(this.ButtonHeight);
+	        sp_released.setHeight(this.ButtonWidth);
 			
 			this.mToolBar.attachChild(sp_released);
 			
@@ -177,7 +173,7 @@ public class FreePlay extends Scene {
 			this.setTouchAreaBindingEnabled(true);
 		}
 		
-		this.mToolBar.setPosition(this.ToolbarX,this.ToolbarY);
+		this.mToolBar.setPosition(this.ToolbarY,this.ToolbarX);
 		
 		this.attachChild(this.mToolBar);
 	}
@@ -187,14 +183,15 @@ public class FreePlay extends Scene {
 		float rotationX;
 		float rotationY;
 		
-		this.WholeStepFwX=this.mMiniPiano.getKeyboardWidth()+this.mMiniPiano.getX()+(CAMERA_WIDTH/20);
-		this.WholeStepFwY=this.mMiniPiano.getY()+(this.mMiniPiano.getKeyboardHeight()-this.StepHeight)/2.0f;
-		this.WholeStepBwX=this.mMiniPiano.getX()-(CAMERA_WIDTH/45)-(CAMERA_WIDTH/20);
+		this.WholeStepFwX=this.mMiniPiano.getKeyboardWidth()+this.mMiniPiano.getY()+(CAMERA_HEIGHT/20);
+		this.WholeStepFwY=this.mMiniPiano.getX()+(this.mMiniPiano.getKeyboardHeight()-this.StepHeight)/2.0f;
+		
+		this.WholeStepBwX=this.mMiniPiano.getY()-(CAMERA_HEIGHT/45)-(CAMERA_HEIGHT/20);
 		this.WholeStepBwY=this.WholeStepFwY;
 		this.StepFwY=this.WholeStepFwY;
-		this.StepFwX=this.mMiniPiano.getKeyboardWidth()+this.mMiniPiano.getX()+(CAMERA_WIDTH/55);
+		this.StepFwX=this.mMiniPiano.getKeyboardWidth()+this.mMiniPiano.getY()+(CAMERA_HEIGHT/55);
 		this.StepBwY=this.WholeStepFwY;
-		this.StepBwX=this.mMiniPiano.getX()-(CAMERA_WIDTH/48)-(CAMERA_WIDTH/55);
+		this.StepBwX=this.mMiniPiano.getY()-(CAMERA_HEIGHT/48)-(CAMERA_HEIGHT/55);
 		
 		this.mWholeStepFW=new Entity();
 		this.mWholeStepBW=new Entity();
@@ -222,8 +219,8 @@ public class FreePlay extends Scene {
                 return true;
             }
 		};
-		stepFW_sprite[0].setWidth(this.StepWidth);
-		stepFW_sprite[0].setHeight(this.StepHeight);
+		stepFW_sprite[0].setWidth(this.StepHeight);
+		stepFW_sprite[0].setHeight(this.StepWidth);
 		stepFW_sprite[0].setAlpha(0.5f);
 		
 		//Single step backward
@@ -241,10 +238,10 @@ public class FreePlay extends Scene {
                 return true;
             }
 		};
-		stepBW_sprite[0].setWidth(this.StepWidth);
-		stepBW_sprite[0].setHeight(this.StepHeight);
+		stepBW_sprite[0].setWidth(this.StepHeight);
+		stepBW_sprite[0].setHeight(this.StepWidth);
 		stepBW_sprite[0].setAlpha(0.5f);
-		stepBW_sprite[0].setRotationCenter(rotationX,rotationY);
+		stepBW_sprite[0].setRotationCenter(rotationY,rotationX);
 		stepBW_sprite[0].setRotation(180);
 		
 		//Whole step forward
@@ -262,8 +259,8 @@ public class FreePlay extends Scene {
                 return true;
             }
 		};
-		stepFW_sprite[1].setWidth(this.StepWidth*2);
-		stepFW_sprite[1].setHeight(this.StepHeight);
+		stepFW_sprite[1].setHeight(this.StepWidth*2);
+		stepFW_sprite[1].setWidth(this.StepHeight);
 		stepFW_sprite[1].setAlpha(0.5f);
 		
 		//Whole step backward
@@ -281,10 +278,10 @@ public class FreePlay extends Scene {
                 return true;
             }
 		};
-		stepBW_sprite[1].setWidth(this.StepWidth*2);
-		stepBW_sprite[1].setHeight(this.StepHeight);
+		stepBW_sprite[1].setHeight(this.StepWidth*2);
+		stepBW_sprite[1].setWidth(this.StepHeight);
 		stepBW_sprite[1].setAlpha(0.5f);
-		stepBW_sprite[1].setRotationCenter(rotationX,rotationY);
+		stepBW_sprite[1].setRotationCenter(rotationY,rotationX);
 		stepBW_sprite[1].setRotation(180);
 
 		this.mStepFW.attachChild(stepFW_sprite[0]);
@@ -292,10 +289,10 @@ public class FreePlay extends Scene {
 		this.mStepBW.attachChild(stepBW_sprite[0]);
 		this.mWholeStepBW.attachChild(stepBW_sprite[1]);
 		
-		this.mWholeStepFW.setPosition(this.WholeStepFwX,this.WholeStepFwY);
-		this.mWholeStepBW.setPosition(this.WholeStepBwX,this.WholeStepBwY);
-		this.mStepFW.setPosition(this.StepFwX,this.StepFwY);
-		this.mStepBW.setPosition(this.StepBwX,this.StepBwY);
+		this.mWholeStepFW.setPosition(this.WholeStepFwY,this.WholeStepFwX);
+		this.mWholeStepBW.setPosition(this.WholeStepBwY,this.WholeStepBwX);
+		this.mStepFW.setPosition(this.StepFwY,this.StepFwX);
+		this.mStepBW.setPosition(this.StepBwY,this.StepBwX);
 		
 		this.attachChild(this.mStepBW);
 		this.attachChild(this.mStepFW);
@@ -310,9 +307,11 @@ public class FreePlay extends Scene {
 	
 	private void drawMiniPiano()
 	{		
+		
 		this.mMiniPiano = new MiniPiano(this, CAMERA_WIDTH, CAMERA_HEIGHT, this.mActiveTrack, this.mTouchPiano);
-		this.MiniPianoX=(CAMERA_WIDTH-this.mMiniPiano.getKeyboardWidth())/2;
-		this.mMiniPiano.setPosition(this.MiniPianoX, this.MiniPianoY);
+		this.MiniPianoX=(CAMERA_HEIGHT-this.mMiniPiano.getKeyboardWidth())/2;
+		this.MiniPianoY=CAMERA_WIDTH-this.mMiniPiano.getKeyboardHeight()-(CAMERA_WIDTH/4.4f);
+		this.mMiniPiano.setPosition(this.MiniPianoY, this.MiniPianoX);
 		this.mMiniPiano.moveViewer(this.mActiveTrack.getFirstTone());
 		this.attachChild(this.mMiniPiano);	
 		this.mTouchPiano.setMiniPiano(this.mMiniPiano);
@@ -321,8 +320,8 @@ public class FreePlay extends Scene {
 	private void drawPiano()
 	{
 		this.mTouchPiano = new Piano(this, CAMERA_WIDTH, CAMERA_HEIGHT, this.mActiveTrack);
-		this.PianoY=CAMERA_HEIGHT-this.mTouchPiano.getKeyboardHeight();
-		this.mTouchPiano.setPosition(this.PianoX, this.PianoY);
+		this.PianoY=this.mTouchPiano.getKeyboardHeight();
+		this.mTouchPiano.setPosition(this.PianoY, this.PianoX);
 		this.mTouchPiano.moveViewer(this.mActiveTrack.getFirstTone());
 		this.attachChild(this.mTouchPiano);
 	}
@@ -362,7 +361,7 @@ public class FreePlay extends Scene {
 						{
 							this.mToolBar.getChild(5).setAlpha(1.0f);
 						}
-						Player.PlayProject(this.mProject, this.mTouchPiano);
+						Player.PlayProject(MainActivity.getInstance().getProject(), this.mTouchPiano);
 					}
 				}
 				else

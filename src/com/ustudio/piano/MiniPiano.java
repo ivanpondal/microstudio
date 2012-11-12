@@ -71,14 +71,14 @@ public class MiniPiano extends Entity {
 		scene = pScene;
 		loadSizes();
 		loadGUITextures();
-		tmptonekeys=new Key[49];
-		tmpsemitonekeys=new Key[35];
-		for (byte i=0;i<49;i++)
+		tmptonekeys=new Key[42];
+		tmpsemitonekeys=new Key[30];
+		for (byte i=0;i<42;i++)
 		{
 			tmptonekeys[i]=new Key(false,true,i,PianoMath.SpriteIndex2MIDI(i, true));
 		}
 		
-		for (byte i=0;i<35;i++)
+		for (byte i=0;i<30;i++)
 		{
 			tmpsemitonekeys[i]=new Key(false,false,i,PianoMath.SpriteIndex2MIDI(i, false));
 		}
@@ -89,15 +89,15 @@ public class MiniPiano extends Entity {
 		this.setActiveTrack(t);
 		this.setPiano(p);
 	
-		Rectangle touchControl = new Rectangle(0,0,this.getKeyboardWidth(), this.getKeyboardHeight()){
+		Rectangle touchControl = new Rectangle(0,0,this.getKeyboardHeight(), this.getKeyboardWidth()){
 			public boolean onAreaTouched(final TouchEvent pAreaTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
 				switch(pAreaTouchEvent.getAction()) 
 				{
                     case TouchEvent.ACTION_DOWN:
-                    	MiniPiano.this.moveViewer(MiniPiano.this.getSelTone(pTouchAreaLocalX));
+                    	MiniPiano.this.moveViewer(MiniPiano.this.getSelTone(pTouchAreaLocalY));
                     	break;
                     case TouchEvent.ACTION_MOVE:  
-                    	MiniPiano.this.moveViewer(MiniPiano.this.getSelTone(pTouchAreaLocalX));
+                    	MiniPiano.this.moveViewer(MiniPiano.this.getSelTone(pTouchAreaLocalY));
                     	break;	
 				}
                 return true;
@@ -127,8 +127,8 @@ public class MiniPiano extends Entity {
 	
 	private void loadSizes()
 	{
-		this.setKeyboardHeight(CAMERA_HEIGHT/9.5f);
-		this.setKeyboardWidth(CAMERA_WIDTH/1.6f);
+		this.setKeyboardHeight(CAMERA_WIDTH/9.5f);
+		this.setKeyboardWidth(CAMERA_HEIGHT/1.6f);
 		this.setTonesWidth(this.getKeyboardWidth()/49);
 		this.setTonesHeight(this.getKeyboardHeight());
 		this.setSTWidth(this.getTonesWidth()/2);
@@ -142,24 +142,24 @@ public class MiniPiano extends Entity {
 	private void loadGUITextures()
 	{
 		BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/Backgrounds/");
-		this.mBGTexture = new BitmapTextureAtlas(1024, 128, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+		this.mBGTexture = new BitmapTextureAtlas(128, 1024, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 		this.mBG = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mBGTexture, MainActivity.getInstance().getApplicationContext(), "minipiano_bg.png", 0, 0);
 		MainActivity.getInstance().getEngine().getTextureManager().loadTexture(this.mBGTexture);
 		
 		BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/Piano/SmallKeys/");
-		this.mTexture = new BitmapTextureAtlas(64, 128, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+		this.mTexture = new BitmapTextureAtlas(128, 64, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 		this.mFTR_TN = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "Tones/to_released.png", 0, 0);
-		this.mFTR_TP = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "Tones/to_pressed.png", 20,0);
-		this.mFTR_STN = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "Semitones/st_released.png", 40, 0);
-		this.mFTR_STP = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "Semitones/st_pressed.png", 52,0);
+		this.mFTR_TP = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "Tones/to_pressed.png", 0,20);
+		this.mFTR_STN = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "Semitones/st_released.png", 0, 40);
+		this.mFTR_STP = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "Semitones/st_pressed.png", 0,52);
 		MainActivity.getInstance().getEngine().getTextureManager().loadTexture(this.mTexture);
 	}
 	
 	private void drawBG()
 	{
-		Sprite bg_sprite = new Sprite((this.widthKeyboard-this.widthBG)/2,(this.heightKeyboard-this.heightBG)/2,this.mBG);
-		bg_sprite.setWidth(this.getBGWidth());
-		bg_sprite.setHeight(this.getBGHeight());
+		Sprite bg_sprite = new Sprite((this.heightKeyboard-this.heightBG)/2,(this.widthKeyboard-this.widthBG)/2,this.mBG);
+		bg_sprite.setWidth(this.getBGHeight());
+		bg_sprite.setHeight(this.getBGWidth());
 		bg_sprite.setAlpha(0.4f);
 		this.attachChild(bg_sprite); 
 	}
@@ -170,17 +170,17 @@ public class MiniPiano extends Entity {
 		Entity tmp_tonesp;
 		tmp_tones = new Entity();
 		tmp_tonesp = new Entity();
-		for (int i = 0; i < 49; i++){
-			Sprite tp = new Sprite(i*this.getTonesWidth(),0,this.mFTR_TP);
-			tp.setWidth(this.getTonesWidth());
-			tp.setHeight(this.getTonesHeight());
+		for (int i = 0; i < 42; i++){
+			Sprite tp = new Sprite(0,i*this.getTonesWidth(),this.mFTR_TP);
+			tp.setWidth(this.getTonesHeight());
+			tp.setHeight(this.getTonesWidth());
 			tmp_tonesp.attachChild(tp);
 			
-			Sprite t = new Sprite(i*this.getTonesWidth(),0,this.mFTR_TN){
+			Sprite t = new Sprite(0,i*this.getTonesWidth(),this.mFTR_TN){
 
 			};
-			t.setWidth(this.getTonesWidth());
-	        t.setHeight(this.getTonesHeight());
+			t.setWidth(this.getTonesHeight());
+	        t.setHeight(this.getTonesWidth());
 	        tmp_tones.attachChild(t);		
 		}
 		
@@ -194,16 +194,16 @@ public class MiniPiano extends Entity {
 		Entity tmp_semitonesp;
 		tmp_semitones = new Entity();
 		tmp_semitonesp = new Entity();
-		for (int i = 0; i < 49; i++){
+		for (int i = 0; i < 42; i++){
 			if ((i-2)%7!=0 && (i+1)%7!=0){
-				Sprite stp = new Sprite(this.getSTWidth() + this.getSpaceST() + i*this.getTonesWidth(),0,this.mFTR_STP);
-				stp.setWidth(this.getSTWidth());
-		        stp.setHeight(this.getSTHeight());
+				Sprite stp = new Sprite(this.getTonesHeight()-this.getSTHeight(),this.getSTWidth() + this.getSpaceST() + i*this.getTonesWidth(),this.mFTR_STP);
+				stp.setWidth(this.getSTHeight());
+		        stp.setHeight(this.getSTWidth());
 		        tmp_semitonesp.attachChild(stp);
 
-				Sprite st = new Sprite(this.getSTWidth() + this.getSpaceST() + i*this.getTonesWidth(),0,this.mFTR_STN);		
-				st.setWidth(this.getSTWidth());
-		        st.setHeight(this.getSTHeight());
+				Sprite st = new Sprite(this.getTonesHeight()-this.getSTHeight(),this.getSTWidth() + this.getSpaceST() + i*this.getTonesWidth(),this.mFTR_STN);		
+				st.setWidth(this.getSTHeight());
+		        st.setHeight(this.getSTWidth());
 		        tmp_semitones.attachChild(st);
 			}
 		}
@@ -216,7 +216,7 @@ public class MiniPiano extends Entity {
 	{
 		Rectangle recviewer;
 		
-		recviewer=new Rectangle(0,0,this.getTonesWidth()*this.getTonesVisible(),this.getKeyboardHeight());
+		recviewer=new Rectangle(0,0,this.getKeyboardHeight(),this.getTonesWidth()*this.getTonesVisible());
 		recviewer.setColor(0, 0, 0);
 		recviewer.setAlpha(0.5f);
 		
@@ -236,9 +236,9 @@ public class MiniPiano extends Entity {
 	public void moveViewer(byte selTone)
 	{
 		float posX;
-		if((49-selTone)<this.tonesVisible)
+		if((42-selTone)<this.tonesVisible)
 		{
-			selTone=(byte)(49-this.tonesVisible);
+			selTone=(byte)(42-this.tonesVisible);
 		}
 		else if(selTone<0)
 		{
@@ -247,7 +247,7 @@ public class MiniPiano extends Entity {
 		posX=this.getTonesWidth()*selTone;
 		this.getActiveTrack().setFirstTone(selTone);
 		this.getPiano().moveViewer(selTone);
-		this.getViewer().setPosition(posX,this.getViewer().getY());
+		this.getViewer().setPosition(this.getViewer().getX(),posX);
 	}
 	
 	// SET
