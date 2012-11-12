@@ -98,10 +98,10 @@ public class RecordScene extends Scene {
 		tmpMainActivity.setSamplesManager(tmpSamplesManager);
 		tmpMainActivity.getProject().setActiveTrack("Piano 1");
 		
+		MainActivity.getInstance().getSceneManager().setFreePlay(CAMERA_WIDTH, CAMERA_HEIGHT);
+		
 		this.mLoading=false;	
 		this.mLoadingScreen.setLoaderVisible(false);
-		
-		MainActivity.getInstance().getSceneManager().setFreePlay(CAMERA_WIDTH, CAMERA_HEIGHT);
 	}
 	
 	private void loadGUITextures()

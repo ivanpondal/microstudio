@@ -60,7 +60,6 @@ public class SamplesManager {
 		
     	for(byte i=first_midi;i<(last_midi+1);i++)//using -129 because it overflows as 128 to -128
 		{
-    		Log.d("Piano","Index:"+i);
 			tmp_notes[i]=new Note(i,list);
 			loadscreen.setLoaded((byte)(loadscreen.getLoaded()+1));
 			loadscreen.updateProgress();

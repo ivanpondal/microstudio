@@ -128,8 +128,8 @@ public class MiniPiano extends Entity {
 	private void loadSizes()
 	{
 		this.setKeyboardHeight(CAMERA_WIDTH/9.5f);
-		this.setKeyboardWidth(CAMERA_HEIGHT/1.6f);
-		this.setTonesWidth(this.getKeyboardWidth()/49);
+		this.setKeyboardWidth(CAMERA_HEIGHT/1.9f);
+		this.setTonesWidth(this.getKeyboardWidth()/42);
 		this.setTonesHeight(this.getKeyboardHeight());
 		this.setSTWidth(this.getTonesWidth()/2);
 		this.setSTHeight(this.getTonesHeight()/1.75f);
