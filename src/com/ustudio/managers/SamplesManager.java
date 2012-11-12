@@ -7,6 +7,7 @@ import org.anddev.andengine.audio.sound.SoundFactory;
 
 import android.content.res.AssetManager;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.ustudio.audio.Note;
 import com.ustudio.loading.LoadingScreen;
@@ -38,7 +39,7 @@ public class SamplesManager {
 		this.mSamples.remove(name);
 	}
 	
-	public void loadSamples(String str_name, byte first_midi, byte last_midi,byte samples, LoadingScreen loadscreen)
+	public void loadSamples(String str_name, byte first_midi, byte last_midi, LoadingScreen loadscreen)
 	{
 		Note[] tmp_notes;
 		
@@ -59,7 +60,8 @@ public class SamplesManager {
 		
     	for(byte i=first_midi;i<(last_midi+1);i++)//using -129 because it overflows as 128 to -128
 		{
-			tmp_notes[i]=new Note(i,samples,list);
+    		Log.d("Piano","Index:"+i);
+			tmp_notes[i]=new Note(i,list);
 			loadscreen.setLoaded((byte)(loadscreen.getLoaded()+1));
 			loadscreen.updateProgress();
 		}   	

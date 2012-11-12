@@ -18,22 +18,19 @@ public class Instrument {
 	private String str_name;
 	private float val_left_vol;
 	private float val_right_vol;
-	private byte val_samples;
 	private long val_decay;
 	
-	public Instrument(String n, byte s, long d)
+	public Instrument(String n, long d)
 	{
 		setName(n);
-		setSamples(s);
 		setDecay(d);
 		setVolumeLeft(1.0f);
 		setVolumeRight(1.0f);
 	}
 	
-	public Instrument(String n, byte s, long d, Note[] nt)
+	public Instrument(String n, long d, Note[] nt)
 	{
 		setName(n);
-		setSamples(s);
 		setDecay(d);
 		setNotes(nt);
 		setVolumeLeft(1.0f);
@@ -66,11 +63,6 @@ public class Instrument {
 		this.val_right_vol=r;
 	}
 	
-	public void setSamples(byte s)
-	{
-		this.val_samples=s;
-	}
-	
 	public void setDecay(long d)
 	{
 		this.val_decay=d;
@@ -94,11 +86,6 @@ public class Instrument {
 	public float getVolumeRight()
 	{
 		return this.val_right_vol;
-	}
-	
-	public byte getSamples()
-	{
-		return this.val_samples;
 	}
 	
 	public long getDecay()

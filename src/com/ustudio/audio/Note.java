@@ -10,15 +10,15 @@ import com.ustudio.main.MainActivity;
 
 public class Note {
 	private String str_name;
-	private Sound[] dat_samples;
+	private Sound dat_sample;
 	private VolumeDecay decay;
 	private byte val_midi;
 	private byte val_velocity;
 	private boolean val_enabled; 
 	
-	public Note(byte m, byte s, String[] l)//midi note, samples, instrument
+	public Note(byte m, String[] l)//midi note, samples, instrument
 	{
-		setSamples(m,s,l);
+		setSamples(m,l);
 	}
 	
 	public void setName(String n)
@@ -26,16 +26,14 @@ public class Note {
 		this.str_name=n;
 	}
 	
-	public void setSamples(byte m, byte s,String[] l)
+	public void setSamples(byte m,String[] l)
 	{
 		String[] files,filename;
 		String str_regex;
 		boolean found=false,finished=false;
 		int i;
-
-		this.dat_samples=new Sound[s];
+		
 		try {
-			
 			files=l; //load all the files in the instruments folder
 			i=0;
 			while(!finished)
@@ -46,9 +44,12 @@ public class Note {
 				}
 				else
 				{
-					str_regex=m+"_[_a-zA-Z0-9#]*.ogg"; //search for the sound that belongs to the midi value asked
+					str_regex=m+"_[a-zA-Z0-9#]*.ogg"; //search for the sound that belongs to the midi value asked
 					if(files[i].matches(str_regex))
 					{
+						filename=files[i].split("_");
+						this.str_name=filename[1].substring(0, filename[1].length()-4);
+						this.dat_sample = SoundFactory.createSoundFromAsset(MainActivity.getInstance().getSoundManager(), MainActivity.getInstance().getApplicationContext(), files[i]);					
 						found=true;
 						finished=true;
 					}
@@ -56,36 +57,7 @@ public class Note {
 				i++;
 			}
 			this.val_enabled=found;
-			if(found)
-			{
-				for(byte samp=0;samp<s;samp++)
-				{
-					i=0;
-					found=false;
-					finished=false;
-
-					while(!finished)
-					{
-						if(i==files.length)
-						{
-							finished=true;
-						}
-						else
-						{
-							str_regex=m+"_"+samp+"_[a-zA-Z0-9#]*.ogg"; //search for the sound's samples
-							if(files[i].matches(str_regex))
-							{
-								found=true;
-								finished=true;
-								filename=files[i].split("_");
-								this.str_name=filename[2].substring(0, filename[2].length()-4);
-								this.dat_samples[samp] = SoundFactory.createSoundFromAsset(MainActivity.getInstance().getSoundManager(), MainActivity.getInstance().getApplicationContext(), files[i]);								
-							}
-							i++;
-						}
-					}
-				}
-			}
+			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -112,9 +84,9 @@ public class Note {
 		return this.str_name;
 	}
 	
-	public Sound[] getSamples()
+	public Sound getSample()
 	{
-		return this.dat_samples;
+		return this.dat_sample;
 	}
 	
 	public byte getMidi()
@@ -134,12 +106,8 @@ public class Note {
 	
 	public void playNote(byte v, float l, float r)
 	{
-		float samplerange,left,right;
-		byte sample;
+		float left,right;
 
-		samplerange=(float)Math.ceil(128/(float)dat_samples.length);
-		sample=(byte)Math.ceil(v/samplerange);
-		sample--;
 		left=1.0f*l;
 		right=1.0f*r;
 
@@ -156,26 +124,19 @@ public class Note {
 			}
 		}
 		this.setVelocity(v);
-		this.dat_samples[sample].setVolume(right, left);
-		this.dat_samples[sample].play();
+		this.dat_sample.setVolume(right, left);
+		this.dat_sample.play();
 	}
 	
 	public void stopNote(long d)
 	{
-		byte sample=0;
-		float samplerange;
-
-		samplerange=(float)Math.ceil(128/(float)dat_samples.length);
-		sample=(byte)Math.ceil(this.getVelocity()/samplerange);
-		sample--;
-		
 		if(d==0)
 		{
-			this.dat_samples[sample].stop();
+			this.dat_sample.stop();
 		}
 		else
 		{	
-			this.decay=new VolumeDecay(d,this.dat_samples[sample]);
+			this.decay=new VolumeDecay(d,this.dat_sample);
 			this.decay.start();
 		}
 	}

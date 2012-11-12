@@ -67,7 +67,7 @@ public class RecordScene extends Scene {
 		Track tmpTrack;
 		Instrument tmpPiano;
 		
-		tmpPiano=new Instrument("Piano",(byte)1,1500);
+		tmpPiano=new Instrument("Piano",750);
 		tmpTrack=new Track("Piano 1",tmpPiano);
 		tmpProject=new Project("Test",tmpTrack);
 		tmpProject.setActiveTrack("Piano 1");
@@ -93,7 +93,7 @@ public class RecordScene extends Scene {
 		this.mLoadingScreen.setLoaderVisible(true);
 		
 		tmpSamplesManager=MainActivity.getInstance().getSamplesManager();
-		tmpSamplesManager.loadSamples("piano", IniConstants.PianoFirstMIDI,IniConstants.PianoLastMIDI, (byte)1, this.mLoadingScreen);
+		tmpSamplesManager.loadSamples("piano", IniConstants.PianoFirstMIDI,IniConstants.PianoLastMIDI, this.mLoadingScreen);
 		tmpMainActivity.getProject().getTracks().get("Piano 1").getInstr().setNotes(tmpSamplesManager.getSamples().get("piano"));
 		tmpMainActivity.setSamplesManager(tmpSamplesManager);
 		tmpMainActivity.getProject().setActiveTrack("Piano 1");
