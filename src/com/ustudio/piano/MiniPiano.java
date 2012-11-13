@@ -39,6 +39,7 @@ public class MiniPiano extends Entity {
 	
 	private Texture mTexture;
 	private Texture mBGTexture;
+	private TextureRegion mTransparent;
 	private TextureRegion mBG;
 	private TextureRegion mFTR_TN;
 	private TextureRegion mFTR_TP;
@@ -142,7 +143,8 @@ public class MiniPiano extends Entity {
 	private void loadGUITextures()
 	{
 		BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/Backgrounds/");
-		this.mBGTexture = new BitmapTextureAtlas(128, 1024, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+		this.mBGTexture = new BitmapTextureAtlas(128, 1024, TextureOptions.BILINEAR);
+		this.mTransparent = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mBGTexture, MainActivity.getInstance().getApplicationContext(), "128x1024.png", 0, 0);
 		this.mBG = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mBGTexture, MainActivity.getInstance().getApplicationContext(), "minipiano_bg.png", 0, 0);
 		MainActivity.getInstance().getEngine().getTextureManager().loadTexture(this.mBGTexture);
 		
