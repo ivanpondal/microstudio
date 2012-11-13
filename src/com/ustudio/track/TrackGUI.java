@@ -10,9 +10,11 @@ import org.anddev.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.anddev.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegionFactory;
 import org.anddev.andengine.opengl.texture.region.TextureRegion;
 
+import android.util.Log;
+
 import com.ustudio.main.MainActivity;
 
-public class Track extends Entity{
+public class TrackGUI extends Entity{
 	
 	static int CAMERA_WIDTH;
 	static int CAMERA_HEIGHT;
@@ -21,6 +23,7 @@ public class Track extends Entity{
 	private Texture	mTexture;
 	
 	private TextureRegion mKnob;
+	private TextureRegion mVolumeIndicators;
 	private TextureRegion mMuteRelased;
 	private TextureRegion mMutePressed;
 	private TextureRegion mSoloRelased;
@@ -30,6 +33,7 @@ public class Track extends Entity{
 	private TextureRegion mConfigRelased;
 	private TextureRegion mConfigPressed;
 	private TextureRegion mOpenTrack;
+	private TextureRegion mSeparator;
 	
 	private float knobHeight;
 	private float knobWidth;
@@ -61,34 +65,84 @@ public class Track extends Entity{
 	private float openY;
 	private float openX;
 	
-	public Track (int w, int h, Scene s){
+	private float indicatorHeight;
+	private float indicatorWidth;
+	private float indicatorY;
+	private float indicatorX;
+	
+	private float separatorHeight;
+	private float separatorWidth;
+	private float separatorY;
+	private float separatorX;
+	
+	private Sprite knob_sprite;
+	
+	public TrackGUI (int w, int h, Scene s){
+		CAMERA_WIDTH = w;
+		CAMERA_HEIGHT = h;
 		scene = s;
-
+		loadGUITextures();
+		loadSizes();
+		drawButtons();
 	}
 	private void loadGUITextures(){
 		this.mTexture = new BitmapTextureAtlas(2048, 2048, TextureOptions.BILINEAR);
 		BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/Buttons/");
-		this.mKnob = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "knob.png", 0, 0);
+		this.mKnob = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "knob-rotate.png", 0, 0);
 		this.mMuteRelased = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "mute_relased.png", 0, 115);
 		this.mMutePressed = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "mute_pressed.png", 0, 162);
-		this.mSoloRelased = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "solo_relased.png", 53, 115);
-		this.mSoloPressed = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "solo_pressed.png", 53, 162);
-		this.mPianoRelased = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "piano_relased.png", 0, 162);
-		this.mPianoPressed = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "piano_pressed.png", 0, 209);
-		this.mConfigRelased = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "config_relased.png", 84, 162);
-		this.mConfigPressed = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "config_pressed.png", 84, 209);
-		this.mOpenTrack = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "open_track.png", 0, 281);
+		this.mSoloRelased = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "solo_relased.png", 0, 208);
+		this.mSoloPressed = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "solo_pressed.png", 0, 254);
+		this.mPianoRelased = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "piano_relased.png", 0, 300);
+		this.mPianoPressed = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "piano_pressed.png", 0, 385);
+		this.mConfigRelased = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "config_relased.png", 0, 470);
+		this.mConfigPressed = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "config_pressed.png", 0, 541);
+		this.mOpenTrack = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "open_track.png", 0, 612);
+		this.mVolumeIndicators = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "volume_indicators_03.png", 0, 663);
+		this.mSeparator = BitmapTextureAtlasTextureRegionFactory.createFromAsset((BitmapTextureAtlas) this.mTexture, MainActivity.getInstance().getApplicationContext(), "separator.png", 0, 678);
 		
 		MainActivity.getInstance().getEngine().getTextureManager().loadTexture(this.mTexture);
 	}
 	private void drawButtons(){
-		Sprite knob_sprite = new Sprite(0,0,this.mKnob);
+		knob_sprite = new Sprite(0,0,this.mKnob);
 		knob_sprite.setWidth(this.knobWidth);
 		knob_sprite.setHeight(this.knobHeight);
 		
 		knob_sprite.setPosition(this.knobX,this.knobY);
+		knob_sprite.setRotationCenter(knobWidth/2, knobHeight/2);
+		knob_sprite.setRotation(-22.5f);
 		
 		this.attachChild(knob_sprite);
+		
+		//----------------------------------------------------------------------------------------
+		
+		Sprite knob_adjust = new Sprite(0,0,this.mKnob){
+            public boolean onAreaTouched(final TouchEvent pAreaTouchEvent, final float pX, final float pY) {
+            	switch(pAreaTouchEvent.getAction()) {
+				    case TouchEvent.ACTION_DOWN:  
+				        break;
+				    case TouchEvent.ACTION_UP:  
+				        break;
+				    case TouchEvent.ACTION_MOVE:
+				    	if (pX<280 && pX>0 ){
+				    		knob_sprite.setRotation(pX + 200);
+				    		Log.d("ROTATE",pX + "¼");
+				    	}
+				    	break;
+				}
+				return true;
+            }
+        };
+        knob_adjust.setWidth(this.knobWidth*4);
+        knob_adjust.setHeight(this.knobHeight);
+		
+        knob_adjust.setPosition(this.knobX - this.knobWidth*2,this.knobY);
+        knob_adjust.setRotationCenter(knobWidth/2, knobHeight/2);
+		knob_adjust.setAlpha(0.0f);
+        
+		this.attachChild(knob_adjust);
+		
+		scene.registerTouchArea(knob_adjust);
 		
 		//----------------------------------------------------------------------------------------
 		
@@ -240,38 +294,77 @@ public class Track extends Entity{
 		
 		//----------------------------------------------------------------------------------------
 		
+		Sprite open_sprite = new Sprite(0,0,this.mOpenTrack);
+		open_sprite.setWidth(this.openWidth);
+		open_sprite.setHeight(this.openHeight);
+		
+		open_sprite.setPosition(this.openX,this.openY);
+		
+		this.attachChild(open_sprite);
+		
+		//----------------------------------------------------------------------------------------
+		
+		Sprite indicator_sprite = new Sprite(0,0,this.mVolumeIndicators);
+		indicator_sprite.setWidth(this.indicatorWidth);
+		indicator_sprite.setHeight(this.indicatorHeight);
+		
+		indicator_sprite.setPosition(this.indicatorX,this.indicatorY);
+		
+		this.attachChild(indicator_sprite);
+		
+		//----------------------------------------------------------------------------------------
+		
+		Sprite separator_sprite = new Sprite(0,0,this.mSeparator);
+		separator_sprite.setWidth(this.separatorWidth);
+		separator_sprite.setHeight(this.separatorHeight);
+		
+		separator_sprite.setPosition(this.separatorX,this.separatorY);
+		
+		this.attachChild(separator_sprite);
+		
+		//----------------------------------------------------------------------------------------
 		
 	}
 	private void loadSizes(){
 		this.knobHeight=CAMERA_HEIGHT/14.15f;
-		this.knobWidth=CAMERA_WIDTH/5.78f;
-		this.knobY=CAMERA_HEIGHT-(this.knobHeight+(CAMERA_HEIGHT/14.67f));
-		this.knobX=CAMERA_WIDTH-(this.knobWidth+(CAMERA_WIDTH/3.01f));
+		this.knobWidth=CAMERA_HEIGHT/14.15f;
+		this.knobY=((CAMERA_HEIGHT/15.0f));
+		this.knobX=((CAMERA_WIDTH/2.85f));
 		
 		this.muteHeight=CAMERA_HEIGHT/34.78f;
 		this.muteWidth=CAMERA_WIDTH/18.46f;
-		this.muteY=CAMERA_HEIGHT-(this.muteHeight+(CAMERA_HEIGHT/14.95f));
-		this.muteX=CAMERA_WIDTH-(this.muteWidth+(CAMERA_WIDTH/1.8045f));
+		this.muteY=((CAMERA_HEIGHT/14.95f));
+		this.muteX=((CAMERA_WIDTH/1.8045f));
 		
 		this.soloHeight=CAMERA_HEIGHT/34.78f;
 		this.soloWidth=CAMERA_WIDTH/18.46f;
-		this.soloY=CAMERA_HEIGHT-(this.soloHeight+(CAMERA_HEIGHT/8.69f));
-		this.soloX=CAMERA_WIDTH-(this.soloWidth+(CAMERA_WIDTH/1.8045f));
+		this.soloY=((CAMERA_HEIGHT/8.69f));
+		this.soloX=((CAMERA_WIDTH/1.8045f));
 		
 		this.pianoHeight=CAMERA_HEIGHT/18.82f;
 		this.pianoWidth=CAMERA_WIDTH/11.42f;
-		this.pianoY=CAMERA_HEIGHT-(this.pianoHeight+(CAMERA_HEIGHT/12.69f));
-		this.pianoX=CAMERA_WIDTH-(this.pianoWidth+(CAMERA_WIDTH/1.5311f));
+		this.pianoY=((CAMERA_HEIGHT/12.69f));
+		this.pianoX=((CAMERA_WIDTH/1.5311f));
 		
 		this.configHeight=CAMERA_HEIGHT/22.53f;
 		this.configWidth=CAMERA_WIDTH/14.54f;
-		this.configY=CAMERA_HEIGHT-(this.configHeight+(CAMERA_HEIGHT/12.03f));
-		this.configX=CAMERA_WIDTH-(this.configWidth+(CAMERA_WIDTH/1.2834f));
+		this.configY=((CAMERA_HEIGHT/12.03f));
+		this.configX=((CAMERA_WIDTH/1.2834f));
 		
 		this.openHeight=CAMERA_HEIGHT/32.00f;
 		this.openWidth=CAMERA_WIDTH/34.28f;
-		this.openY=CAMERA_HEIGHT-(this.openHeight+(CAMERA_HEIGHT/11.34f));
-		this.openX=CAMERA_WIDTH-(this.openWidth+(CAMERA_WIDTH/1.1136f));
+		this.openY=((CAMERA_HEIGHT/11.34f));
+		this.openX=((CAMERA_WIDTH/1.135f));
 		
+		this.indicatorHeight=CAMERA_HEIGHT/(1600.0f/14.71f);
+		this.indicatorWidth=CAMERA_WIDTH/(960.0f/171.0f);
+		this.indicatorY=((CAMERA_HEIGHT/(1600.0f/210.0f)));
+		this.indicatorX=((CAMERA_WIDTH/(960.0f/315.0f)));
+		
+		this.separatorHeight=CAMERA_HEIGHT/(1600.0f/6.461f);
+		this.separatorWidth=CAMERA_WIDTH/(960.0f/843.0f);
+		this.separatorY=((CAMERA_HEIGHT/(1600.0f/283.5f)));
+		this.separatorX=((CAMERA_WIDTH/(960.0f/59.0f)));
+			
 	}
 }

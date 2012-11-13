@@ -1,5 +1,7 @@
 package com.ustudio.scenes;
 
+import java.util.Hashtable;
+
 import org.anddev.andengine.entity.scene.Scene;
 import org.anddev.andengine.entity.sprite.Sprite;
 import org.anddev.andengine.input.touch.TouchEvent;
@@ -11,6 +13,8 @@ import org.anddev.andengine.opengl.texture.region.TextureRegion;
 
 import com.ustudio.loading.LoadingScreen;
 import com.ustudio.main.MainActivity;
+import com.ustudio.piano.Key;
+import com.ustudio.track.TrackGUI;
 
 public class MenuScene extends Scene {
 	

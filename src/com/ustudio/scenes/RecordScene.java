@@ -1,5 +1,7 @@
 package com.ustudio.scenes;
 
+import java.util.Hashtable;
+
 import org.anddev.andengine.entity.Entity;
 import org.anddev.andengine.entity.scene.Scene;
 import org.anddev.andengine.entity.sprite.Sprite;
@@ -21,6 +23,7 @@ import com.ustudio.managers.SceneManager;
 import com.ustudio.project.IniConstants;
 import com.ustudio.project.Project;
 import com.ustudio.project.Track;
+import com.ustudio.track.TrackGUI;
 
 public class RecordScene extends Scene {
 
@@ -33,6 +36,8 @@ public class RecordScene extends Scene {
 	
 	private TextureRegion mBackground;
 	private TextureRegion mTransparent;
+	
+	private Hashtable<String,TrackGUI> mTrackGUIs;
 	
 	private TextureRegion[] mButton_N;
 	private TextureRegion[] mButton_P;
@@ -58,9 +63,19 @@ public class RecordScene extends Scene {
 		loadGUITextures();
 		drawBG();
 		drawToolBar();
+		drawTrack();
 		loadWindow();
 	}
 
+	private void drawTrack()
+	{
+		mTrackGUIs=new Hashtable<String,TrackGUI>();
+		TrackGUI tmpTrack;
+		tmpTrack=new TrackGUI(CAMERA_WIDTH, CAMERA_HEIGHT, this);
+		mTrackGUIs.put("Piano 1", tmpTrack);
+		this.attachChild(mTrackGUIs.get("Piano 1"));
+	}
+	
 	private void createProject()
 	{
 		Project tmpProject;
