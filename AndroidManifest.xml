@@ -3,8 +3,8 @@
     package="com.ustudio.main"
     android:versionCode="1"
     android:versionName="1.0" >
-
-    <uses-sdk android:minSdkVersion="4" android:targetSdkVersion="15" />
+	<uses-feature android:name="android.hardware.usb.accessory"/>
+    <uses-sdk android:minSdkVersion="12" android:targetSdkVersion="15" />
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
     <application
