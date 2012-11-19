@@ -1,5 +1,10 @@
 package com.ustudio.main;
 
+import java.io.FileDescriptor;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 import org.anddev.andengine.engine.Engine;
 import org.anddev.andengine.engine.camera.ZoomCamera;
 import org.anddev.andengine.engine.options.EngineOptions;
@@ -12,13 +17,20 @@ import org.anddev.andengine.extension.input.touch.controller.MultiTouchControlle
 import org.anddev.andengine.extension.input.touch.exception.MultiTouchException;
 import org.anddev.andengine.ui.activity.BaseGameActivity;
 
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.ParcelFileDescriptor;
+import android.util.Log;
+
+import android.hardware.usb.*;
 import com.ustudio.audio.Instrument;
 import com.ustudio.managers.SamplesManager;
 import com.ustudio.managers.SceneManager;
 import com.ustudio.project.Project;
 import com.ustudio.project.Track;
-
-import dalvik.system.VMRuntime;
 
 public class MainActivity extends BaseGameActivity {
 	
@@ -30,8 +42,69 @@ public class MainActivity extends BaseGameActivity {
 	private Project mProject;
 	private SamplesManager mSamplesManager;
 	
+	private UsbManager mUsbManager;
+	private PendingIntent mPermissionIntent;
+	private boolean mPermissionRequestPending;
+	
+	private static final String ACTION_USB_PERMISSION = "com.google.android.DemoKit.action.USB_PERMISSION";
+	
+	UsbAccessory mAccessory;
+	ParcelFileDescriptor mFileDescriptor;
+	FileInputStream mInputStream;
+	FileOutputStream mOutputStream;
+	
 	private static MainActivity mInstance;
 
+	private final BroadcastReceiver mUsbReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			String action = intent.getAction();
+			if (ACTION_USB_PERMISSION.equals(action)) {
+				synchronized (this) {
+					UsbAccessory accessory = (UsbAccessory)
+			                   intent.getParcelableExtra(UsbManager.EXTRA_ACCESSORY);
+					if (intent.getBooleanExtra(
+					UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
+						openAccessory(accessory);
+					} else {
+
+					}
+					mPermissionRequestPending = false;
+				}
+			} else if (UsbManager.ACTION_USB_ACCESSORY_DETACHED.equals(action)) {
+				UsbAccessory accessory = (UsbAccessory)
+		                   intent.getParcelableExtra(UsbManager.EXTRA_ACCESSORY);
+				if (accessory != null && accessory.equals(mAccessory))
+				{
+					closeAccessory();
+				}
+			}
+		}
+	};
+	
+	private void openAccessory(UsbAccessory accessory) {
+		mFileDescriptor = mUsbManager.openAccessory(accessory);
+		if (mFileDescriptor != null) {
+			mAccessory = accessory;
+			FileDescriptor fd = mFileDescriptor.getFileDescriptor();
+			mInputStream = new FileInputStream(fd);
+			mOutputStream = new FileOutputStream(fd);
+		} else {
+		}
+	}
+		 
+		 
+	private void closeAccessory() {
+		try {
+			if (mFileDescriptor != null) {
+				mFileDescriptor.close();
+			}
+		} catch (IOException e) {
+		} finally {
+			mFileDescriptor = null;
+			mAccessory = null;
+		}
+	}
 	
 	@Override
 	public void onLoadComplete() {
@@ -51,6 +124,17 @@ public class MainActivity extends BaseGameActivity {
 		this.mSceneManager = new SceneManager();
 		this.mProject = new Project();
 		this.mSamplesManager = new SamplesManager();
+		
+		mUsbManager = (UsbManager) getSystemService(Context.USB_SERVICE);
+		mPermissionIntent = PendingIntent.getBroadcast(this, 0, new Intent(ACTION_USB_PERMISSION), 0);
+		IntentFilter filter = new IntentFilter(ACTION_USB_PERMISSION);
+		filter.addAction(UsbManager.ACTION_USB_ACCESSORY_DETACHED);
+		registerReceiver(mUsbReceiver, filter);
+		 
+		if (getLastNonConfigurationInstance() != null) {
+			mAccessory = (UsbAccessory) getLastNonConfigurationInstance();
+			openAccessory(mAccessory);
+		}
 		
 		final Engine mEngine = new Engine(new EngineOptions(true,ScreenOrientation.PORTRAIT , new RatioResolutionPolicy(CAMERA_WIDTH,CAMERA_HEIGHT ), mCamera).setNeedsSound(true));
 		try {
@@ -81,7 +165,13 @@ public class MainActivity extends BaseGameActivity {
         return this.mSceneManager.getCurrentScene();
 	}
     /** Called when the activity is first created. */
-	 
+	
+	@Override
+	public void onDestroy() {
+		unregisterReceiver(mUsbReceiver);
+		super.onDestroy();
+	}
+	
 	//SET	
 	public void setSamplesManager(SamplesManager s)
 	{

@@ -63,7 +63,7 @@ public class RecordScene extends Scene {
 		loadGUITextures();
 		drawBG();
 		drawToolBar();
-		drawTrack();
+		//drawTrack();
 		loadWindow();
 	}
 
