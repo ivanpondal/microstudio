@@ -22,15 +22,14 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Handler;
 import android.os.ParcelFileDescriptor;
-import android.util.Log;
 
 import android.hardware.usb.*;
-import com.ustudio.audio.Instrument;
 import com.ustudio.managers.SamplesManager;
 import com.ustudio.managers.SceneManager;
 import com.ustudio.project.Project;
-import com.ustudio.project.Track;
+import com.ustudio.usb.USBRead;
 
 public class MainActivity extends BaseGameActivity {
 	
@@ -42,9 +41,11 @@ public class MainActivity extends BaseGameActivity {
 	private Project mProject;
 	private SamplesManager mSamplesManager;
 	
-	private UsbManager mUsbManager;
 	private PendingIntent mPermissionIntent;
 	private boolean mPermissionRequestPending;
+	private UsbManager mUsbManager;
+	
+	private Handler mDeviceHandler;
 	
 	private static final String ACTION_USB_PERMISSION = "com.google.android.DemoKit.action.USB_PERMISSION";
 	
@@ -106,6 +107,22 @@ public class MainActivity extends BaseGameActivity {
 		}
 	}
 	
+	private void searchAccessory()
+	{
+		mUsbManager = (UsbManager) getSystemService(Context.USB_SERVICE);
+		mPermissionIntent = PendingIntent.getBroadcast(this, 0, new Intent(ACTION_USB_PERMISSION), 0);
+		IntentFilter filter = new IntentFilter(ACTION_USB_PERMISSION);
+		filter.addAction(UsbManager.ACTION_USB_ACCESSORY_DETACHED);
+		registerReceiver(mUsbReceiver, filter);
+		 
+		if (getLastNonConfigurationInstance() != null) {
+			mAccessory = (UsbAccessory) getLastNonConfigurationInstance();
+			openAccessory(mAccessory);
+			Thread thread = new Thread(null, new USBRead());
+			thread.start();
+		}
+	}
+	
 	@Override
 	public void onLoadComplete() {
 		// TODO Auto-generated method stub
@@ -125,16 +142,7 @@ public class MainActivity extends BaseGameActivity {
 		this.mProject = new Project();
 		this.mSamplesManager = new SamplesManager();
 		
-		mUsbManager = (UsbManager) getSystemService(Context.USB_SERVICE);
-		mPermissionIntent = PendingIntent.getBroadcast(this, 0, new Intent(ACTION_USB_PERMISSION), 0);
-		IntentFilter filter = new IntentFilter(ACTION_USB_PERMISSION);
-		filter.addAction(UsbManager.ACTION_USB_ACCESSORY_DETACHED);
-		registerReceiver(mUsbReceiver, filter);
-		 
-		if (getLastNonConfigurationInstance() != null) {
-			mAccessory = (UsbAccessory) getLastNonConfigurationInstance();
-			openAccessory(mAccessory);
-		}
+		searchAccessory();
 		
 		final Engine mEngine = new Engine(new EngineOptions(true,ScreenOrientation.PORTRAIT , new RatioResolutionPolicy(CAMERA_WIDTH,CAMERA_HEIGHT ), mCamera).setNeedsSound(true));
 		try {
@@ -182,6 +190,10 @@ public class MainActivity extends BaseGameActivity {
 	public void setProject(Project p) {
 		this.mProject = p;
 	}
+	
+	public static void setInstance(MainActivity mInstance) {
+		MainActivity.mInstance = mInstance;
+	}
 
 	//GET
 	public ZoomCamera getCamera() {
@@ -205,8 +217,11 @@ public class MainActivity extends BaseGameActivity {
 		return mInstance;
 	}
 
-	public static void setInstance(MainActivity mInstance) {
-		MainActivity.mInstance = mInstance;
+	public FileInputStream getFileInputStream() {
+		return this.mInputStream;
 	}
-
+	
+	public Handler getHandler() {
+		return this.mDeviceHandler;
+	}
 }
