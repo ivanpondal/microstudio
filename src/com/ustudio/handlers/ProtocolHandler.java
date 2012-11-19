@@ -3,11 +3,13 @@ package com.ustudio.handlers;
 import java.io.IOException;
 import java.io.InputStream;
 
+import com.ustudio.main.MainActivity;
 import com.ustudio.usb.Utilities;
 
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.widget.Toast;
 
 public class ProtocolHandler {
 	InputStream mInputStream;
@@ -54,25 +56,9 @@ public class ProtocolHandler {
 		try {
 			while (mInputStream.available() > 0) {
 
-					Log.i("Piano", "about to read opcode");
-				int opCode = readByte();
-
-					Log.i("Piano", "opCode = " + opCode);
-
 					int sequence = readByte();
+					Toast.makeText(MainActivity.getInstance().getBaseContext(), "secuencia:"+sequence,0);
 
-						Log.i("Piano", "sequence = " + sequence);
-					int replySize = readInt16();
-
-						Log.i("Piano", "replySize = " + replySize);
-					byte[] replyBuffer = readBuffer(replySize);
-				
-						Log.i("Piano",
-								"replyBuffer: "
-										+ Utilities.dumpBytes(replyBuffer,
-												replyBuffer.length));
-
-					processReply(opCode & 0x7f, sequence, replyBuffer);
 					mInputStream.mark(0);
 			}
 			mInputStream.reset();
@@ -81,10 +67,5 @@ public class ProtocolHandler {
 		}
 	}
 
-	private void processReply(int opCode, int sequence, byte[] replyBuffer) {
-		Message msg = mHandler.obtainMessage(opCode, sequence, 0,
-				replyBuffer);
-		mHandler.sendMessage(msg);
-	}
 
 }
