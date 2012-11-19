@@ -24,8 +24,7 @@ public class USBRead implements Runnable{
 				bufferUsed += ret;
 				int remainder = process(buffer, bufferUsed);
 				if (remainder > 0) {
-					System.arraycopy(buffer, remainder, buffer, 0, bufferUsed
-							- remainder);
+					System.arraycopy(buffer, remainder, buffer, 0, bufferUsed - remainder);
 					bufferUsed = remainder;
 				} else {
 					bufferUsed = 0;

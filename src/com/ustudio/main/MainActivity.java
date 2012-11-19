@@ -47,7 +47,7 @@ public class MainActivity extends BaseGameActivity {
 	
 	private Handler mDeviceHandler;
 	
-	private static final String ACTION_USB_PERMISSION = "com.google.android.DemoKit.action.USB_PERMISSION";
+	private static final String ACTION_USB_PERMISSION = "com.ustudio.action.USB_PERMISSION";
 	
 	UsbAccessory mAccessory;
 	ParcelFileDescriptor mFileDescriptor;
