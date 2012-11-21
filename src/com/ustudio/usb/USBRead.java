@@ -4,7 +4,11 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.ustudio.handlers.ProtocolHandler;
 import com.ustudio.main.MainActivity;
@@ -16,7 +20,7 @@ public class USBRead implements Runnable{
 		int ret = 0;
 		byte[] buffer = new byte[16384];
 		int bufferUsed = 0;
-
+		Looper.prepare();
 		while (ret >= 0) {
 			try {
 				ret = MainActivity.getInstance().getFileInputStream().read(buffer, bufferUsed,
@@ -33,6 +37,7 @@ public class USBRead implements Runnable{
 				break;
 			}
 		}	
+		Looper.loop();
 	}
 	
 	public int process(byte[] buffer, int bufferUsed) {
@@ -41,7 +46,7 @@ public class USBRead implements Runnable{
 							+ Utilities.dumpBytes(buffer, bufferUsed));
 		ByteArrayInputStream inputStream = new ByteArrayInputStream(buffer, 0,
 				bufferUsed);
-		ProtocolHandler ph = new ProtocolHandler(MainActivity.getInstance().getHandler(), inputStream);
+		ProtocolHandler ph = new ProtocolHandler(inputStream);
 		ph.process();
 		return inputStream.available();
 	}

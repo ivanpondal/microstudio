@@ -13,10 +13,10 @@ import android.widget.Toast;
 
 public class ProtocolHandler {
 	InputStream mInputStream;
-	Handler mHandler;
 
-	public ProtocolHandler(Handler handler, InputStream inputStream) {
-		mHandler = handler;
+
+	public ProtocolHandler(InputStream inputStream) {
+
 		mInputStream = inputStream;
 	}
 
@@ -57,8 +57,7 @@ public class ProtocolHandler {
 			while (mInputStream.available() > 0) {
 
 					int sequence = readByte();
-					Toast.makeText(MainActivity.getInstance().getBaseContext(), "secuencia:"+sequence,0);
-
+					Toast.makeText(MainActivity.getInstance().getBaseContext(), "secuencia:"+sequence, Toast.LENGTH_LONG).show();
 					mInputStream.mark(0);
 			}
 			mInputStream.reset();

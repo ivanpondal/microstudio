@@ -24,6 +24,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.ParcelFileDescriptor;
+import android.widget.Toast;
 
 import android.hardware.usb.*;
 import com.ustudio.managers.SamplesManager;
@@ -44,44 +45,20 @@ public class MainActivity extends BaseGameActivity {
 	private PendingIntent mPermissionIntent;
 	private boolean mPermissionRequestPending;
 	private UsbManager mUsbManager;
+
 	
 	private Handler mDeviceHandler;
 	
 	private static final String ACTION_USB_PERMISSION = "com.ustudio.action.USB_PERMISSION";
 	
-	UsbAccessory mAccessory;
-	ParcelFileDescriptor mFileDescriptor;
-	FileInputStream mInputStream;
-	FileOutputStream mOutputStream;
+	private UsbAccessory mAccessory;
+	private ParcelFileDescriptor mFileDescriptor;
+	private FileInputStream mInputStream;
+	private FileOutputStream mOutputStream;
+	private BroadcastReceiver mUsbReceiver=null;
 	
 	private static MainActivity mInstance;
 
-	private final BroadcastReceiver mUsbReceiver = new BroadcastReceiver() {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			String action = intent.getAction();
-			if (ACTION_USB_PERMISSION.equals(action)) {
-				synchronized (this) {
-					UsbAccessory accessory = (UsbAccessory)
-			                   intent.getParcelableExtra(UsbManager.EXTRA_ACCESSORY);
-					if (intent.getBooleanExtra(
-					UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
-						openAccessory(accessory);
-					} else {
-
-					}
-					mPermissionRequestPending = false;
-				}
-			} else if (UsbManager.ACTION_USB_ACCESSORY_DETACHED.equals(action)) {
-				UsbAccessory accessory = (UsbAccessory)
-		                   intent.getParcelableExtra(UsbManager.EXTRA_ACCESSORY);
-				if (accessory != null && accessory.equals(mAccessory))
-				{
-					closeAccessory();
-				}
-			}
-		}
-	};
 	
 	private void openAccessory(UsbAccessory accessory) {
 		mFileDescriptor = mUsbManager.openAccessory(accessory);
@@ -90,6 +67,40 @@ public class MainActivity extends BaseGameActivity {
 			FileDescriptor fd = mFileDescriptor.getFileDescriptor();
 			mInputStream = new FileInputStream(fd);
 			mOutputStream = new FileOutputStream(fd);
+			
+			IntentFilter filter = new IntentFilter(ACTION_USB_PERMISSION);
+			filter.addAction(UsbManager.ACTION_USB_ACCESSORY_DETACHED);
+			
+			mUsbReceiver=new BroadcastReceiver() {
+				@Override
+				public void onReceive(Context context, Intent intent) {
+					String action = intent.getAction();
+					
+					if (ACTION_USB_PERMISSION.equals(action)) {
+						synchronized (this) {
+							UsbAccessory accessory = (UsbAccessory)
+					                   intent.getParcelableExtra(UsbManager.EXTRA_ACCESSORY);
+							if (intent.getBooleanExtra(
+							UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
+								openAccessory(accessory);
+							} else {
+
+							}
+							mPermissionRequestPending = false;
+						}
+					} else if (UsbManager.ACTION_USB_ACCESSORY_DETACHED.equals(action)) {
+						UsbAccessory accessory = (UsbAccessory)
+				                   intent.getParcelableExtra(UsbManager.EXTRA_ACCESSORY);
+						if (accessory != null && accessory.equals(mAccessory))
+						{
+							closeAccessory();
+						}
+					}
+				}
+			};
+			this.registerReceiver(mUsbReceiver, filter);
+			new Thread(new USBRead()).start();
+
 		} else {
 		}
 	}
@@ -110,16 +121,33 @@ public class MainActivity extends BaseGameActivity {
 	private void searchAccessory()
 	{
 		mUsbManager = (UsbManager) getSystemService(Context.USB_SERVICE);
-		mPermissionIntent = PendingIntent.getBroadcast(this, 0, new Intent(ACTION_USB_PERMISSION), 0);
+		/*mPermissionIntent = PendingIntent.getBroadcast(this, 0, new Intent(ACTION_USB_PERMISSION), 0);
 		IntentFilter filter = new IntentFilter(ACTION_USB_PERMISSION);
 		filter.addAction(UsbManager.ACTION_USB_ACCESSORY_DETACHED);
 		registerReceiver(mUsbReceiver, filter);
-		 
+		Toast.makeText(this.getBaseContext(), "buscando", Toast.LENGTH_SHORT).show();
 		if (getLastNonConfigurationInstance() != null) {
 			mAccessory = (UsbAccessory) getLastNonConfigurationInstance();
 			openAccessory(mAccessory);
-			Thread thread = new Thread(null, new USBRead());
-			thread.start();
+			Toast.makeText(this.getBaseContext(), "last non conf", Toast.LENGTH_SHORT).show();
+		}
+		*/
+		
+		mAccessory = (UsbAccessory)this.getIntent().getParcelableExtra(UsbManager.EXTRA_ACCESSORY);
+		if (mAccessory != null) {
+			if (mUsbManager.hasPermission(mAccessory)) {
+				openAccessory(mAccessory);
+			} else {
+				// synchronized (mUsbReceiver) {
+				// if (!mPermissionRequestPending) {
+				// mUsbManager.requestPermission(accessory,
+				// mPermissionIntent);
+				// mPermissionRequestPending = true;
+				// }
+				// }
+			}
+		} else {
+			// Log.d(TAG, "mAccessory is null");
 		}
 	}
 	
@@ -141,7 +169,8 @@ public class MainActivity extends BaseGameActivity {
 		this.mSceneManager = new SceneManager();
 		this.mProject = new Project();
 		this.mSamplesManager = new SamplesManager();
-		
+		this.mDeviceHandler=new Handler();
+	
 		searchAccessory();
 		
 		final Engine mEngine = new Engine(new EngineOptions(true,ScreenOrientation.PORTRAIT , new RatioResolutionPolicy(CAMERA_WIDTH,CAMERA_HEIGHT ), mCamera).setNeedsSound(true));
@@ -176,7 +205,10 @@ public class MainActivity extends BaseGameActivity {
 	
 	@Override
 	public void onDestroy() {
-		unregisterReceiver(mUsbReceiver);
+		if(mUsbReceiver!=null)
+		{
+			unregisterReceiver(mUsbReceiver);
+		}
 		super.onDestroy();
 	}
 	
