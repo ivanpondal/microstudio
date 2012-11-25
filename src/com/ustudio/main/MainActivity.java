@@ -75,20 +75,7 @@ public class MainActivity extends BaseGameActivity {
 				@Override
 				public void onReceive(Context context, Intent intent) {
 					String action = intent.getAction();
-					
-					if (ACTION_USB_PERMISSION.equals(action)) {
-						synchronized (this) {
-							UsbAccessory accessory = (UsbAccessory)
-					                   intent.getParcelableExtra(UsbManager.EXTRA_ACCESSORY);
-							if (intent.getBooleanExtra(
-							UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
-								openAccessory(accessory);
-							} else {
-
-							}
-							mPermissionRequestPending = false;
-						}
-					} else if (UsbManager.ACTION_USB_ACCESSORY_DETACHED.equals(action)) {
+					if (UsbManager.ACTION_USB_ACCESSORY_DETACHED.equals(action)) {
 						UsbAccessory accessory = (UsbAccessory)
 				                   intent.getParcelableExtra(UsbManager.EXTRA_ACCESSORY);
 						if (accessory != null && accessory.equals(mAccessory))
@@ -121,33 +108,12 @@ public class MainActivity extends BaseGameActivity {
 	private void searchAccessory()
 	{
 		mUsbManager = (UsbManager) getSystemService(Context.USB_SERVICE);
-		/*mPermissionIntent = PendingIntent.getBroadcast(this, 0, new Intent(ACTION_USB_PERMISSION), 0);
-		IntentFilter filter = new IntentFilter(ACTION_USB_PERMISSION);
-		filter.addAction(UsbManager.ACTION_USB_ACCESSORY_DETACHED);
-		registerReceiver(mUsbReceiver, filter);
-		Toast.makeText(this.getBaseContext(), "buscando", Toast.LENGTH_SHORT).show();
-		if (getLastNonConfigurationInstance() != null) {
-			mAccessory = (UsbAccessory) getLastNonConfigurationInstance();
-			openAccessory(mAccessory);
-			Toast.makeText(this.getBaseContext(), "last non conf", Toast.LENGTH_SHORT).show();
-		}
-		*/
 		
 		mAccessory = (UsbAccessory)this.getIntent().getParcelableExtra(UsbManager.EXTRA_ACCESSORY);
 		if (mAccessory != null) {
 			if (mUsbManager.hasPermission(mAccessory)) {
 				openAccessory(mAccessory);
-			} else {
-				// synchronized (mUsbReceiver) {
-				// if (!mPermissionRequestPending) {
-				// mUsbManager.requestPermission(accessory,
-				// mPermissionIntent);
-				// mPermissionRequestPending = true;
-				// }
-				// }
 			}
-		} else {
-			// Log.d(TAG, "mAccessory is null");
 		}
 	}
 	

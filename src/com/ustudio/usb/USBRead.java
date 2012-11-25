@@ -41,9 +41,6 @@ public class USBRead implements Runnable{
 	}
 	
 	public int process(byte[] buffer, int bufferUsed) {
-			Log.i("Piano",
-					"read " + bufferUsed + " bytes: "
-							+ Utilities.dumpBytes(buffer, bufferUsed));
 		ByteArrayInputStream inputStream = new ByteArrayInputStream(buffer, 0,
 				bufferUsed);
 		ProtocolHandler ph = new ProtocolHandler(inputStream);

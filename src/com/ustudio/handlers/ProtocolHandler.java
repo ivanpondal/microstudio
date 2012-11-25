@@ -28,13 +28,6 @@ public class ProtocolHandler {
 		return retVal;
 	}
 
-	int readInt16() throws IOException {
-		int low = readByte();
-		int high = readByte();
-		Log.i("Piano", "readInt16 low=" + low + " high=" + high);
-		return low | (high << 8);
-	}
-
 	byte[] readBuffer(int bufferSize) throws IOException {
 		byte readBuffer[] = new byte[bufferSize];
 		int index = 0;
@@ -56,8 +49,9 @@ public class ProtocolHandler {
 		try {
 			while (mInputStream.available() > 0) {
 
-					int sequence = readByte();
-					Toast.makeText(MainActivity.getInstance().getBaseContext(), "secuencia:"+sequence, Toast.LENGTH_LONG).show();
+					byte sequence[]=readBuffer(3);
+					Log.d("Piano","Status:"+sequence[0]+" Data 1:"+sequence[1]+" Data 2:"+sequence[2]);
+
 					mInputStream.mark(0);
 			}
 			mInputStream.reset();
