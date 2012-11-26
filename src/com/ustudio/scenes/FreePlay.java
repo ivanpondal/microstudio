@@ -69,6 +69,8 @@ public class FreePlay extends Scene {
 	private float StepFwX;
 	private float StepFwY;
 	
+	private static FreePlay mInstance;
+	
 	public FreePlay(int w, int h) {
 		CAMERA_WIDTH = w;
 		CAMERA_HEIGHT = h;
@@ -81,6 +83,7 @@ public class FreePlay extends Scene {
 		drawPiano();
 		drawMiniPiano();
 		drawSteps();
+		FreePlay.setInstance(this);
 	}
 
 	private void loadActiveTrack()
@@ -448,6 +451,10 @@ public class FreePlay extends Scene {
 
 	//SET
 	
+	public static void setInstance(FreePlay mInstance) {
+		FreePlay.mInstance = mInstance;
+	}
+	
 	public void setActiveTrack(Track t)
 	{
 		this.mActiveTrack=t;
@@ -478,5 +485,9 @@ public class FreePlay extends Scene {
 	public MiniPiano getMiniPiano()
 	{
 		return this.mMiniPiano;
+	}
+	
+	public static FreePlay getInstance() {
+		return mInstance;
 	}
 }

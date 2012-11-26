@@ -108,8 +108,8 @@ public class Note {
 	{
 		float left,right;
 
-		left=1.0f*l;
-		right=1.0f*r;
+		left=(v*(1.0f*l))/127;
+		right=(v*(1.0f*r))/127;
 
 		if(this.decay!=null)
 		{

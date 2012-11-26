@@ -15,6 +15,7 @@ public class Project {
 	{
 		this.mName=n;
 		this.mTracks=new Hashtable<String,Track>();
+		this.mActiveTrack=null;
 	}
 	
 	public Project(String n, Track t)
@@ -22,6 +23,7 @@ public class Project {
 		this.mName=n;
 		this.mTracks=new Hashtable<String,Track>();
 		this.mTracks.put(t.getName(), t);
+		this.mActiveTrack=null;
 	}
 	
 	public Track findActiveTrack()

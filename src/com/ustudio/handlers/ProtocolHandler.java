@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import com.ustudio.main.MainActivity;
+import com.ustudio.midi.MIDIMessage;
+import com.ustudio.usb.USBAction;
 import com.ustudio.usb.Utilities;
 
 import android.os.Handler;
@@ -50,8 +52,8 @@ public class ProtocolHandler {
 			while (mInputStream.available() > 0) {
 
 					byte sequence[]=readBuffer(3);
-					Log.d("Piano","Status:"+sequence[0]+" Data 1:"+sequence[1]+" Data 2:"+sequence[2]);
-
+					MIDIMessage tmp_msg=new MIDIMessage(sequence[0],(byte)0,sequence[1],sequence[2]);
+					USBAction.processMIDI(tmp_msg);
 					mInputStream.mark(0);
 			}
 			mInputStream.reset();
