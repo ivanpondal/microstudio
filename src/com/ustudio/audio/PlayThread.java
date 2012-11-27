@@ -61,7 +61,7 @@ class PlayThread extends Thread {
 		Vector<Long> vecMIDI = new Vector<Long>(); 
 		Hashtable<Long,MIDIMessage> tmpHashMIDI;
 		
-		tmpTrack=mProject.getTracks().get("Piano");
+		tmpTrack=mProject.getTracks().get("Piano 1");
 		tmpHashMIDI=tmpTrack.getMIDInotes();
 		
 		Enumeration<Long> enume = tmpHashMIDI.keys(); 

@@ -50,6 +50,9 @@ public class RecordScene extends Scene {
 	private float ToolbarY;
 	private float ToolbarX;
 	
+	private float TrackOffsetY;
+	private float TrackOffsetX;
+	
 	private boolean mLoading;
 
 	
@@ -63,7 +66,7 @@ public class RecordScene extends Scene {
 		loadGUITextures();
 		drawBG();
 		drawToolBar();
-		//drawTrack();
+		drawTrack();
 		loadWindow();
 	}
 
@@ -72,6 +75,7 @@ public class RecordScene extends Scene {
 		mTrackGUIs=new Hashtable<String,TrackGUI>();
 		TrackGUI tmpTrack;
 		tmpTrack=new TrackGUI(CAMERA_WIDTH, CAMERA_HEIGHT, this);
+		tmpTrack.setPosition(this.TrackOffsetX,this.TrackOffsetY);
 		mTrackGUIs.put("Piano 1", tmpTrack);
 		this.attachChild(mTrackGUIs.get("Piano 1"));
 	}
@@ -94,30 +98,6 @@ public class RecordScene extends Scene {
 		this.mLoadingScreen=new LoadingScreen(this,CAMERA_WIDTH,CAMERA_HEIGHT);
 	}
 	
-	private void loadPiano()
-	{
-		
-		this.mLoading=true;	
-		SamplesManager tmpSamplesManager;
-		MainActivity tmpMainActivity;
-		tmpMainActivity=MainActivity.getInstance();
-		String tmpLoadMsg="Loading sample #loaded of #total...";
-		String tmpFinishMsg="Finished loading samples!";
-		
-		this.mLoadingScreen.setValues(tmpLoadMsg, tmpFinishMsg,(byte)0,(byte)((IniConstants.PianoLastMIDI-IniConstants.PianoFirstMIDI)+1));
-		this.mLoadingScreen.setLoaderVisible(true);
-		
-		tmpSamplesManager=MainActivity.getInstance().getSamplesManager();
-		tmpSamplesManager.loadSamples("piano", IniConstants.PianoFirstMIDI,IniConstants.PianoLastMIDI, this.mLoadingScreen);
-		tmpMainActivity.getProject().getTracks().get("Piano 1").getInstr().setNotes(tmpSamplesManager.getSamples().get("piano"));
-		tmpMainActivity.setSamplesManager(tmpSamplesManager);
-		tmpMainActivity.getProject().setActiveTrack("Piano 1");
-		
-		MainActivity.getInstance().getSceneManager().setFreePlay(CAMERA_WIDTH, CAMERA_HEIGHT);
-		
-		this.mLoading=false;	
-		this.mLoadingScreen.setLoaderVisible(false);
-	}
 	
 	private void loadGUITextures()
 	{
@@ -197,9 +177,36 @@ public class RecordScene extends Scene {
 		this.btnMenuButtonsWidth=CAMERA_WIDTH/4.55f;
 		this.ToolbarY=CAMERA_HEIGHT-(CAMERA_HEIGHT/9.35f);
 		this.ToolbarX=CAMERA_WIDTH/2-((this.btnMenuButtonsWidth*4)/2);
+		this.TrackOffsetY=CAMERA_HEIGHT/(400/13.0f);
+		this.TrackOffsetX=CAMERA_WIDTH/(480/29.0f);
 	}	
 	
 	//PUBLIC
+	public void loadPiano()
+	{
+		
+		this.mLoading=true;	
+		SamplesManager tmpSamplesManager;
+		MainActivity tmpMainActivity;
+		tmpMainActivity=MainActivity.getInstance();
+		String tmpLoadMsg="Loading sample #loaded of #total...";
+		String tmpFinishMsg="Finished loading samples!";
+		
+		this.mLoadingScreen.setValues(tmpLoadMsg, tmpFinishMsg,(byte)0,(byte)((IniConstants.PianoLastMIDI-IniConstants.PianoFirstMIDI)+1));
+		this.mLoadingScreen.setLoaderVisible(true);
+		
+		tmpSamplesManager=MainActivity.getInstance().getSamplesManager();
+		tmpSamplesManager.loadSamples("piano", IniConstants.PianoFirstMIDI,IniConstants.PianoLastMIDI, this.mLoadingScreen);
+		tmpMainActivity.getProject().getTracks().get("Piano 1").getInstr().setNotes(tmpSamplesManager.getSamples().get("piano"));
+		tmpMainActivity.setSamplesManager(tmpSamplesManager);
+		tmpMainActivity.getProject().setActiveTrack("Piano 1");
+		
+		MainActivity.getInstance().getSceneManager().setFreePlay(CAMERA_WIDTH, CAMERA_HEIGHT);
+		
+		this.mLoading=false;	
+		this.mLoadingScreen.setLoaderVisible(false);
+	}
+	
 	public void ToolbarAction(byte selindex, boolean pressed)
 	{
 		switch(selindex)
@@ -212,7 +219,6 @@ public class RecordScene extends Scene {
 				else
 				{
 					this.mToolBar.getChild(selindex).setVisible(true);
-					loadPiano();
 				}
 				break;
 			case 3:

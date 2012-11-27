@@ -69,9 +69,11 @@ public class Piano extends Entity {
 		CAMERA_HEIGHT = h;
 		
 		scene = pScene;
-		this.setKeyboardHeight(CAMERA_WIDTH/1.6f);
-		this.setKeyboardWidth(CAMERA_HEIGHT*7);
 		this.setTonesWidth(CAMERA_HEIGHT/(float)t.getTonesVisible());
+		
+		this.setKeyboardHeight(CAMERA_WIDTH/1.6f);
+		this.setKeyboardWidth(this.getTonesWidth()*42);
+
 		this.setTonesHeight(this.getKeyboardHeight());
 		this.setSTWidth(this.getTonesWidth()/2);
 		this.setSTHeight(this.getTonesHeight()/1.75f);
@@ -111,28 +113,28 @@ public class Piano extends Entity {
 				int PointerID,SelKey;
 				byte SpriteIndex;
 				boolean tmpIsTone;
-
+				
 				tmpIsTone=Piano.this.isTone(pTouchAreaLocalY, pTouchAreaLocalX);
 				SelKey=Piano.this.TouchX2SelKey(pTouchAreaLocalY,tmpIsTone);
-				SpriteIndex=PianoMath.SelKey2SpriteIndex(SelKey, tmpIsTone);
-
+				SpriteIndex=PianoMath.SelKey2SpriteIndex(SelKey, tmpIsTone);	
     			PointerID=pAreaTouchEvent.getPointerID();
-    			
-				switch(pAreaTouchEvent.getAction()) 
-				{
-                    case TouchEvent.ACTION_DOWN:
-                    	Piano.this.doUpDownAction(tmpIsTone, true, PointerID, SpriteIndex);
-                    	break;
-                    case TouchEvent.ACTION_UP: 
-                    	Piano.this.doUpDownAction(tmpIsTone, false, PointerID, SpriteIndex);
-                        break;
-                    case TouchEvent.ACTION_MOVE:    
-                    	Piano.this.doMoveAction(tmpIsTone, PointerID, SpriteIndex);
-                    	break;	
-				}
-
-				Piano.this.processKeys();
-
+    			if(SpriteIndex<42)
+    			{
+					switch(pAreaTouchEvent.getAction()) 
+					{
+	                    case TouchEvent.ACTION_DOWN:
+	                    	Piano.this.doUpDownAction(tmpIsTone, true, PointerID, SpriteIndex);
+	                    	break;
+	                    case TouchEvent.ACTION_UP: 
+	                    	Piano.this.doUpDownAction(tmpIsTone, false, PointerID, SpriteIndex);
+	                        break;
+	                    case TouchEvent.ACTION_MOVE:    
+	                    	Piano.this.doMoveAction(tmpIsTone, PointerID, SpriteIndex);
+	                    	break;	
+					}
+	
+					Piano.this.processKeys();
+    			}
                 return true;
             }
 		};
