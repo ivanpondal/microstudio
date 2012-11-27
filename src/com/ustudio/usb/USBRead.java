@@ -23,8 +23,8 @@ public class USBRead implements Runnable{
 		Looper.prepare();
 		while (ret >= 0) {
 			try {
-				ret = MainActivity.getInstance().getFileInputStream().read(buffer, bufferUsed,
-						buffer.length - bufferUsed);
+				ret = MainActivity.getInstance().getFileInputStream().read(buffer, bufferUsed,buffer.length - bufferUsed);
+
 				bufferUsed += ret;
 				int remainder = process(buffer, bufferUsed);
 				if (remainder > 0) {
